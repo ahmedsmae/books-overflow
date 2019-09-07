@@ -1,0 +1,38 @@
+{
+  "name": "books-overflow",
+  "version": "1.0.0",
+  "description": "Application to offer, sell and buy books and book collections based on locations",
+  "main": "server.js",
+  "scripts": {
+    "play": "nodemon play",
+    "server": "nodemon server",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
+  },
+  "keywords": [
+    "books",
+    "book",
+    "collection",
+    "sell",
+    "buy",
+    "locations",
+    "overflow"
+  ],
+  "author": "Ahmed Afifi",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "compression": "^1.7.4",
+    "dotenv": "^8.1.0",
+    "express": "^4.17.1",
+    "express-sslify": "^1.2.0",
+    "express-validator": "^6.2.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.6.13",
+    "multer": "^1.4.2",
+    "nodemailer": "^6.3.0",
+    "request": "^2.88.0",
+    "sharp": "^0.23.0"
+  }
+}
