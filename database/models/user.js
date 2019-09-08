@@ -33,13 +33,11 @@ const userSchema = new mongoose.Schema(
     contactnumber: {
       type: String
     },
-    defaultlocation: {
-      latitude: {
-        type: Number
-      },
-      longitude: {
-        type: Number
-      }
+    defaultlatitude: {
+      type: Number
+    },
+    defaultlongitude: {
+      type: Number
     },
     defaultcurrency: {
       type: String

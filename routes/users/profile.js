@@ -12,7 +12,7 @@ const Avatar = require('../../database/models/avatar');
 /**
  * @method - POST
  * @url - 'api/users/profile'
- * @data - {firstname, lastname, avatar, contactnumber, defaultlocation, defaultcurrency, bio}
+ * @data - {firstname, lastname, avatar, contactnumber, defaultlatitude, defaultlongitude, defaultcurrency, bio}
  * @action - add a user profile info - make sure to save avatar binary in his own collection
  * @access - private
  */
@@ -40,7 +40,8 @@ router.post(
       firstname,
       lastname,
       contactnumber,
-      defaultlocation,
+      defaultlatitude,
+      defaultlongitude,
       defaultcurrency,
       bio
     } = req.body;
@@ -59,17 +60,27 @@ router.post(
         .png()
         .toBuffer();
 
-      const avatar = new Avatar({ image: buffer });
+      if (buffer) {
+        let avatar;
 
-      await avatar.save();
+        if (user.avatarid) {
+          avatar = await Avatar.findById(user.avatarid);
+          avatar.image = buffer;
+        } else {
+          avatar = new Avatar({ image: buffer });
+          user.avatarid = avatar._id;
+        }
+
+        await avatar.save();
+      }
 
       if (firstname) user.firstname = firstname;
       if (lastname) user.lastname = lastname;
       if (contactnumber) user.contactnumber = contactnumber;
-      if (defaultlocation) user.defaultlocation = defaultlocation;
-      if (defaultcurrency) user.defaultcurrency = defaultcurrency;
+      if (defaultlatitude) user.defaultlatitude = defaultlatitude;
+      if (defaultlatitude) user.defaultlatitude = defaultlatitude;
+      if (defaultlongitude) user.defaultlongitude = defaultlongitude;
       if (bio) user.bio = bio;
-      user.avatarid = avatar._id;
 
       await user.save();
 

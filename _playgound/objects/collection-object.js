@@ -17,7 +17,8 @@ const collection = {
   summary: 'Summary about the collection',
   price: 500,
   currency: 'EP', // dropdown list as a start will be the default of the owner
-  location: { altitude: 102.34, longitude: 54.66 }, // filter list as a start will be the default of the owner
+  latitude: 102.04,
+  longitude: 54.66, // filter list + add button to check current location and set it here
   keywords: ['action', 'comedy', 'horror'], // auto filter
   timestamp: 'createdAt, lastUpdated'
 };
