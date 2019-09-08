@@ -4,7 +4,12 @@ const jwt = require('jsonwebtoken');
 
 const userSchema = new mongoose.Schema(
   {
-    name: {
+    firstname: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    lastname: {
       type: String,
       required: true,
       trim: true
@@ -22,10 +27,63 @@ const userSchema = new mongoose.Schema(
       trim: true,
       minlength: 7
     },
-    joindate: {
-      type: Date,
-      default: Date.now
+    avatarid: {
+      type: String
     },
+    contactnumber: {
+      type: String
+    },
+    defaultlocation: {
+      latitude: {
+        type: Number
+      },
+      longitude: {
+        type: Number
+      }
+    },
+    defaultcurrency: {
+      type: String
+    },
+    bio: {
+      type: String,
+      trim: true
+    },
+    blockedusers: [
+      {
+        userid: {
+          type: String,
+          required: true
+        },
+        reason: {
+          type: String,
+          required: true
+        }
+      }
+    ],
+    notifications: [
+      {
+        notificationid: {
+          type: String,
+          required: true
+        },
+        seen: {
+          type: Boolean,
+          default: false
+        }
+      }
+    ],
+    favourites: [
+      {
+        favouriteitemid: {
+          type: String,
+          required: true
+        },
+        kind: {
+          type: String,
+          required: true
+        }
+      }
+    ],
     tokens: [
       {
         token: {
@@ -45,6 +103,23 @@ userSchema.methods.toJSON = function() {
 
   delete userObject.password;
   delete userObject.tokens;
+
+  return userObject;
+};
+
+// this will get a public version of the userObject
+userSchema.methods.getPublicVersion = function() {
+  const user = this;
+  const userObject = user.toObject();
+
+  delete userObject.password;
+  delete userObject.contactnumber;
+  delete userObject.defaultcurrency;
+  delete userObject.blockedusers;
+  delete userObject.notifications;
+  delete userObject.favourites;
+  delete userObject.tokens;
+  delete userObject.updatedAt;
 
   return userObject;
 };
@@ -99,7 +174,7 @@ userSchema.pre('save', async function(next) {
 userSchema.post('remove', async function(next) {
   const user = this;
 
-  // delete all user books and collection as below
+  // ! delete all user books and collection as below
   // await deleteAllUserContacts(user._id);
 
   next();

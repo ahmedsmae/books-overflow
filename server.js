@@ -20,8 +20,15 @@ app.use(express.json({ extended: false }));
 
 // Define Routers
 app.use('/api/users', require('./routes/users/signing'));
-// app.use('/api/users', require('./routes/users/password'));
-// app.use('/api/users', require('./routes/users/logout'));
+app.use('/api/users', require('./routes/users/profile'));
+app.use('/api/users', require('./routes/users/password'));
+app.use('/api/users', require('./routes/users/logout'));
+app.use('/api/avatars', require('./routes/avatars/avatars'));
+app.use('/api/bookimages', require('./routes/book-images/book-images'));
+app.use(
+  '/api/collectionimages',
+  require('./routes/collection-images/collection-images')
+);
 
 // contains all event handlers
 require('./socket-io/main')(io);

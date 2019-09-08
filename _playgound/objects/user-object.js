@@ -3,6 +3,7 @@ const user = {
   firstname: 'Ahmed',
   lastname: 'Afifi',
   email: 'ahmed.mohsen.afifi@gmail.com',
+  password: 'PASS',
   avatarid: 'snhjfdjkwehujkwekjejwhkjhijcewidjklcdjw',
   contactnumber: '+971 502138893', // give an option for the user while posting book or collection to give the access to his number with the book or collection
   // ! bookscount: 50, // this number will be counted based on the books the user post
@@ -25,7 +26,12 @@ const user = {
   favourites: [
     {
       kind: 'BOOK or COLECTION',
-      id: 'sghyujefhuhjkiwjkijfihjewoijiljweolijkcoiwerjile'
+      fovouriteitemid: 'sghyujefhuhjkiwjkijfihjewoijiljweolijkcoiwerjile'
+    }
+  ],
+  tokens: [
+    {
+      token: 'cewjhudhkjwqhkdhikwehkuhcdukwehcukheukhwukkiwkquiwedhj'
     }
   ],
   timestamp: 'createdAt, lastUpdated'
