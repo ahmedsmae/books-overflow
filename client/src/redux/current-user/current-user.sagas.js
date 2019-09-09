@@ -3,52 +3,31 @@ import axios from 'axios';
 
 import setAuthToken from '../utils/setAuthToken';
 
-import UserActionTypes from './user.types';
+import UserActionTypes from './current-user.types';
 import {
   loadingUserSuccess,
   loadingUserFailure,
   signinUserSuccess,
   signinUserFailure,
-  registerUserSuccess,
-  registerUserFailure,
+  signupUserSuccess,
+  signupUserFailure,
   signoutUserSuccess,
   signoutUserFailure
-} from './user.actions';
+} from './current-user.actions';
 
-function* loadingUserAsync() {
-  try {
-    yield setAuthToken();
-
-    const response = yield call(axios, {
-      method: 'get',
-      url: '/api/users/auth'
-    });
-
-    const { name, email, _id, joindate } = response.data;
-    const user = { name, email, joindate, id: _id };
-
-    yield put(loadingUserSuccess(user));
-  } catch (err) {
-    yield put(loadingUserFailure(err.message));
-  }
-}
-
-function* registerUserAsync({ payload }) {
+function* signupUserAsync({ payload }) {
   try {
     const response = yield call(axios, {
       method: 'post',
-      url: 'api/users/register',
+      url: 'api/users/signup',
       data: { ...payload }
     });
 
-    const { name, email, _id, joindate } = response.data.user;
-    const user = { name, email, joindate, id: _id };
-
     yield localStorage.setItem('token', response.data.token);
 
-    yield put(registerUserSuccess(user));
+    yield put(signupUserSuccess(response.data.user));
   } catch (err) {
-    yield put(registerUserFailure(err.message));
+    yield put(signupUserFailure(err.message));
   }
 }
 
@@ -56,18 +35,30 @@ function* signInUserAsync({ payload }) {
   try {
     const response = yield call(axios, {
       method: 'post',
-      url: 'api/users/login',
+      url: 'api/users/signin',
       data: { ...payload }
     });
 
-    const { name, email, _id, joindate } = response.data.user;
-    const user = { name, email, joindate, id: _id };
-
     yield localStorage.setItem('token', response.data.token);
 
-    yield put(signinUserSuccess(user));
+    yield put(signinUserSuccess(response.data.user));
   } catch (err) {
     yield put(signinUserFailure(err.message));
+  }
+}
+
+function* loadingUserAsync() {
+  try {
+    yield setAuthToken();
+
+    const response = yield call(axios, {
+      method: 'get',
+      url: 'api/users/auth'
+    });
+
+    yield put(loadingUserSuccess(response.data.user));
+  } catch (err) {
+    yield put(loadingUserFailure(err.message));
   }
 }
 
@@ -77,7 +68,7 @@ function* signoutUserAsync() {
 
     yield call(axios, {
       method: 'post',
-      url: 'api/users/logout'
+      url: 'api/users/signout'
     });
 
     yield localStorage.removeItem('token');
@@ -96,8 +87,8 @@ function* signInUserStart() {
   yield takeLatest(UserActionTypes.SIGNIN_USER_START, signInUserAsync);
 }
 
-function* registerUserStart() {
-  yield takeLatest(UserActionTypes.REGISTER_USER_START, registerUserAsync);
+function* signupUserStart() {
+  yield takeLatest(UserActionTypes.SIGNUP_USER_START, signupUserAsync);
 }
 
 function* signoutUserStart() {
@@ -108,7 +99,7 @@ export default function* userSagas() {
   yield all([
     call(loadingUserStart),
     call(signInUserStart),
-    call(registerUserStart),
+    call(signupUserStart),
     call(signoutUserStart)
   ]);
 }

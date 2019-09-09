@@ -147,7 +147,7 @@ router.get('/auth', auth, async (req, res) => {
  */
 router.get('/getuser/:userid', async (req, res) => {
   try {
-    let user = await User.findById(req.params.userid);
+    const user = await User.findById(req.params.userid);
 
     // this will remove the private data of the user
     user = user.getPublicVersion();

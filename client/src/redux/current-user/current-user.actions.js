@@ -1,4 +1,4 @@
-import UserActionTypes from './user.types';
+import UserActionTypes from './current-user.types';
 
 export const loadingUserStart = () => ({
   type: UserActionTypes.LOADING_USER_START
@@ -14,18 +14,18 @@ export const loadingUserFailure = errorMessage => ({
   payload: errorMessage
 });
 
-export const registerUserStart = userCredentials => ({
-  type: UserActionTypes.REGISTER_USER_START,
+export const signupUserStart = userCredentials => ({
+  type: UserActionTypes.SIGNUP_USER_START,
   payload: userCredentials
 });
 
-export const registerUserSuccess = user => ({
-  type: UserActionTypes.REGISTER_USER_SUCCESS,
+export const signupUserSuccess = user => ({
+  type: UserActionTypes.SIGNUP_USER_SUCCESS,
   payload: user
 });
 
-export const registerUserFailure = errorMessage => ({
-  type: UserActionTypes.REGISTER_USER_FAILURE,
+export const signupUserFailure = errorMessage => ({
+  type: UserActionTypes.SIGNUP_USER_FAILURE,
   payload: errorMessage
 });
 
