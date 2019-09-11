@@ -10,6 +10,7 @@ import Header from './components/header/header.component';
 import ListContainerPage from './pages/list-container/list-container.component';
 import ProfilePage from './pages/profile/profile.component';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
+import EditProfilePage from './pages/edit-profile/edit-profile.component';
 import HelpPage from './pages/help/help.component';
 import ContactUsPage from './pages/contact-us/contact-us.component';
 import AboutPage from './pages/about/about.component';
@@ -33,6 +34,7 @@ const App = ({ currentUser }) => {
               )
             }
           />
+          <Route exact path='/edit-profile' component={EditProfilePage} />
           <Route exact path='/about' component={AboutPage} />
           <Route exact path='/contact-us' component={ContactUsPage} />
           <Route path='/profile' component={ProfilePage} />

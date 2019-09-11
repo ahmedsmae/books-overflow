@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
+import { selectUser } from '../../redux/current-user/current-user.selectors';
+
 import WithSpinner from '../../components/with-spinner/with-spinner.component';
 import UserCard from '../../components/user-card/user-card.component';
 
@@ -35,7 +37,9 @@ const Profile = ({ location: { pathname }, currentUser, selectedUser }) => {
   );
 };
 
-const mapStateToProps = createStructuredSelector({});
+const mapStateToProps = createStructuredSelector({
+  currentUser: selectUser
+});
 
 const mapDispatchToProps = dispatch => ({});
 

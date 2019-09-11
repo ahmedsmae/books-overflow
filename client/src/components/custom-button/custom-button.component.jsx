@@ -17,6 +17,7 @@ const CustomButton = ({
   block,
   large,
   disabled,
+  type,
   ...props
 }) => (
   <button
@@ -41,6 +42,7 @@ const CustomButton = ({
       ${large && 'btn-lg'} 
       ${block && 'btn-block'}`}
     disabled={disabled ? true : false}
+    type={type ? type : 'button'}
     {...props}
   >
     {children}
