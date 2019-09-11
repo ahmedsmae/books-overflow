@@ -5,9 +5,10 @@ import ReactCrop from 'react-image-crop';
 import {
   imageFileTypes,
   image64toCanvasRef,
-  extractImageFileExtensionFromBase64,
-  downloadBase64File
+  extractImageFileExtensionFromBase64
 } from './handle-image.utils';
+
+import BlankUser from '../../assets/user.png';
 
 import CustomButton from '../../components/custom-button/custom-button.component';
 
@@ -15,7 +16,7 @@ import 'react-image-crop/lib/ReactCrop.scss';
 
 const HandleImage = ({ updateImage, avatarid }) => {
   const [image, setImage] = useState({
-    source: `api/avatars/${avatarid}`,
+    source: avatarid ? `api/avatars/${avatarid}` : BlankUser,
     isImageSelected: false,
     crop: { aspect: 1 / 1, x: 10, y: 10, width: 250, height: 250 }
   });
@@ -73,8 +74,8 @@ const HandleImage = ({ updateImage, avatarid }) => {
       source: canvasBase64,
       crop: { aspect: 1 / 1, x: 10, y: 10, width: 250, height: 250 }
     });
-    updateImage('source', canvasBase64);
-    console.log(canvasBase64);
+    updateImage(canvasBase64);
+    // console.log(canvasBase64);
 
     // const downloadFileName = `UserPhoto.${fileExtension}`;
     // downloadBase64File(canvasBase64, downloadFileName);

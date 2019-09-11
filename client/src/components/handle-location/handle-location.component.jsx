@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Autocomplete from 'react-google-autocomplete';
 
 import { fetchLatLng } from './handle-location.utils';
@@ -9,15 +9,9 @@ import CustomButton from '../custom-button/custom-button.component';
 import './handle-location.styles.scss';
 
 class HandleLocation extends React.Component {
-  // state = {
-  //   latitude: props.latitude,
-  //   longitude: props.longitude,
-  //   address: ''
-  // };
-
   state = {
-    latitude: 25.1279484,
-    longitude: 55.38626380000005,
+    latitude: this.props.latitude,
+    longitude: this.props.longitude,
     address: ''
   };
 
@@ -28,17 +22,31 @@ class HandleLocation extends React.Component {
     }
   }
 
+  handleSelectCurrentPlace = async (latitude, longitude) => {
+    this.props.updateLocation(latitude, longitude);
+    this.setState({
+      latitude,
+      longitude,
+      address: await fetchLatLng(latitude, longitude)
+    });
+  };
+
+  handleSelectPlace = (latitude, longitude, address) => {
+    this.props.updateLocation(latitude, longitude);
+    this.setState({ latitude, longitude, address });
+  };
+
   render() {
     const { latitude, longitude, address } = this.state;
 
     return (
-      <div>
+      <div className='form-row'>
         {!!latitude && !!longitude ? (
-          <div className='row mx-auto'>
-            <div className='col-md-9'>
+          <Fragment>
+            <div className='col col-md-9'>
               <FormInput value={address} readonly large />
             </div>
-            <div className='col-md-3'>
+            <div className='col col-md-3'>
               <CustomButton
                 large
                 outline
@@ -54,41 +62,34 @@ class HandleLocation extends React.Component {
                 Change Location
               </CustomButton>
             </div>
-          </div>
+          </Fragment>
         ) : (
-          <div className='row mx-auto'>
-            <div className='col-md-9'>
+          <Fragment>
+            <div className='col col-md-9'>
               <Autocomplete
                 className='form-control form-control-lg'
                 style={{ width: '100%' }}
                 onPlaceSelected={place => {
-                  this.setState({
-                    latitude: place.geometry.location.lat(),
-                    longitude: place.geometry.location.lng(),
-                    address: place.formatted_address
-                  });
-                  console.log(this.state);
+                  const latitude = place.geometry.location.lat();
+                  const longitude = place.geometry.location.lng();
+                  const address = place.formatted_address;
+
+                  this.handleSelectPlace(latitude, longitude, address);
                 }}
                 types={['(regions)']}
               />
             </div>
 
-            <div className='col-md-3'>
+            <div className='col col-md-3'>
               <CustomButton
                 large
                 outline
                 primary
                 onClick={() => {
                   navigator.geolocation.getCurrentPosition(
-                    async position => {
+                    position => {
                       const { latitude, longitude } = position.coords;
-                      this.setState({
-                        latitude,
-                        longitude,
-                        address: await fetchLatLng(latitude, longitude)
-                      });
-                      // console.log(this.state);
-                      // ! this.props.updateParentLocation(latitude, longitude)
+                      this.handleSelectCurrentPlace(latitude, longitude);
                     },
                     err => console.log(err)
                   );
@@ -97,7 +98,7 @@ class HandleLocation extends React.Component {
                 Current Location
               </CustomButton>
             </div>
-          </div>
+          </Fragment>
         )}
       </div>
     );
