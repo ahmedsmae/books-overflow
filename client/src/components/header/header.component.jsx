@@ -28,15 +28,27 @@ const Header = ({ currentUser, signoutUserStart }) => {
             </CustomButton>
           </div>
 
-          <div className='my-auto mr-2'>
-            <CustomButton dark outline onClick={() => signoutUserStart()}>
-              Sign Out
+          <Link to='/book-details' className='my-auto mr-2'>
+            <CustomButton dark outline onClick={() => {}}>
+              <i className='fas fa-plus' /> Book{' '}
             </CustomButton>
-          </div>
+          </Link>
+
+          <Link to='/collection-details' className='my-auto mr-2'>
+            <CustomButton dark outline onClick={() => {}}>
+              <i className='fas fa-plus' /> Collection{' '}
+            </CustomButton>
+          </Link>
 
           <Link to='/profile/me'>
             <UserImage small source={`api/avatars/${currentUser.avatarid}`} />
           </Link>
+
+          <div className='my-auto ml-2'>
+            <CustomButton dark outline onClick={() => signoutUserStart()}>
+              <i className='fas fa-sign-out-alt' />
+            </CustomButton>
+          </div>
         </div>
       ) : (
         <Link to='/sign-in' className='my-auto mr-2'>

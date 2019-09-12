@@ -2,6 +2,7 @@ import { call, takeLatest, put, all } from 'redux-saga/effects';
 import axios from 'axios';
 
 import setAuthToken from '../utils/setAuthToken';
+import { dataURLtoFile } from './current-user.utils';
 
 import UserActionTypes from './current-user.types';
 import {
@@ -12,7 +13,9 @@ import {
   signupUserSuccess,
   signupUserFailure,
   signoutUserSuccess,
-  signoutUserFailure
+  signoutUserFailure,
+  editUserProfileSuccess,
+  editUserProfileFailure
 } from './current-user.actions';
 
 function* signupUserAsync({ payload }) {
@@ -79,6 +82,28 @@ function* signoutUserAsync() {
   }
 }
 
+function* editUserProfileAsync({ payload }) {
+  const { source, ...otherInfo } = payload;
+  try {
+    yield call(setAuthToken);
+
+    const fd = yield new FormData();
+    const file = yield dataURLtoFile(source, 'userImage.png');
+    fd.append('avatar', file, file.name);
+    yield call(axios.post, 'api/avatars/setavatar', fd);
+
+    const response = yield call(axios, {
+      method: 'post',
+      url: 'api/users/profile',
+      data: { ...otherInfo }
+    });
+
+    yield put(editUserProfileSuccess(response.data.user));
+  } catch (err) {
+    yield put(editUserProfileFailure(err.message));
+  }
+}
+
 function* loadingUserStart() {
   yield takeLatest(UserActionTypes.LOADING_USER_START, loadingUserAsync);
 }
@@ -95,11 +120,19 @@ function* signoutUserStart() {
   yield takeLatest(UserActionTypes.SIGNOUT_USER_START, signoutUserAsync);
 }
 
+function* editUserProfileStart() {
+  yield takeLatest(
+    UserActionTypes.EDIT_USER_PROFILE_START,
+    editUserProfileAsync
+  );
+}
+
 export default function* userSagas() {
   yield all([
     call(loadingUserStart),
     call(signInUserStart),
     call(signupUserStart),
-    call(signoutUserStart)
+    call(signoutUserStart),
+    call(editUserProfileStart)
   ]);
 }

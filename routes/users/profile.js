@@ -20,7 +20,7 @@ router.post(
   '/profile',
   [
     auth,
-    upload.single('avatar'),
+    // upload.single('avatar'),
     [
       (check('firstname', 'First Name is required')
         .not()
@@ -55,31 +55,12 @@ router.post(
           .json({ errors: [{ msg: 'User does not exists' }] });
       }
 
-      const buffer = await sharp(req.file.buffer)
-        .resize({ width: 250, height: 250 })
-        .png()
-        .toBuffer();
-
-      if (buffer) {
-        let avatar;
-
-        if (user.avatarid) {
-          avatar = await Avatar.findById(user.avatarid);
-          avatar.image = buffer;
-        } else {
-          avatar = new Avatar({ image: buffer });
-          user.avatarid = avatar._id;
-        }
-
-        await avatar.save();
-      }
-
       if (firstname) user.firstname = firstname;
       if (lastname) user.lastname = lastname;
       if (contactnumber) user.contactnumber = contactnumber;
       if (defaultlatitude) user.defaultlatitude = defaultlatitude;
-      if (defaultlatitude) user.defaultlatitude = defaultlatitude;
       if (defaultlongitude) user.defaultlongitude = defaultlongitude;
+      if (defaultcurrency) user.defaultcurrency = defaultcurrency;
       if (bio) user.bio = bio;
 
       await user.save();

@@ -18,6 +18,7 @@ export default (state = INITIAL_STATE, { type, payload }) => {
     case UserActionTypes.SIGNIN_USER_START:
     case UserActionTypes.LOADING_USER_START:
     case UserActionTypes.SIGNOUT_USER_START:
+    case UserActionTypes.EDIT_USER_PROFILE_START:
       return {
         ...state,
         user: null,
@@ -29,6 +30,7 @@ export default (state = INITIAL_STATE, { type, payload }) => {
     case UserActionTypes.SIGNIN_USER_SUCCESS:
     case UserActionTypes.LOADING_USER_SUCCESS:
     case UserActionTypes.SIGNOUT_USER_SUCCESS:
+    case UserActionTypes.EDIT_USER_PROFILE_SUCCESS:
       return {
         ...state,
         user: payload,
@@ -40,6 +42,7 @@ export default (state = INITIAL_STATE, { type, payload }) => {
     case UserActionTypes.SIGNIN_USER_FAILURE:
     case UserActionTypes.LOADING_USER_FAILURE:
     case UserActionTypes.SIGNOUT_USER_FAILURE:
+    case UserActionTypes.EDIT_USER_PROFILE_FAILURE:
       return {
         ...state,
         user: null,

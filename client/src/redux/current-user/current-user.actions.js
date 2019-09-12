@@ -56,3 +56,18 @@ export const signoutUserFailure = errorMessage => ({
   type: UserActionTypes.SIGNOUT_USER_FAILURE,
   payload: errorMessage
 });
+
+export const editUserProfileStart = userInfo => ({
+  type: UserActionTypes.EDIT_USER_PROFILE_START,
+  payload: userInfo
+});
+
+export const editUserProfileSuccess = user => ({
+  type: UserActionTypes.EDIT_USER_PROFILE_SUCCESS,
+  payload: user
+});
+
+export const editUserProfileFailure = errorMessage => ({
+  type: UserActionTypes.EDIT_USER_PROFILE_FAILURE,
+  payload: errorMessage
+});

@@ -43,10 +43,10 @@ class HandleLocation extends React.Component {
       <div className='form-row'>
         {!!latitude && !!longitude ? (
           <Fragment>
-            <div className='col col-md-9'>
+            <div className='col col-md-10'>
               <FormInput value={address} readonly large />
             </div>
-            <div className='col col-md-3'>
+            <div className='col col-md-2'>
               <CustomButton
                 large
                 outline
@@ -59,16 +59,17 @@ class HandleLocation extends React.Component {
                   })
                 }
               >
-                Change Location
+                Change
               </CustomButton>
             </div>
           </Fragment>
         ) : (
           <Fragment>
-            <div className='col col-md-9'>
+            <div className='col col-md-10'>
               <Autocomplete
                 className='form-control form-control-lg'
                 style={{ width: '100%' }}
+                placeholder='enter location'
                 onPlaceSelected={place => {
                   const latitude = place.geometry.location.lat();
                   const longitude = place.geometry.location.lng();
@@ -80,7 +81,7 @@ class HandleLocation extends React.Component {
               />
             </div>
 
-            <div className='col col-md-3'>
+            <div className='col col-md-2'>
               <CustomButton
                 large
                 outline
@@ -95,7 +96,7 @@ class HandleLocation extends React.Component {
                   );
                 }}
               >
-                Current Location
+                <i className='fas fa-street-view' /> Current
               </CustomButton>
             </div>
           </Fragment>

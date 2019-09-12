@@ -1,5 +1,6 @@
-import React, { Fragment } from 'react';
-import Select from 'react-select';
+import React from 'react';
+// import Select from 'react-select';
+import Downshift from 'downshift';
 
 import { getCurrencyList } from './handle-currency.utils';
 
@@ -23,8 +24,8 @@ class HandleCurrency extends React.Component {
     return (
       <div className='form-row'>
         {!!currency ? (
-          <Fragment>
-            <div className='col px-auto'>
+          <div className='col col-md-12 row'>
+            <div className='col'>
               <FormInput large value={currency} readonly />
             </div>
             <div className='col'>
@@ -39,20 +40,71 @@ class HandleCurrency extends React.Component {
                 Change Currency
               </CustomButton>
             </div>
-          </Fragment>
+          </div>
         ) : (
-          // ! react-select using legacy life cycles
-          <Select
-            className='col form-control-lg'
-            styles={{ margin: '0' }}
-            value={currency}
-            placeholder='Select Currency'
+          <Downshift
             onChange={selectedCurrency => {
               this.setState({ currency: selectedCurrency.label });
               this.props.updateCurrency(selectedCurrency.label);
             }}
-            options={currencyList}
-          />
+            itemToString={item => (item ? item.value : '')}
+          >
+            {({
+              getInputProps,
+              getItemProps,
+              getLabelProps,
+              getMenuProps,
+              isOpen,
+              inputValue,
+              highlightedIndex,
+              selectedItem
+            }) => (
+              <div className='col col-md-12'>
+                <FormInput
+                  large
+                  placeholder='enter currency'
+                  prepend='Currency'
+                  {...getInputProps()}
+                />
+                <ul
+                  {...getMenuProps()}
+                  // className='dropdown-menu'
+                  style={{
+                    height: isOpen && '100px',
+                    overflowY: 'scroll',
+                    scrollbarWidth: '1px'
+                  }}
+                >
+                  {isOpen
+                    ? currencyList
+                        .filter(
+                          item => !inputValue || item.value.includes(inputValue)
+                        )
+                        .map((item, index) => (
+                          <li
+                            className='dropdown-item'
+                            {...getItemProps({
+                              key: item.value,
+                              index,
+                              item,
+                              style: {
+                                backgroundColor:
+                                  highlightedIndex === index
+                                    ? 'lightgray'
+                                    : 'white',
+                                fontWeight:
+                                  selectedItem === item ? 'bold' : 'normal'
+                              }
+                            })}
+                          >
+                            {item.label}
+                          </li>
+                        ))
+                    : null}
+                </ul>
+              </div>
+            )}
+          </Downshift>
         )}
       </div>
     );

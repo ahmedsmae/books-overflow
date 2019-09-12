@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
 import { selectUser } from '../../redux/current-user/current-user.selectors';
+import { editUserProfileStart } from '../../redux/current-user/current-user.actions';
 
 import FormInput from '../../components/form-input/form-input.component';
 import FormTextArea from '../../components/form-text-area/form-text-area.component';
@@ -33,9 +34,7 @@ class EditProfile extends React.Component {
       ? this.props.currentUser.defaultcurrency
       : '',
     bio: this.props.currentUser ? this.props.currentUser.bio : '',
-    source: this.props.currentUser
-      ? `api/avatars/${this.props.currentUser.avatarid}`
-      : '',
+    source: null,
     isImageSelected: false,
     crop: { aspect: 1 / 1, x: 10, y: 10, width: 250, height: 250 },
     profileChanged: false
@@ -73,7 +72,8 @@ class EditProfile extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    // run action
+    const { email, ...otherInfo } = this.state;
+    this.props.editUserProfileStart({ ...otherInfo });
   };
 
   render() {
@@ -155,23 +155,23 @@ class EditProfile extends React.Component {
                 longitude={defaultlongitude}
               />
             </div>
-            <FormTextArea
-              large
-              rows='3'
-              name='bio'
-              value={bio}
-              onChange={this.handleChange}
-              label='About Yourself'
-              placeholder='your bio...'
-              hint='this is a hint'
-            />
+            <div className='mt-3'>
+              <FormTextArea
+                large
+                rows='3'
+                name='bio'
+                value={bio}
+                onChange={this.handleChange}
+                label='About Yourself'
+                placeholder='your bio...'
+              />
+            </div>
             <div className='text-right'>
               <CustomButton
                 large
                 primary
                 type='submit'
                 disabled={this.state.profileChanged ? false : true}
-                onClick={() => {}}
               >
                 Save Changes
               </CustomButton>
@@ -187,7 +187,9 @@ const mapStateToProps = createStructuredSelector({
   currentUser: selectUser
 });
 
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch => ({
+  editUserProfileStart: userInfo => dispatch(editUserProfileStart(userInfo))
+});
 
 export default connect(
   mapStateToProps,
