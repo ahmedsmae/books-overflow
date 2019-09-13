@@ -19,9 +19,9 @@ export default (state = INITIAL_STATE, { type, payload }) => {
     case UserActionTypes.LOADING_USER_START:
     case UserActionTypes.SIGNOUT_USER_START:
     case UserActionTypes.EDIT_USER_PROFILE_START:
+    case UserActionTypes.EDIT_BOOK_START:
       return {
         ...state,
-        user: null,
         loading: true,
         errorMessage: null
       };
@@ -43,13 +43,14 @@ export default (state = INITIAL_STATE, { type, payload }) => {
     case UserActionTypes.LOADING_USER_FAILURE:
     case UserActionTypes.SIGNOUT_USER_FAILURE:
     case UserActionTypes.EDIT_USER_PROFILE_FAILURE:
+    case UserActionTypes.EDIT_BOOK_FAILURE:
       return {
         ...state,
-        user: null,
         loading: false,
         errorMessage: payload
       };
 
+    case UserActionTypes.EDIT_BOOK_SUCCESS:
     default:
       return state;
   }

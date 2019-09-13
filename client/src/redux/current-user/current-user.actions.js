@@ -71,3 +71,17 @@ export const editUserProfileFailure = errorMessage => ({
   type: UserActionTypes.EDIT_USER_PROFILE_FAILURE,
   payload: errorMessage
 });
+
+export const editBookStart = bookInfo => ({
+  type: UserActionTypes.EDIT_BOOK_START,
+  payload: bookInfo
+});
+
+export const editBookSuccess = () => ({
+  type: UserActionTypes.EDIT_BOOK_SUCCESS
+});
+
+export const editBookFailure = errorMessage => ({
+  type: UserActionTypes.EDIT_BOOK_FAILURE,
+  payload: errorMessage
+});

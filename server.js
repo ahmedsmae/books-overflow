@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const path = require('path');
 const http = require('http');
 const socketio = require('socket.io');
@@ -17,6 +18,7 @@ connectMongoDB();
 // Init Middleware
 app.use(compression());
 app.use(express.json({ extended: false }));
+app.use(cors());
 
 // Define Routers
 app.use('/api/users', require('./routes/users/signing'));

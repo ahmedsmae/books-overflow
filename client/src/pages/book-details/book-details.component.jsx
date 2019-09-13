@@ -7,6 +7,7 @@ import {
   selectConditions,
   selectLanguages
 } from '../../redux/constants/constants.selectors';
+import { editBookStart } from '../../redux/current-user/current-user.actions';
 
 import FormInput from '../../components/form-input/form-input.component';
 import FormSelect from '../../components/form-select/form-select.component';
@@ -14,6 +15,7 @@ import FormTextArea from '../../components/form-text-area/form-text-area.compone
 import CustomButton from '../../components/custom-button/custom-button.component';
 import HandleLocation from '../../components/handle-location/handle-location.component';
 import HandleCurrency from '../../components/handle-currency/handle-currency.component';
+import HandleMultipleImages from '../../components/handle-multiple-images/handle-multiple-images.component';
 
 import './book-details.styles.scss';
 
@@ -31,7 +33,9 @@ class BookDetails extends React.Component {
     currency: this.props.book ? this.props.book.currency : '',
     latitude: this.props.book ? this.props.book.latitude : null,
     longitude: this.props.book ? this.props.book.longitude : null,
-    keywords: this.props.book ? this.props.book.keywords : ''
+    keywords: this.props.book ? this.props.book.keywords : '',
+    imageids: this.props.book ? this.props.book.imageids : [],
+    newImageSources: []
   };
 
   updateCurrency = currency => {
@@ -46,6 +50,18 @@ class BookDetails extends React.Component {
     });
   };
 
+  updateImageSources = newImageSources => {
+    this.setState({ newImageSources }, () => {
+      console.log(this.state.newImageSources);
+    });
+  };
+
+  updateImageIds = imageids => {
+    this.setState({ imageids }, () => {
+      console.log(this.state.imageids);
+    });
+  };
+
   handleChange = e => {
     const { name, value } = e.target;
     this.setState({ [name]: value }, () => {
@@ -55,7 +71,14 @@ class BookDetails extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    // run action
+
+    // ! display status proparly
+    // ! make sure that user select category, language and condition
+
+    console.log('Saving...');
+    console.log({ ...this.state });
+
+    this.props.editBookStart({ ...this.state });
   };
 
   render() {
@@ -72,7 +95,8 @@ class BookDetails extends React.Component {
       currency,
       latitude,
       longitude,
-      keywords
+      keywords,
+      imageids
     } = this.state;
 
     return (
@@ -143,7 +167,7 @@ class BookDetails extends React.Component {
             <hr />
             <label>Pricing details</label>
             <div className='form-row'>
-              <div className='col-md-6'>
+              <div className='col-md-6 pr-2'>
                 <FormInput
                   large
                   prepend='Price'
@@ -153,19 +177,11 @@ class BookDetails extends React.Component {
                   onChange={this.handleChange}
                 />
               </div>
-              <div className='col-md-6'>
+              <div className='col-md-6 pl-2'>
                 <HandleCurrency
                   originalCurrency={currency}
                   updateCurrency={this.updateCurrency}
                 />
-                {/* <FormInput
-                  large
-                  prepend='Currency'
-                  placeholder='eg.: USD'
-                  name='currency'
-                  value={currency}
-                  onChange={this.handleChange}
-                /> */}
               </div>
             </div>
             <hr />
@@ -178,6 +194,15 @@ class BookDetails extends React.Component {
 
             <hr />
             <div className=''>Photos</div>
+            <HandleMultipleImages
+              maxPhotos='3'
+              imageids={imageids}
+              updateImageSources={this.updateImageSources}
+              updateImageIds={this.updateImageIds}
+            />
+            <small className='form-text text-muted'>
+              Images will be resized to max of 500px width or height
+            </small>
             <hr />
 
             <label>Book Description</label>
@@ -216,7 +241,9 @@ const mapStateToProps = createStructuredSelector({
   conditions: selectConditions
 });
 
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch => ({
+  editBookStart: bookInfo => dispatch(editBookStart(bookInfo))
+});
 
 export default connect(
   mapStateToProps,

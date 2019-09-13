@@ -1,10 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const sharp = require('sharp');
 const auth = require('../../utils/auth');
 const { check, validationResult } = require('express-validator');
-
-const upload = require('../../utils/upload');
 
 const Book = require('../../database/models/book');
 const BookImage = require('../../database/models/book-image');
@@ -21,7 +18,6 @@ router.post(
   '/',
   [
     auth,
-    upload.array('images'),
     [
       check('title', 'Book title is required')
         .not()
@@ -29,7 +25,6 @@ router.post(
       check('author', 'Book author is required')
         .not()
         .isEmpty(),
-      // don't check for imageids as it is not present with new books
       check('category', 'Book category is required')
         .not()
         .isEmpty(),
@@ -78,40 +73,28 @@ router.post(
     } = req.body;
 
     try {
-      const imageFiles = req.files;
       let book;
 
       if (bookid) {
         // book already exists
         book = await Book.findById(bookid);
 
-        const originalImageIds = book.imageids;
-
-        if (!originalImageIds.length) {
-          // no images saved previously
-          book.imageids = await saveNewImages(imageFiles);
-        } else {
-          // Book exists and also images in the array
-
-          // find the missing ids
-          const missingImageIds = [];
-
-          for (const originalImageId of originalImageIds) {
-            if (!imageids.includes(originalImageId)) {
-              missingImageIds.push(originalImageId);
-            }
-          }
-
-          // remove the missing images totaly from the BookImages collection
-          if (missingImageIds.length) {
-            for (const id of missingImageIds) {
-              await BookImage.remove({ _id: id });
-            }
-          }
-
-          book.imageids = [...imageids, ...(await saveNewImages(imageFiles))];
+        if (!book) {
+          return res
+            .status(400)
+            .json({ errors: [{ msg: 'Book does not exists' }] });
         }
 
+        const oldImageIds = book.imageids;
+
+        // remove missing ids
+        for (const oldId of oldImageIds) {
+          if (!imageids.includes(oldId)) {
+            await BookImage.remove({ _id: oldId });
+          }
+        }
+
+        book.imageids = imageids;
         if (status) book.status = status;
         if (title) book.title = title;
         if (author) book.author = author;
@@ -124,11 +107,12 @@ router.post(
         if (currency) book.currency = currency;
         if (latitude) book.latitude = latitude;
         if (longitude) book.longitude = longitude;
-        if (keywords)
-          book.keywords = keywords.split(',').map(word => word.trim());
+        if (keywords) book.keywords = keywords;
       } else {
         // new book
         const bookData = {};
+
+        if (imageids) bookData.imageids = imageids;
         if (status) bookData.status = status;
         if (title) bookData.title = title;
         if (author) bookData.author = author;
@@ -141,18 +125,13 @@ router.post(
         if (currency) bookData.currency = currency;
         if (latitude) bookData.latitude = latitude;
         if (longitude) bookData.longitude = longitude;
-        if (keywords)
-          bookData.keywords = keywords.split(',').map(word => word.trim());
-
-        bookData.imageids = [...(await saveNewImages(imageFiles))];
-
+        if (keywords) bookData.keywords = keywords;
         bookData.owner = req.user.id;
 
         book = new Book(bookData);
       }
 
       await book.save();
-
       res.json({ book });
     } catch (err) {
       console.error(err.message);
@@ -160,27 +139,5 @@ router.post(
     }
   }
 );
-
-// Helper function
-const saveNewImages = async imageFilesArray => {
-  const newImageIds = [];
-
-  if (imageFilesArray && imageFilesArray.length) {
-    for (const file of imageFilesArray) {
-      const buffer = await sharp(file.buffer)
-        .resize({ width: 500, height: 500 })
-        .png()
-        .toBuffer();
-
-      if (buffer) {
-        const bookImage = new BookImage({ image: buffer });
-        newImageIds.push(bookImage._id);
-        await bookImage.save();
-      }
-    }
-  }
-
-  return newImageIds;
-};
 
 module.exports = router;

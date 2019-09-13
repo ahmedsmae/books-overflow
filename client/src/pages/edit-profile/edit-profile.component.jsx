@@ -88,6 +88,9 @@ class EditProfile extends React.Component {
       defaultlongitude,
       bio
     } = this.state;
+
+    console.log(defaultlatitude, defaultlongitude);
+
     return (
       <div className='card mt-4'>
         <div className='card-body'>

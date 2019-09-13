@@ -17,7 +17,7 @@ class HandleLocation extends React.Component {
 
   async componentDidMount() {
     const { latitude, longitude } = this.state;
-    if (!!latitude && !!longitude) {
+    if (latitude && longitude) {
       this.setState({ address: await fetchLatLng(latitude, longitude) });
     }
   }
@@ -70,6 +70,7 @@ class HandleLocation extends React.Component {
                 className='form-control form-control-lg'
                 style={{ width: '100%' }}
                 placeholder='enter location'
+                onKey
                 onPlaceSelected={place => {
                   const latitude = place.geometry.location.lat();
                   const longitude = place.geometry.location.lng();
@@ -78,6 +79,11 @@ class HandleLocation extends React.Component {
                   this.handleSelectPlace(latitude, longitude, address);
                 }}
                 types={['(regions)']}
+                onKeyDown={e => {
+                  if (e.keyCode === 13) {
+                    e.preventDefault();
+                  }
+                }}
               />
             </div>
 

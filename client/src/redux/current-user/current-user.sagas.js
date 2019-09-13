@@ -15,7 +15,9 @@ import {
   signoutUserSuccess,
   signoutUserFailure,
   editUserProfileSuccess,
-  editUserProfileFailure
+  editUserProfileFailure,
+  editBookSuccess,
+  editBookFailure
 } from './current-user.actions';
 
 function* signupUserAsync({ payload }) {
@@ -104,6 +106,36 @@ function* editUserProfileAsync({ payload }) {
   }
 }
 
+function* editBookAsync({ payload }) {
+  const { newImageSources, ...otherInfo } = payload;
+
+  try {
+    yield call(setAuthToken);
+
+    // save book data first
+    const response = yield call(axios, {
+      method: 'post',
+      url: 'api/books',
+      data: { ...otherInfo }
+    });
+
+    const bookId = response.data.book._id;
+
+    // save all new image sources
+    for (const newSource of newImageSources) {
+      const fd = yield new FormData();
+      const file = yield dataURLtoFile(newSource, 'bookImage.png');
+      fd.append('image', file, file.name);
+      yield call(axios.post, `api/bookimages/setimage/${bookId}`, fd);
+    }
+
+    yield put(editBookSuccess());
+    // ! CALL SAGA TO GET ALL BOOKS
+  } catch (err) {
+    yield put(editBookFailure(err.message));
+  }
+}
+
 function* loadingUserStart() {
   yield takeLatest(UserActionTypes.LOADING_USER_START, loadingUserAsync);
 }
@@ -127,12 +159,17 @@ function* editUserProfileStart() {
   );
 }
 
+function* editBookStart() {
+  yield takeLatest(UserActionTypes.EDIT_BOOK_START, editBookAsync);
+}
+
 export default function* userSagas() {
   yield all([
     call(loadingUserStart),
     call(signInUserStart),
     call(signupUserStart),
     call(signoutUserStart),
-    call(editUserProfileStart)
+    call(editUserProfileStart),
+    call(editBookStart)
   ]);
 }

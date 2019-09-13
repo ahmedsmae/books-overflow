@@ -1,21 +1,23 @@
 import React from 'react';
-// import Select from 'react-select';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 import Downshift from 'downshift';
 
-import { getCurrencyList } from './handle-currency.utils';
+import { selectCurrencies } from '../../redux/constants/constants.selectors';
 
-import './handle-currency.styles.scss';
 import FormInput from '../form-input/form-input.component';
 import CustomButton from '../custom-button/custom-button.component';
+
+import './handle-currency.styles.scss';
 
 class HandleCurrency extends React.Component {
   state = {
     currency: this.props.originalCurrency ? this.props.originalCurrency : '',
-    currencyList: []
+    currencyList: this.props.currencyList || []
   };
 
-  async componentDidMount() {
-    this.setState({ currencyList: await getCurrencyList() });
+  componentDidMount() {
+    this.setState({ currencyList: this.props.currencyList });
   }
 
   render() {
@@ -44,10 +46,10 @@ class HandleCurrency extends React.Component {
         ) : (
           <Downshift
             onChange={selectedCurrency => {
-              this.setState({ currency: selectedCurrency.label });
-              this.props.updateCurrency(selectedCurrency.label);
+              this.setState({ currency: selectedCurrency });
+              this.props.updateCurrency(selectedCurrency);
             }}
-            itemToString={item => (item ? item.value : '')}
+            itemToString={item => (item ? item : '')}
           >
             {({
               getInputProps,
@@ -68,23 +70,27 @@ class HandleCurrency extends React.Component {
                 />
                 <ul
                   {...getMenuProps()}
-                  // className='dropdown-menu'
                   style={{
-                    height: isOpen && '100px',
+                    maxHeight: isOpen && '400px',
+                    width: isOpen && '400px',
                     overflowY: 'scroll',
-                    scrollbarWidth: '1px'
+                    scrollbarWidth: '1px',
+                    position: 'absolute',
+                    zIndex: '1'
                   }}
                 >
                   {isOpen
                     ? currencyList
                         .filter(
-                          item => !inputValue || item.value.includes(inputValue)
+                          item =>
+                            !inputValue.toUpperCase() ||
+                            item.includes(inputValue.toUpperCase())
                         )
                         .map((item, index) => (
                           <li
                             className='dropdown-item'
                             {...getItemProps({
-                              key: item.value,
+                              key: item,
                               index,
                               item,
                               style: {
@@ -97,7 +103,7 @@ class HandleCurrency extends React.Component {
                               }
                             })}
                           >
-                            {item.label}
+                            {item}
                           </li>
                         ))
                     : null}
@@ -111,4 +117,8 @@ class HandleCurrency extends React.Component {
   }
 }
 
-export default HandleCurrency;
+const mapStateToProps = createStructuredSelector({
+  currencyList: selectCurrencies
+});
+
+export default connect(mapStateToProps)(HandleCurrency);
