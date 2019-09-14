@@ -31,6 +31,8 @@ app.use('/api/books', require('./routes/books/setters'));
 app.use('/api/books', require('./routes/books/getters'));
 app.use('/api/bookimages', require('./routes/book-images/book-images'));
 
+app.use('/api/collections', require('./routes/collections/setters'));
+app.use('/api/collections', require('./routes/collections/getters'));
 app.use(
   '/api/collectionimages',
   require('./routes/collection-images/collection-images')

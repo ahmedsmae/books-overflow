@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
-const BookImage = require('./book-image');
+const CollectionImage = require('./collection-image');
 
-const bookSchema = new mongoose.Schema(
+const collectionSchema = new mongoose.Schema(
   {
     owner: {
       type: mongoose.Schema.Types.ObjectId,
@@ -19,8 +19,8 @@ const bookSchema = new mongoose.Schema(
       required: true,
       trim: true
     },
-    author: {
-      type: String,
+    numberofbooks: {
+      type: Number,
       required: true,
       trim: true
     },
@@ -28,9 +28,25 @@ const bookSchema = new mongoose.Schema(
       type: [String],
       trim: true
     },
-    publishdate: {
-      type: Date
-    },
+    books: [
+      {
+        title: {
+          type: String,
+          required: true,
+          trim: true
+        },
+        author: {
+          type: String,
+          required: true,
+          trim: true
+        },
+        condition: {
+          type: String,
+          required: true,
+          trim: true
+        }
+      }
+    ],
     category: {
       type: String,
       trim: true
@@ -40,10 +56,6 @@ const bookSchema = new mongoose.Schema(
       trim: true
     },
     summary: {
-      type: String,
-      trim: true
-    },
-    condition: {
       type: String,
       trim: true
     },
@@ -67,16 +79,16 @@ const bookSchema = new mongoose.Schema(
 );
 
 // remove user entries after deleting themselves
-bookSchema.post('remove', async function(next) {
-  const book = this;
+collectionSchema.post('remove', async function(next) {
+  const collection = this;
 
-  const bookImageIds = book.imageids;
+  const collectionImageIds = collection.imageids;
 
-  await BookImage.remove({ _id: { $in: bookImageIds } });
+  await CollectionImage.remove({ _id: { $in: collectionImageIds } });
 
   next();
 });
 
-const Book = mongoose.model('Book', bookSchema);
+const Collection = mongoose.model('Collection', collectionSchema);
 
-module.exports = Book;
+module.exports = Collection;

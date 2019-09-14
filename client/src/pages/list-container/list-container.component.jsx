@@ -1,8 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
 import { SpecificListTypes } from '../../assets/list.types';
+
+import {
+  selectBooks,
+  selectColelctions
+} from '../../redux/current-user/current-user.selectors';
+import {
+  getUserBooksStart,
+  getUserCollectionsStart
+} from '../../redux/current-user/current-user.actions';
 
 import WithSpinner from '../../components/with-spinner/with-spinner.component';
 import List from '../../components/list/list.component';
@@ -16,11 +25,31 @@ const ListWithSpinner = WithSpinner(List);
  * @param {type} - type of list that will be fetched here
  */
 const ListContainer = ({
+  userBooks,
+  userCollections,
+  getUserBooksStart,
+  getUserCollectionsStart,
   location: { pathname },
   type,
-  homePageList,
-  myBooksList
+  homePageList
 }) => {
+  useEffect(() => {
+    switch (pathname) {
+      case '/my-library':
+        !userBooks && getUserBooksStart();
+        !userCollections && getUserCollectionsStart();
+        break;
+
+      default:
+    }
+  }, [
+    pathname,
+    userBooks,
+    userCollections,
+    getUserBooksStart,
+    getUserCollectionsStart
+  ]);
+
   switch (pathname) {
     case '/':
       // request saga to fetch the home page data then pass it to the list component
@@ -35,15 +64,14 @@ const ListContainer = ({
         </div>
       );
 
-    case '/mybooks':
-      // request saga to fetch my books then pass it to the list component
+    case '/my-library':
       return (
         <div>
-          My Books Page
           <ListWithSpinner
-            isLoading={myBooksList ? false : true}
-            type={SpecificListTypes.MY_BOOKS}
-            list={myBooksList}
+            // ! check for both books and collections
+            isLoading={userBooks ? false : true}
+            type={SpecificListTypes.MY_LIBRARY}
+            list={[...userBooks, ...userCollections]}
           />
         </div>
       );
@@ -53,9 +81,15 @@ const ListContainer = ({
   }
 };
 
-const mapStateToProps = createStructuredSelector({});
+const mapStateToProps = createStructuredSelector({
+  userBooks: selectBooks,
+  userCollections: selectColelctions
+});
 
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch => ({
+  getUserBooksStart: () => dispatch(getUserBooksStart()),
+  getUserCollectionsStart: () => dispatch(getUserCollectionsStart())
+});
 
 export default connect(
   mapStateToProps,

@@ -6,6 +6,10 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import { selectUser } from './redux/current-user/current-user.selectors';
 import { loadingUserStart } from './redux/current-user/current-user.actions';
 import { getConversionRatesStart } from './redux/conversion-rates/conversion-rates.action';
+import {
+  getUserBooksStart,
+  getUserCollectionsStart
+} from './redux/current-user/current-user.actions';
 
 import Header from './components/header/header.component';
 import ListContainerPage from './pages/list-container/list-container.component';
@@ -20,11 +24,27 @@ import AboutPage from './pages/about/about.component';
 
 import './App.scss';
 
-const App = ({ currentUser, loadingUserStart, getConversionRatesStart }) => {
+const App = ({
+  currentUser,
+  loadingUserStart,
+  getConversionRatesStart,
+  getUserBooksStart,
+  getUserCollectionsStart
+}) => {
   useEffect(() => {
-    loadingUserStart();
-    getConversionRatesStart();
-  }, [loadingUserStart, getConversionRatesStart]);
+    !currentUser && loadingUserStart();
+    if (currentUser) {
+      getConversionRatesStart();
+      getUserBooksStart();
+      getUserCollectionsStart();
+    }
+  }, [
+    currentUser,
+    loadingUserStart,
+    getConversionRatesStart,
+    getUserBooksStart,
+    getUserCollectionsStart
+  ]);
 
   return (
     <Fragment>
@@ -67,7 +87,9 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = dispatch => ({
   loadingUserStart: () => dispatch(loadingUserStart()),
-  getConversionRatesStart: () => dispatch(getConversionRatesStart())
+  getConversionRatesStart: () => dispatch(getConversionRatesStart()),
+  getUserBooksStart: () => dispatch(getUserBooksStart()),
+  getUserCollectionsStart: () => dispatch(getUserCollectionsStart())
 });
 
 export default connect(

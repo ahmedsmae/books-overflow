@@ -43,10 +43,10 @@ class HandleLocation extends React.Component {
       <div className='form-row'>
         {!!latitude && !!longitude ? (
           <Fragment>
-            <div className='col col-md-10'>
+            <div className='col col-md-10 pr-2'>
               <FormInput value={address} readonly large />
             </div>
-            <div className='col col-md-2'>
+            <div className='col col-md-2 pl-2'>
               <CustomButton
                 large
                 outline
@@ -65,12 +65,11 @@ class HandleLocation extends React.Component {
           </Fragment>
         ) : (
           <Fragment>
-            <div className='col col-md-10'>
+            <div className='col col-md-10 pr-2'>
               <Autocomplete
                 className='form-control form-control-lg'
                 style={{ width: '100%' }}
                 placeholder='enter location'
-                onKey
                 onPlaceSelected={place => {
                   const latitude = place.geometry.location.lat();
                   const longitude = place.geometry.location.lng();
@@ -87,7 +86,7 @@ class HandleLocation extends React.Component {
               />
             </div>
 
-            <div className='col col-md-2'>
+            <div className='col col-md-2 pl-2'>
               <CustomButton
                 large
                 outline

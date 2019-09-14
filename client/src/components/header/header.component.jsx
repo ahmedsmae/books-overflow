@@ -4,14 +4,17 @@ import { Link } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
 
 import { selectUser } from '../../redux/current-user/current-user.selectors';
-import { signoutUserStart } from '../../redux/current-user/current-user.actions';
+import {
+  signoutUserStart,
+  clearSelectedItem
+} from '../../redux/current-user/current-user.actions';
 
 import UserImage from '../user-image/user-image.component';
 import CustomButton from '../custom-button/custom-button.component';
 
 import './header.styles.scss';
 
-const Header = ({ currentUser, signoutUserStart }) => {
+const Header = ({ currentUser, signoutUserStart, clearSelectedItem }) => {
   return (
     <nav className='navbar navbar-light bg-light'>
       <span className='navbar-brand'>
@@ -29,13 +32,25 @@ const Header = ({ currentUser, signoutUserStart }) => {
           </div>
 
           <Link to='/book-details' className='my-auto mr-2'>
-            <CustomButton dark outline onClick={() => {}}>
+            <CustomButton
+              dark
+              outline
+              onClick={() => {
+                clearSelectedItem();
+              }}
+            >
               <i className='fas fa-plus' /> Book{' '}
             </CustomButton>
           </Link>
 
           <Link to='/collection-details' className='my-auto mr-2'>
-            <CustomButton dark outline onClick={() => {}}>
+            <CustomButton
+              dark
+              outline
+              onClick={() => {
+                clearSelectedItem();
+              }}
+            >
               <i className='fas fa-plus' /> Collection{' '}
             </CustomButton>
           </Link>
@@ -66,7 +81,8 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = dispatch => ({
-  signoutUserStart: () => dispatch(signoutUserStart())
+  signoutUserStart: () => dispatch(signoutUserStart()),
+  clearSelectedItem: () => dispatch(clearSelectedItem())
 });
 
 export default connect(

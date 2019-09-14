@@ -17,7 +17,13 @@ import {
   editUserProfileSuccess,
   editUserProfileFailure,
   editBookSuccess,
-  editBookFailure
+  editBookFailure,
+  getUserBooksSuccess,
+  getUserBooksFailure,
+  editCollectionSuccess,
+  editCollectionFailure,
+  getUserCollectionsSuccess,
+  getUserCollectionsFailure
 } from './current-user.actions';
 
 function* signupUserAsync({ payload }) {
@@ -89,10 +95,12 @@ function* editUserProfileAsync({ payload }) {
   try {
     yield call(setAuthToken);
 
-    const fd = yield new FormData();
-    const file = yield dataURLtoFile(source, 'userImage.png');
-    fd.append('avatar', file, file.name);
-    yield call(axios.post, 'api/avatars/setavatar', fd);
+    if (source) {
+      const fd = yield new FormData();
+      const file = yield dataURLtoFile(source, 'userImage.png');
+      fd.append('avatar', file, file.name);
+      yield call(axios.post, 'api/avatars/setavatar', fd);
+    }
 
     const response = yield call(axios, {
       method: 'post',
@@ -130,9 +138,71 @@ function* editBookAsync({ payload }) {
     }
 
     yield put(editBookSuccess());
-    // ! CALL SAGA TO GET ALL BOOKS
   } catch (err) {
     yield put(editBookFailure(err.message));
+  }
+}
+
+function* getBooksAsync() {
+  try {
+    yield setAuthToken();
+
+    const response = yield call(axios, {
+      method: 'get',
+      url: 'api/books/mybooks'
+    });
+
+    yield put(getUserBooksSuccess(response.data.books));
+  } catch (err) {
+    yield put(getUserBooksFailure(err.message));
+  }
+}
+
+function* editCollectionAsync({ payload }) {
+  const { newImageSources, ...otherInfo } = payload;
+
+  try {
+    yield call(setAuthToken);
+
+    // save collection data first
+    const response = yield call(axios, {
+      method: 'post',
+      url: 'api/collections',
+      data: { ...otherInfo }
+    });
+
+    const collectionId = response.data.collection._id;
+
+    // save all new image sources
+    for (const newSource of newImageSources) {
+      const fd = yield new FormData();
+      const file = yield dataURLtoFile(newSource, 'collectionImage.png');
+      fd.append('image', file, file.name);
+      yield call(
+        axios.post,
+        `api/collectionimages/setimage/${collectionId}`,
+        fd
+      );
+    }
+
+    yield put(editCollectionSuccess());
+  } catch (err) {
+    yield put(editCollectionFailure(err.message));
+  }
+}
+
+function* getCollectionsAsync() {
+  try {
+    yield setAuthToken();
+
+    const response = yield call(axios, {
+      method: 'get',
+      url: 'api/collections/mycollections'
+    });
+
+    yield put(getUserCollectionsSuccess(response.data.collections));
+  } catch (err) {
+    yield put(getUserCollectionsFailure(err.message));
   }
 }
 
@@ -163,6 +233,34 @@ function* editBookStart() {
   yield takeLatest(UserActionTypes.EDIT_BOOK_START, editBookAsync);
 }
 
+// this saga will listen to the success in the edit book then will run get books again
+function* reloadBooksAfterEditBook() {
+  yield takeLatest(UserActionTypes.EDIT_BOOK_SUCCESS, getBooksAsync);
+}
+
+function* getBooksStart() {
+  yield takeLatest(UserActionTypes.GET_USER_BOOKS_START, getBooksAsync);
+}
+
+function* editCollectionStart() {
+  yield takeLatest(UserActionTypes.EDIT_COLLECTION_START, editCollectionAsync);
+}
+
+// this saga will listen to the success in the edit collection then will run get collections again
+function* reloadCollectionsAfterEditCollection() {
+  yield takeLatest(
+    UserActionTypes.EDIT_COLLECTION_SUCCESS,
+    getCollectionsAsync
+  );
+}
+
+function* getCollectionsStart() {
+  yield takeLatest(
+    UserActionTypes.GET_USER_COLLECTIONS_START,
+    getCollectionsAsync
+  );
+}
+
 export default function* userSagas() {
   yield all([
     call(loadingUserStart),
@@ -170,6 +268,11 @@ export default function* userSagas() {
     call(signupUserStart),
     call(signoutUserStart),
     call(editUserProfileStart),
-    call(editBookStart)
+    call(editBookStart),
+    call(getBooksStart),
+    call(reloadBooksAfterEditBook),
+    call(editCollectionStart),
+    call(getCollectionsStart),
+    call(reloadCollectionsAfterEditCollection)
   ]);
 }

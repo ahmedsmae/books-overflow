@@ -11,7 +11,7 @@ import 'react-image-lightbox/style.css';
 import './handle-multiple-images.styles.scss';
 
 /**
- * @parentProps - {maxPhotos, imageids, updateImageSources, updateImageIds}
+ * @parentProps - {maxPhotos, url, imageids, updateImageSources, updateImageIds}
  * @action - add photos till the maxPhotos, display them in thumbnail and display in modal onClick
  */
 class HandleMultipleImages extends React.Component {
@@ -20,12 +20,29 @@ class HandleMultipleImages extends React.Component {
     this.inputRef = React.createRef();
 
     this.state = {
-      maxPhotos: this.props.maxPhotos ? this.props.maxPhotos : 3,
-      imageids: this.props.imageids.length ? this.props.imageids : [],
+      maxPhotos: 3,
+      imageids: [],
       selectedPhotos: [], // will contain the photo sources that has been selected here
       isPhotoEnlarged: false,
       enlargedPhotoSource: null
     };
+    // this.state = {
+    //   maxPhotos: this.props.maxPhotos ? this.props.maxPhotos : 3,
+    //   imageids: this.props.imageids.length ? this.props.imageids : [],
+    //   selectedPhotos: [], // will contain the photo sources that has been selected here
+    //   isPhotoEnlarged: false,
+    //   enlargedPhotoSource: null
+    // };
+  }
+
+  static getDerivedStateFromProps(props, currentState) {
+    if (props.imageids) {
+      return {
+        imageids: props.imageids,
+        maxPhotos: props.maxPhotos
+      };
+    }
+    return null;
   }
 
   canAddMore = () => {
@@ -86,14 +103,13 @@ class HandleMultipleImages extends React.Component {
           style={{ border: '1px solid lightgrey', borderRadius: '5px' }}
         >
           {imageids.map((id, index) => (
-            // ! change avatars to bookimages
             <div className='d-inline-flex flex-column' key={index}>
               <CustomImage
-                source={`api/avatars/${id}`}
+                source={`${this.props.url}${id}`}
                 onClick={() =>
                   this.setState({
                     isPhotoEnlarged: true,
-                    enlargedPhotoSource: `api/avatars/${id}`
+                    enlargedPhotoSource: `${this.props.url}${id}`
                   })
                 }
               />

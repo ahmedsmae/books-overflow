@@ -4,7 +4,7 @@ const collection = {
   status: 'available, sold', // dropdown list - sold collection will be disappeared after specific time from the last updated date
   title: 'Collection 1',
   numberofbooks: 10,
-  photoids: [ids_of_the_full_size_photos],
+  imageids: [ids_of_the_full_size_photos],
   books: [
     {
       title: 'Title of book',

@@ -1,17 +1,34 @@
 import React from 'react';
 
-import ListItem from '../list-item/list-item.component';
+import BookCard from '../book-card/book-card.component';
+import CollectionCard from '../collection-card/collection-card.component';
+import { SpecificListTypes } from '../../assets/list.types';
 
 import './list.styles.scss';
 
 const List = ({ type, list }) => {
-  return (
-    <div>
-      {list.map(item => (
-        <ListItem type={type} item={item} />
-      ))}
-    </div>
-  );
+  switch (type) {
+    case SpecificListTypes.MY_LIBRARY:
+      return (
+        <div className='card mt-4'>
+          <div className='card-body'>
+            {list.map((item, index) =>
+              // ! arrange array by createdAt date
+              item.hasOwnProperty('books') ? (
+                <CollectionCard collection={item} key={index} />
+              ) : (
+                <BookCard book={item} key={index} />
+              )
+            )}
+          </div>
+        </div>
+      );
+
+    // other cases for other lists
+
+    default:
+      return <div>UNKNOWN LIST</div>;
+  }
 };
 
 export default List;

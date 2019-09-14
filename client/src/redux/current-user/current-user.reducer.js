@@ -2,12 +2,13 @@ import UserActionTypes from './current-user.types';
 
 const INITIAL_STATE = {
   user: null,
-  books: [],
+  books: null,
   collections: [],
   notifications: [],
   chats: [],
   favourites: [],
   blockedUsers: [],
+  selectedItem: null,
   loading: false,
   errorMessage: null
 };
@@ -20,6 +21,9 @@ export default (state = INITIAL_STATE, { type, payload }) => {
     case UserActionTypes.SIGNOUT_USER_START:
     case UserActionTypes.EDIT_USER_PROFILE_START:
     case UserActionTypes.EDIT_BOOK_START:
+    case UserActionTypes.GET_USER_BOOKS_START:
+    case UserActionTypes.EDIT_COLLECTION_START:
+    case UserActionTypes.GET_USER_COLLECTIONS_START:
       return {
         ...state,
         loading: true,
@@ -44,13 +48,45 @@ export default (state = INITIAL_STATE, { type, payload }) => {
     case UserActionTypes.SIGNOUT_USER_FAILURE:
     case UserActionTypes.EDIT_USER_PROFILE_FAILURE:
     case UserActionTypes.EDIT_BOOK_FAILURE:
+    case UserActionTypes.GET_USER_BOOKS_FAILURE:
+    case UserActionTypes.EDIT_COLLECTION_FAILURE:
+    case UserActionTypes.GET_USER_COLLECTIONS_FAILURE:
       return {
         ...state,
         loading: false,
         errorMessage: payload
       };
 
+    case UserActionTypes.GET_USER_BOOKS_SUCCESS:
+      return {
+        ...state,
+        books: payload,
+        loading: false,
+        errorMessage: ''
+      };
+
+    case UserActionTypes.GET_USER_COLLECTIONS_SUCCESS:
+      return {
+        ...state,
+        collections: payload,
+        loading: false,
+        errorMessage: ''
+      };
+
+    case UserActionTypes.SET_SELECTED_ITEM:
+      return {
+        ...state,
+        selectedItem: payload
+      };
+
+    case UserActionTypes.CLEAR_SELECTED_ITEM:
+      return {
+        ...state,
+        selectedItem: null
+      };
+
     case UserActionTypes.EDIT_BOOK_SUCCESS:
+    case UserActionTypes.EDIT_COLLECTION_SUCCESS:
     default:
       return state;
   }

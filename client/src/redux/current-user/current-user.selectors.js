@@ -36,3 +36,8 @@ export const selectBlockedUsers = createSelector(
   [selectCurrentUser],
   currentUser => currentUser.blockedUsers
 );
+
+export const selectSelectedItem = createSelector(
+  [selectCurrentUser],
+  currentUser => currentUser.selectedItem
+);

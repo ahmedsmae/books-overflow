@@ -7,6 +7,7 @@ import {
   selectConditions,
   selectLanguages
 } from '../../redux/constants/constants.selectors';
+import { selectSelectedItem } from '../../redux/current-user/current-user.selectors';
 import { editBookStart } from '../../redux/current-user/current-user.actions';
 
 import FormInput from '../../components/form-input/form-input.component';
@@ -21,22 +22,69 @@ import './book-details.styles.scss';
 
 class BookDetails extends React.Component {
   state = {
-    status: this.props.book ? this.props.book.status : 'Available',
-    title: this.props.book ? this.props.book.title : '',
-    author: this.props.book ? this.props.book.author : '',
-    publishdate: this.props.book ? this.props.book.publishdate : '',
-    category: this.props.book ? this.props.book.category : '',
-    language: this.props.book ? this.props.book.language : '',
-    summary: this.props.book ? this.props.book.summary : '',
-    condition: this.props.book ? this.props.book.condition : '',
-    price: this.props.book ? this.props.book.price : '',
-    currency: this.props.book ? this.props.book.currency : '',
-    latitude: this.props.book ? this.props.book.latitude : null,
-    longitude: this.props.book ? this.props.book.longitude : null,
-    keywords: this.props.book ? this.props.book.keywords : '',
-    imageids: this.props.book ? this.props.book.imageids : [],
+    status: 'Available',
+    title: '',
+    author: '',
+    publishdate: '',
+    category: '',
+    language: '',
+    summary: '',
+    condition: '',
+    price: '',
+    currency: '',
+    latitude: null,
+    longitude: null,
+    keywords: '',
+    imageids: [],
     newImageSources: []
   };
+
+  // state = {
+  //   status: this.props.selectedBook
+  //     ? this.props.selectedBook.status
+  //     : 'Available',
+  //   title: this.props.selectedBook ? this.props.selectedBook.title : '',
+  //   author: this.props.selectedBook ? this.props.selectedBook.author : '',
+  //   publishdate: this.props.selectedBook
+  //     ? this.props.selectedBook.publishdate
+  //     : '',
+  //   category: this.props.selectedBook ? this.props.selectedBook.category : '',
+  //   language: this.props.selectedBook ? this.props.selectedBook.language : '',
+  //   summary: this.props.selectedBook ? this.props.selectedBook.summary : '',
+  //   condition: this.props.selectedBook ? this.props.selectedBook.condition : '',
+  //   price: this.props.selectedBook ? this.props.selectedBook.price : '',
+  //   currency: this.props.selectedBook ? this.props.selectedBook.currency : '',
+  //   latitude: this.props.selectedBook ? this.props.selectedBook.latitude : null,
+  //   longitude: this.props.selectedBook
+  //     ? this.props.selectedBook.longitude
+  //     : null,
+  //   keywords: this.props.selectedBook ? this.props.selectedBook.keywords : '',
+  //   imageids: this.props.selectedBook ? this.props.selectedBook.imageids : [],
+  //   newImageSources: []
+  // };
+
+  static getDerivedStateFromProps(props, currentState) {
+    if (props.selectedBook) {
+      return {
+        title: props.selectedBook.title,
+        status: props.selectedBook.status,
+        author: props.selectedBook.author,
+        publishdate: props.selectedBook.publishdate,
+        category: props.selectedBook.category,
+        language: props.selectedBook.language,
+        summary: props.selectedBook.summary,
+        condition: props.selectedBook.condition,
+        price: props.selectedBook.price,
+        currency: props.selectedBook.currency,
+        latitude: props.selectedBook.latitude,
+        longitude: props.selectedBook.longitude,
+        keywords: props.selectedBook.keywords,
+        imageids: props.selectedBook.imageids
+        // computed_prop: heavy_computation(props.selectedBook)
+      };
+    }
+    return null;
+  }
 
   updateCurrency = currency => {
     this.setState({ currency }, () => {
@@ -98,6 +146,7 @@ class BookDetails extends React.Component {
       keywords,
       imageids
     } = this.state;
+    console.log(imageids);
 
     return (
       <div className='card mt-4'>
@@ -196,6 +245,7 @@ class BookDetails extends React.Component {
             <div className=''>Photos</div>
             <HandleMultipleImages
               maxPhotos='3'
+              url='api/bookimages/'
               imageids={imageids}
               updateImageSources={this.updateImageSources}
               updateImageIds={this.updateImageIds}
@@ -225,7 +275,7 @@ class BookDetails extends React.Component {
             />
             <div className='mt-4 text-right'>
               <CustomButton large primary type='submit'>
-                {this.props.book ? 'Save Changes' : 'Save Book'}
+                {this.props.selectedBook ? 'Save Changes' : 'Save Book'}
               </CustomButton>
             </div>
           </form>
@@ -238,7 +288,8 @@ class BookDetails extends React.Component {
 const mapStateToProps = createStructuredSelector({
   categories: selectCategories,
   languages: selectLanguages,
-  conditions: selectConditions
+  conditions: selectConditions,
+  selectedBook: selectSelectedItem
 });
 
 const mapDispatchToProps = dispatch => ({

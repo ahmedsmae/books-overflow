@@ -2,20 +2,20 @@ const express = require('express');
 const router = express.Router();
 
 const auth = require('../../utils/auth');
-const Book = require('../../database/models/book');
+const Collection = require('../../database/models/collection');
 
 /**
  * @method - GET
- * @url - 'api/books/mybooks'
+ * @url - 'api/collection/mycollections'
  * @data - token header
- * @action - get all user books
+ * @action - get all user collections
  * @access - private
  */
-router.get('/mybooks', auth, async (req, res) => {
+router.get('/mycollections', auth, async (req, res) => {
   try {
-    const books = await Book.find({ owner: req.user.id });
+    const collections = await Collection.find({ owner: req.user.id });
 
-    res.json({ books });
+    res.json({ collections });
   } catch (err) {
     console.error(err.message);
     res.status(400).json({ errors: [{ msg: err.message }] });
@@ -24,14 +24,14 @@ router.get('/mybooks', auth, async (req, res) => {
 
 /**
  * @method - GET
- * @url - 'api/books/allbooks'
+ * @url - 'api/collection/allcollections'
  * @data - No data
- * @action - get all books and some users info
+ * @action - get all collections and some owners info
  * @access - public
  */
-router.get('/allbooks', async (req, res) => {
+router.get('/allcollections', async (req, res) => {
   try {
-    const books = await Book.find().populate('owner', [
+    const collections = await Collection.find().populate('owner', [
       'firstname',
       'lastname',
       'email',
@@ -41,7 +41,7 @@ router.get('/allbooks', async (req, res) => {
       'bio'
     ]);
 
-    res.json({ books });
+    res.json({ collections });
   } catch (err) {
     console.error(err.message);
     res.status(400).json({ errors: [{ msg: err.message }] });

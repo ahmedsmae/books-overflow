@@ -16,29 +16,39 @@ import './edit-profile.styles.scss';
 
 class EditProfile extends React.Component {
   state = {
-    firstname: this.props.currentUser ? this.props.currentUser.firstname : '',
-    lastname: this.props.currentUser ? this.props.currentUser.lastname : '',
-    createdAt: this.props.currentUser ? this.props.currentUser.createdAt : '',
-    email: this.props.currentUser ? this.props.currentUser.email : '',
-    avatarid: this.props.currentUser ? this.props.currentUser.avatarid : '',
-    contactnumber: this.props.currentUser
-      ? this.props.currentUser.contactnumber
-      : '',
-    defaultlatitude: this.props.currentUser
-      ? this.props.currentUser.defaultlatitude
-      : '',
-    defaultlongitude: this.props.currentUser
-      ? this.props.currentUser.defaultlongitude
-      : '',
-    defaultcurrency: this.props.currentUser
-      ? this.props.currentUser.defaultcurrency
-      : '',
-    bio: this.props.currentUser ? this.props.currentUser.bio : '',
+    firstname: '',
+    lastname: '',
+    createdAt: '',
+    email: '',
+    avatarid: '',
+    contactnumber: '',
+    defaultlatitude: '',
+    defaultlongitude: '',
+    defaultcurrency: '',
+    bio: '',
     source: null,
     isImageSelected: false,
     crop: { aspect: 1 / 1, x: 10, y: 10, width: 250, height: 250 },
     profileChanged: false
   };
+
+  static getDerivedStateFromProps(props, currentState) {
+    if (props.currentUser) {
+      return {
+        firstname: props.currentUser.firstname,
+        lastname: props.currentUser.lastname,
+        createdAt: props.currentUser.createdAt,
+        email: props.currentUser.email,
+        avatarid: props.currentUser.avatarid,
+        contactnumber: props.currentUser.contactnumber,
+        defaultlatitude: props.currentUser.defaultlatitude,
+        defaultlongitude: props.currentUser.defaultlongitude,
+        defaultcurrency: props.currentUser.defaultcurrency,
+        bio: props.currentUser.bio
+      };
+    }
+    return null;
+  }
 
   updateImage = source => {
     this.setState({ source, profileChanged: true }, () => {
