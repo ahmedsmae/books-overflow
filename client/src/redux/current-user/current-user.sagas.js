@@ -23,7 +23,11 @@ import {
   editCollectionSuccess,
   editCollectionFailure,
   getUserCollectionsSuccess,
-  getUserCollectionsFailure
+  getUserCollectionsFailure,
+  getUserNotificationsSuccess,
+  getUserNotificationsFailure,
+  updateNotificationSuccess,
+  updateNotificationFailure
 } from './current-user.actions';
 
 function* signupUserAsync({ payload }) {
@@ -206,6 +210,36 @@ function* getCollectionsAsync() {
   }
 }
 
+function* getNotificationsAsync() {
+  try {
+    yield setAuthToken();
+
+    const response = yield call(axios, {
+      method: 'get',
+      url: 'api/notifications/mynotifications'
+    });
+
+    yield put(getUserNotificationsSuccess(response.data.notifications));
+  } catch (err) {
+    yield put(getUserNotificationsFailure(err.message));
+  }
+}
+
+function* updateNotificationAsync({ payload }) {
+  try {
+    yield setAuthToken();
+
+    yield call(axios, {
+      method: 'post',
+      url: `api/users/profile/updatenotificationseen/${payload}`
+    });
+
+    yield put(updateNotificationSuccess());
+  } catch (err) {
+    yield put(updateNotificationFailure(err.message));
+  }
+}
+
 function* loadingUserStart() {
   yield takeLatest(UserActionTypes.LOADING_USER_START, loadingUserAsync);
 }
@@ -261,6 +295,28 @@ function* getCollectionsStart() {
   );
 }
 
+function* getNotificationsStart() {
+  yield takeLatest(
+    UserActionTypes.GET_USER_NOTIFICATIONS_START,
+    getNotificationsAsync
+  );
+}
+
+function* updateNotificationStart() {
+  yield takeLatest(
+    UserActionTypes.UPDATE_NOTIFICATION_START,
+    updateNotificationAsync
+  );
+}
+
+// this saga will listen to the success in the notification update then will run get notifications again
+function* reloadNotificationsAfterUpdateOne() {
+  yield takeLatest(
+    UserActionTypes.UPDATE_NOTIFICATION_SUCCESS,
+    getNotificationsAsync
+  );
+}
+
 export default function* userSagas() {
   yield all([
     call(loadingUserStart),
@@ -273,6 +329,9 @@ export default function* userSagas() {
     call(reloadBooksAfterEditBook),
     call(editCollectionStart),
     call(getCollectionsStart),
-    call(reloadCollectionsAfterEditCollection)
+    call(reloadCollectionsAfterEditCollection),
+    call(getNotificationsStart),
+    call(updateNotificationStart),
+    call(reloadNotificationsAfterUpdateOne)
   ]);
 }

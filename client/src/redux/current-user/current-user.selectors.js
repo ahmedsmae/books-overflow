@@ -12,7 +12,7 @@ export const selectBooks = createSelector(
   currentUser => currentUser.books
 );
 
-export const selectColelctions = createSelector(
+export const selectCollections = createSelector(
   [selectCurrentUser],
   currentUser => currentUser.collections
 );

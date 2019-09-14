@@ -2,6 +2,8 @@ import React from 'react';
 
 import BookCard from '../book-card/book-card.component';
 import CollectionCard from '../collection-card/collection-card.component';
+import NotificationCard from '../notification-card/notification-card.component';
+
 import { SpecificListTypes } from '../../assets/list.types';
 
 import './list.styles.scss';
@@ -20,6 +22,17 @@ const List = ({ type, list }) => {
                 <BookCard book={item} key={index} />
               )
             )}
+          </div>
+        </div>
+      );
+
+    case SpecificListTypes.MY_NOTIFICATIONS:
+      return (
+        <div className='card mt-4'>
+          <div className='card-body'>
+            {list.map((not, index) => (
+              <NotificationCard notification={not} key={index} />
+            ))}
           </div>
         </div>
       );

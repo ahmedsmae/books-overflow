@@ -59,11 +59,13 @@ router.post(
         .toBuffer();
 
       const newImage = new BookImage({ image: buffer });
-      await newImage.save();
 
       imageIds.push(newImage._id);
-
+      book.imageids = imageIds;
       await book.save();
+
+      // you don't have to wait until saving finished
+      newImage.save();
 
       res.json({ msg: 'Image saved successfully' });
     } catch (err) {

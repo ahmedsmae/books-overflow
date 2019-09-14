@@ -1,6 +1,8 @@
 import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 
+import { PATHS } from '../../assets/list.types';
+
 import UserImage from '../user-image/user-image.component';
 import CustomButton from '../custom-button/custom-button.component';
 
@@ -46,7 +48,7 @@ const UserCard = ({
             <p className='lead mt-4'>{bio}</p>
           </div>
           <div className='mx-auto mt-4'>
-            <Link to='/my-library' className='mx-3'>
+            <Link to={PATHS.MY_LIBRARY_PATH} className='mx-3'>
               <CustomButton primary>
                 <i className='fas fa-book' />
                 {myProfile ? ' My ' : ` ${firstname}'s `}
@@ -54,30 +56,30 @@ const UserCard = ({
               </CustomButton>
             </Link>
 
-            <Link to='/my-favourites' className='mx-3'>
-              <CustomButton primary>
-                <i className='fas fa-star text-warning' />
-                {myProfile ? ' My ' : ` ${firstname}'s `}
-                Favourites
-              </CustomButton>
-            </Link>
-
             {myProfile && (
               <Fragment>
-                <Link to='my-notifications' className='mx-3'>
+                <Link to={PATHS.MY_FAVOURITES_PATH} className='mx-3'>
+                  <CustomButton primary>
+                    <i className='fas fa-star text-warning' />
+                    {myProfile ? ' My ' : ` ${firstname}'s `}
+                    Favourites
+                  </CustomButton>
+                </Link>
+
+                <Link to={PATHS.MY_NOTIFICATIONS_PATH} className='mx-3'>
                   <CustomButton warning>
                     <i className='fas fa-clipboard' /> Notifications{' '}
                     <span className='text-danger'>5</span>
                   </CustomButton>
                 </Link>
 
-                <Link to='/my-blocked-users' className='mx-3'>
+                <Link to={PATHS.MY_BLOCKED_USERS_PATH} className='mx-3'>
                   <CustomButton danger>
                     <i className='fas fa-user-lock' /> Blocked Users
                   </CustomButton>
                 </Link>
 
-                <Link to='/edit-profile' className='mx-3'>
+                <Link to={PATHS.EDIT_PROFILE_PATH} className='mx-3'>
                   <CustomButton primary>
                     <i className='fas fa-edit' /> Edit Profile
                   </CustomButton>

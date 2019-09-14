@@ -9,6 +9,8 @@ import {
   clearSelectedItem
 } from '../../redux/current-user/current-user.actions';
 
+import { PATHS } from '../../assets/list.types';
+
 import UserImage from '../user-image/user-image.component';
 import CustomButton from '../custom-button/custom-button.component';
 
@@ -31,7 +33,7 @@ const Header = ({ currentUser, signoutUserStart, clearSelectedItem }) => {
             </CustomButton>
           </div>
 
-          <Link to='/book-details' className='my-auto mr-2'>
+          <Link to={PATHS.BOOK_DETAILS_PATH} className='my-auto mr-2'>
             <CustomButton
               dark
               outline
@@ -43,7 +45,7 @@ const Header = ({ currentUser, signoutUserStart, clearSelectedItem }) => {
             </CustomButton>
           </Link>
 
-          <Link to='/collection-details' className='my-auto mr-2'>
+          <Link to={PATHS.COLLECTION_DETAILS_PATH} className='my-auto mr-2'>
             <CustomButton
               dark
               outline
@@ -55,7 +57,7 @@ const Header = ({ currentUser, signoutUserStart, clearSelectedItem }) => {
             </CustomButton>
           </Link>
 
-          <Link to='/profile/me'>
+          <Link to={PATHS.MY_PROFILE_PATH}>
             <UserImage small source={`api/avatars/${currentUser.avatarid}`} />
           </Link>
 
@@ -66,7 +68,7 @@ const Header = ({ currentUser, signoutUserStart, clearSelectedItem }) => {
           </div>
         </div>
       ) : (
-        <Link to='/sign-in' className='my-auto mr-2'>
+        <Link to={PATHS.SIGN_IN_PATH} className='my-auto mr-2'>
           <CustomButton dark outline>
             Sign In
           </CustomButton>

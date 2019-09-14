@@ -268,4 +268,41 @@ router.delete(
   }
 );
 
+/**
+ * @method - POST
+ * @url - 'api/users/profile/updatenotificationseen/:notificationid'
+ * @data - token header
+ * @action - set notification to be seen: true
+ * @access - private
+ */
+router.post(
+  '/profile/updatenotificationseen/:notificationid',
+  auth,
+  async (req, res) => {
+    try {
+      const user = await User.findById(req.user.id);
+
+      if (!user) {
+        return res
+          .status(400)
+          .json({ errors: [{ msg: 'User does not exists' }] });
+      }
+
+      user.notifications = user.notifications.map(note => {
+        if (note.notificationid === req.params.notificationid) {
+          note.seen = true;
+        }
+        return note;
+      });
+
+      await user.save();
+
+      res.json({ user });
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).json({ errors: [{ msg: err.message }] });
+    }
+  }
+);
+
 module.exports = router;

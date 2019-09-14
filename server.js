@@ -38,6 +38,9 @@ app.use(
   require('./routes/collection-images/collection-images')
 );
 
+app.use('/api/notifications', require('./routes/notifications/admin'));
+app.use('/api/notifications', require('./routes/notifications/user'));
+
 // contains all event handlers
 require('./socket-io/main')(io);
 

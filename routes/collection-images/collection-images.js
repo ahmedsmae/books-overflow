@@ -60,11 +60,13 @@ router.post(
         .toBuffer();
 
       const newImage = new CollectionImage({ image: buffer });
-      await newImage.save();
 
       imageIds.push(newImage._id);
-
+      collection.imageids = imageIds;
       await collection.save();
+
+      // you don't have to wait until saving finished
+      newImage.save();
 
       res.json({ msg: 'Image saved successfully' });
     } catch (err) {

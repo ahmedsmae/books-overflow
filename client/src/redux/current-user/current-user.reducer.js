@@ -24,6 +24,8 @@ export default (state = INITIAL_STATE, { type, payload }) => {
     case UserActionTypes.GET_USER_BOOKS_START:
     case UserActionTypes.EDIT_COLLECTION_START:
     case UserActionTypes.GET_USER_COLLECTIONS_START:
+    case UserActionTypes.GET_USER_NOTIFICATIONS_START:
+    case UserActionTypes.UPDATE_NOTIFICATION_START:
       return {
         ...state,
         loading: true,
@@ -51,6 +53,8 @@ export default (state = INITIAL_STATE, { type, payload }) => {
     case UserActionTypes.GET_USER_BOOKS_FAILURE:
     case UserActionTypes.EDIT_COLLECTION_FAILURE:
     case UserActionTypes.GET_USER_COLLECTIONS_FAILURE:
+    case UserActionTypes.GET_USER_NOTIFICATIONS_FAILURE:
+    case UserActionTypes.UPDATE_NOTIFICATION_FAILURE:
       return {
         ...state,
         loading: false,
@@ -73,6 +77,14 @@ export default (state = INITIAL_STATE, { type, payload }) => {
         errorMessage: ''
       };
 
+    case UserActionTypes.GET_USER_NOTIFICATIONS_SUCCESS:
+      return {
+        ...state,
+        notifications: payload,
+        loading: false,
+        errorMessage: ''
+      };
+
     case UserActionTypes.SET_SELECTED_ITEM:
       return {
         ...state,
@@ -87,6 +99,7 @@ export default (state = INITIAL_STATE, { type, payload }) => {
 
     case UserActionTypes.EDIT_BOOK_SUCCESS:
     case UserActionTypes.EDIT_COLLECTION_SUCCESS:
+    case UserActionTypes.UPDATE_NOTIFICATION_SUCCESS:
     default:
       return state;
   }

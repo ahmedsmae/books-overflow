@@ -8,8 +8,11 @@ import { loadingUserStart } from './redux/current-user/current-user.actions';
 import { getConversionRatesStart } from './redux/conversion-rates/conversion-rates.action';
 import {
   getUserBooksStart,
-  getUserCollectionsStart
+  getUserCollectionsStart,
+  getUserNotificationsStart
 } from './redux/current-user/current-user.actions';
+
+import { PATHS } from './assets/list.types';
 
 import Header from './components/header/header.component';
 import ListContainerPage from './pages/list-container/list-container.component';
@@ -29,7 +32,8 @@ const App = ({
   loadingUserStart,
   getConversionRatesStart,
   getUserBooksStart,
-  getUserCollectionsStart
+  getUserCollectionsStart,
+  getUserNotificationsStart
 }) => {
   useEffect(() => {
     !currentUser && loadingUserStart();
@@ -37,13 +41,15 @@ const App = ({
       getConversionRatesStart();
       getUserBooksStart();
       getUserCollectionsStart();
+      getUserNotificationsStart();
     }
   }, [
     currentUser,
     loadingUserStart,
     getConversionRatesStart,
     getUserBooksStart,
-    getUserCollectionsStart
+    getUserCollectionsStart,
+    getUserNotificationsStart
   ]);
 
   return (
@@ -53,28 +59,39 @@ const App = ({
         <Switch>
           <Route
             exact
-            path='/sign-in'
+            path={PATHS.SIGN_IN_PATH}
             render={props =>
               currentUser ? (
-                <Redirect to='/' />
+                <Redirect to={PATHS.LIST_CONTAINER_PATH} />
               ) : (
                 <SignInAndSignUpPage {...props} />
               )
             }
           />
-          <Route exact path='/edit-profile' component={EditProfilePage} />
-          <Route exact path='/book-details' component={BookDetailsPage} />
           <Route
             exact
-            path='/collection-details'
+            path={PATHS.EDIT_PROFILE_PATH}
+            component={EditProfilePage}
+          />
+          <Route
+            exact
+            path={PATHS.BOOK_DETAILS_PATH}
+            component={BookDetailsPage}
+          />
+          <Route
+            exact
+            path={PATHS.COLLECTION_DETAILS_PATH}
             component={CollectionDetailsPage}
           />
-          <Route exact path='/about' component={AboutPage} />
-          <Route exact path='/contact-us' component={ContactUsPage} />
-          <Route path='/profile' component={ProfilePage} />
-          <Route path='/help' component={HelpPage} />
+          <Route exact path={PATHS.ABOUT_PATH} component={AboutPage} />
+          <Route exact path={PATHS.CONTACT_US_PATH} component={ContactUsPage} />
+          <Route path={PATHS.PROFILE_PATH} component={ProfilePage} />
+          <Route path={PATHS.HELP_PATH} component={HelpPage} />
           {/* List container should be always at the bottom of the switch */}
-          <Route path='/' component={ListContainerPage} />
+          <Route
+            path={PATHS.LIST_CONTAINER_PATH}
+            component={ListContainerPage}
+          />
         </Switch>
       </div>
     </Fragment>
@@ -89,7 +106,8 @@ const mapDispatchToProps = dispatch => ({
   loadingUserStart: () => dispatch(loadingUserStart()),
   getConversionRatesStart: () => dispatch(getConversionRatesStart()),
   getUserBooksStart: () => dispatch(getUserBooksStart()),
-  getUserCollectionsStart: () => dispatch(getUserCollectionsStart())
+  getUserCollectionsStart: () => dispatch(getUserCollectionsStart()),
+  getUserNotificationsStart: () => dispatch(getUserNotificationsStart())
 });
 
 export default connect(

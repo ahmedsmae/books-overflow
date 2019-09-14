@@ -2,15 +2,17 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
-import { SpecificListTypes } from '../../assets/list.types';
+import { PATHS, SpecificListTypes } from '../../assets/list.types';
 
 import {
   selectBooks,
-  selectColelctions
+  selectCollections,
+  selectNotifications
 } from '../../redux/current-user/current-user.selectors';
 import {
   getUserBooksStart,
-  getUserCollectionsStart
+  getUserCollectionsStart,
+  getUserNotificationsStart
 } from '../../redux/current-user/current-user.actions';
 
 import WithSpinner from '../../components/with-spinner/with-spinner.component';
@@ -27,17 +29,23 @@ const ListWithSpinner = WithSpinner(List);
 const ListContainer = ({
   userBooks,
   userCollections,
+  userNotifications,
   getUserBooksStart,
   getUserCollectionsStart,
+  getUserNotificationsStart,
   location: { pathname },
   type,
   homePageList
 }) => {
   useEffect(() => {
     switch (pathname) {
-      case '/my-library':
+      case PATHS.MY_LIBRARY_PATH:
         !userBooks && getUserBooksStart();
         !userCollections && getUserCollectionsStart();
+        break;
+
+      case PATHS.MY_NOTIFICATIONS_PATH:
+        !userNotifications && getUserNotificationsStart();
         break;
 
       default:
@@ -46,12 +54,14 @@ const ListContainer = ({
     pathname,
     userBooks,
     userCollections,
+    userNotifications,
     getUserBooksStart,
-    getUserCollectionsStart
+    getUserCollectionsStart,
+    getUserNotificationsStart
   ]);
 
   switch (pathname) {
-    case '/':
+    case PATHS.LIST_CONTAINER_PATH:
       // request saga to fetch the home page data then pass it to the list component
       return (
         <div>
@@ -64,7 +74,7 @@ const ListContainer = ({
         </div>
       );
 
-    case '/my-library':
+    case PATHS.MY_LIBRARY_PATH:
       return (
         <div>
           <ListWithSpinner
@@ -76,6 +86,17 @@ const ListContainer = ({
         </div>
       );
 
+    case PATHS.MY_NOTIFICATIONS_PATH:
+      return (
+        <div>
+          <ListWithSpinner
+            isLoading={userNotifications ? false : true}
+            type={SpecificListTypes.MY_NOTIFICATIONS}
+            list={userNotifications}
+          />
+        </div>
+      );
+
     default:
       return <div>List Container</div>;
   }
@@ -83,12 +104,14 @@ const ListContainer = ({
 
 const mapStateToProps = createStructuredSelector({
   userBooks: selectBooks,
-  userCollections: selectColelctions
+  userCollections: selectCollections,
+  userNotifications: selectNotifications
 });
 
 const mapDispatchToProps = dispatch => ({
   getUserBooksStart: () => dispatch(getUserBooksStart()),
-  getUserCollectionsStart: () => dispatch(getUserCollectionsStart())
+  getUserCollectionsStart: () => dispatch(getUserCollectionsStart()),
+  getUserNotificationsStart: () => dispatch(getUserNotificationsStart())
 });
 
 export default connect(

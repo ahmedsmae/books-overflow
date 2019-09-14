@@ -137,6 +137,36 @@ export const getUserCollectionsFailure = errorMessage => ({
   payload: errorMessage
 });
 
+// GET NOTIFICATIONS
+export const getUserNotificationsStart = () => ({
+  type: UserActionTypes.GET_USER_NOTIFICATIONS_START
+});
+
+export const getUserNotificationsSuccess = notifications => ({
+  type: UserActionTypes.GET_USER_NOTIFICATIONS_SUCCESS,
+  payload: notifications
+});
+
+export const getUserNotificationsFailure = errorMessage => ({
+  type: UserActionTypes.GET_USER_NOTIFICATIONS_FAILURE,
+  payload: errorMessage
+});
+
+// UPDATE NOTIFICATION
+export const updateNotificationStart = noteficationId => ({
+  type: UserActionTypes.UPDATE_NOTIFICATION_START,
+  payload: noteficationId
+});
+
+export const updateNotificationSuccess = () => ({
+  type: UserActionTypes.UPDATE_NOTIFICATION_SUCCESS
+});
+
+export const updateNotificationFailure = errorMessage => ({
+  type: UserActionTypes.UPDATE_NOTIFICATION_FAILURE,
+  payload: errorMessage
+});
+
 // SELECTED ITEM
 export const setSelectedItem = selectedItem => ({
   type: UserActionTypes.SET_SELECTED_ITEM,
