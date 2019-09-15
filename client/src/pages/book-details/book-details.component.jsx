@@ -131,7 +131,7 @@ class BookDetails extends React.Component {
 
   render() {
     const {
-      status,
+      // status,
       title,
       author,
       publishdate,

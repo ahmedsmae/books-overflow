@@ -11,11 +11,12 @@ import {
   getUserCollectionsStart,
   getUserNotificationsStart
 } from './redux/current-user/current-user.actions';
+import { getAllPublicItemsStart } from './redux/public-items/public-items.actions';
 
 import { PATHS } from './assets/list.types';
 
 import Header from './components/header/header.component';
-import ListContainerPage from './pages/list-container/list-container.component';
+import HomePage from './pages/home/home.component';
 import ProfilePage from './pages/profile/profile.component';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
 import EditProfilePage from './pages/edit-profile/edit-profile.component';
@@ -33,10 +34,12 @@ const App = ({
   getConversionRatesStart,
   getUserBooksStart,
   getUserCollectionsStart,
-  getUserNotificationsStart
+  getUserNotificationsStart,
+  getAllPublicItemsStart
 }) => {
   useEffect(() => {
     !currentUser && loadingUserStart();
+    getAllPublicItemsStart();
     if (currentUser) {
       getConversionRatesStart();
       getUserBooksStart();
@@ -45,6 +48,7 @@ const App = ({
     }
   }, [
     currentUser,
+    getAllPublicItemsStart,
     loadingUserStart,
     getConversionRatesStart,
     getUserBooksStart,
@@ -57,6 +61,7 @@ const App = ({
       <Header />
       <div className='container'>
         <Switch>
+          <Route exact path={PATHS.HOME_PATH} component={HomePage} />
           <Route
             exact
             path={PATHS.SIGN_IN_PATH}
@@ -88,10 +93,6 @@ const App = ({
           <Route path={PATHS.PROFILE_PATH} component={ProfilePage} />
           <Route path={PATHS.HELP_PATH} component={HelpPage} />
           {/* List container should be always at the bottom of the switch */}
-          <Route
-            path={PATHS.LIST_CONTAINER_PATH}
-            component={ListContainerPage}
-          />
         </Switch>
       </div>
     </Fragment>
@@ -107,7 +108,8 @@ const mapDispatchToProps = dispatch => ({
   getConversionRatesStart: () => dispatch(getConversionRatesStart()),
   getUserBooksStart: () => dispatch(getUserBooksStart()),
   getUserCollectionsStart: () => dispatch(getUserCollectionsStart()),
-  getUserNotificationsStart: () => dispatch(getUserNotificationsStart())
+  getUserNotificationsStart: () => dispatch(getUserNotificationsStart()),
+  getAllPublicItemsStart: () => dispatch(getAllPublicItemsStart())
 });
 
 export default connect(

@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import Autocomplete from 'react-google-autocomplete';
 
-import { fetchLatLng } from './handle-location.utils';
+import { fetchLatLng } from '../../assets/util-functions';
 
 import FormInput from '../form-input/form-input.component';
 import CustomButton from '../custom-button/custom-button.component';
@@ -12,7 +12,8 @@ class HandleLocation extends React.Component {
   state = {
     latitude: this.props.latitude,
     longitude: this.props.longitude,
-    address: ''
+    address: '',
+    isEditing: false
   };
 
   async componentDidMount() {
@@ -27,24 +28,26 @@ class HandleLocation extends React.Component {
     this.setState({
       latitude,
       longitude,
-      address: await fetchLatLng(latitude, longitude)
+      address: await fetchLatLng(latitude, longitude),
+      isEditing: false
     });
   };
 
   handleSelectPlace = (latitude, longitude, address) => {
     this.props.updateLocation(latitude, longitude);
-    this.setState({ latitude, longitude, address });
+    this.setState({ latitude, longitude, address, isEditing: false });
   };
 
   render() {
-    const { latitude, longitude, address } = this.state;
+    const { address, isEditing } = this.state;
 
     return (
       <div className='form-row'>
-        {!!latitude && !!longitude ? (
+        {!isEditing ? (
           <Fragment>
             <div className='col col-md-10 pr-2'>
-              <FormInput value={address} readonly large />
+              <h4>{address}</h4>
+              {/* <FormInput value={address} readonly large /> */}
             </div>
             <div className='col col-md-2 pl-2'>
               <CustomButton
@@ -55,7 +58,8 @@ class HandleLocation extends React.Component {
                   this.setState({
                     latitude: null,
                     longitude: null,
-                    address: ''
+                    address: '',
+                    isEditing: true
                   })
                 }
               >

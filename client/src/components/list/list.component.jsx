@@ -1,16 +1,17 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 
 import BookCard from '../book-card/book-card.component';
 import CollectionCard from '../collection-card/collection-card.component';
 import NotificationCard from '../notification-card/notification-card.component';
 
-import { SpecificListTypes } from '../../assets/list.types';
+import { PATHS } from '../../assets/list.types';
 
 import './list.styles.scss';
 
-const List = ({ type, list }) => {
-  switch (type) {
-    case SpecificListTypes.MY_LIBRARY:
+const List = ({ location: { pathname }, list }) => {
+  switch (pathname) {
+    case PATHS.MY_LIBRARY_PATH:
       return (
         <div className='card mt-4'>
           <div className='card-body'>
@@ -26,7 +27,7 @@ const List = ({ type, list }) => {
         </div>
       );
 
-    case SpecificListTypes.MY_NOTIFICATIONS:
+    case PATHS.MY_NOTIFICATIONS_PATH:
       return (
         <div className='card mt-4'>
           <div className='card-body'>
@@ -37,7 +38,7 @@ const List = ({ type, list }) => {
         </div>
       );
 
-    case SpecificListTypes.HOME_PAGE_ITEMS:
+    case PATHS.HOME_PATH:
       return (
         <div className='card mt-4'>
           <div className='card-body'>
@@ -60,4 +61,4 @@ const List = ({ type, list }) => {
   }
 };
 
-export default List;
+export default withRouter(List);

@@ -9,6 +9,7 @@ const INITIAL_STATE = {
 const PublicItemsReducer = (state = INITIAL_STATE, { type, payload }) => {
   switch (type) {
     case PublicItemsActionTypes.GET_ALL_PUBLIC_ITEMS_START:
+    case PublicItemsActionTypes.SEARCH_ITEMS_START:
       return {
         ...state,
         loading: true,
@@ -16,6 +17,7 @@ const PublicItemsReducer = (state = INITIAL_STATE, { type, payload }) => {
       };
 
     case PublicItemsActionTypes.GET_ALL_PUBLIC_ITEMS_SUCCESS:
+    case PublicItemsActionTypes.SEARCH_ITEMS_SUCCESS:
       return {
         ...state,
         publicItems: payload,
@@ -24,6 +26,7 @@ const PublicItemsReducer = (state = INITIAL_STATE, { type, payload }) => {
       };
 
     case PublicItemsActionTypes.GET_ALL_PUBLIC_ITEMS_FAILURE:
+    case PublicItemsActionTypes.SEARCH_ITEMS_FAILURE:
       return {
         ...state,
         loading: false,

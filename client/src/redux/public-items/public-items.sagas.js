@@ -1,45 +1,49 @@
 import { takeLatest, call, put, all } from 'redux-saga/effects';
 import axios from 'axios';
 
-import { getLatLng, distance } from './public-items.utils';
+import { getLatLng } from './public-items.utils';
 
 import PublicItemsActionTypes from './public-items.types';
 import {
   getAllPublicItemsSuccess,
-  getAllPublicItemsFailure
+  getAllPublicItemsFailure,
+  searchItemsSuccess,
+  searchItemsFailure
 } from './public-items.actions';
 
 function* getItemsAsync() {
   try {
-    const response = yield call(axios, {
-      method: 'get',
-      url: 'api/public/all'
-    });
-
-    const { books, collections } = response.data;
-    // merge books and collections
-    const allItems = [...books, ...collections];
-
     // get user lat lng
-    const { latitude, longitude } = yield getLatLng();
+    const { latitude, longitude } = yield call(getLatLng);
+    console.log(latitude, longitude);
 
-    // calculate the distance of the item from the user and add it as a distance prop into the item itself
-    for (let i = 0; i < allItems.length; i++) {
-      const itemDistance = distance(
-        latitude,
-        longitude,
-        allItems[i].latitude,
-        allItems[i].longitude
-      );
-      allItems[i].distance = itemDistance;
+    if (latitude && longitude) {
+      const response = yield call(axios, {
+        method: 'get',
+        url: 'api/publicitems/all',
+        data: { latitude, longitude }
+      });
+
+      yield put(getAllPublicItemsSuccess(response.data.items));
     }
-
-    // arrange the array from the closest to the farest
-    allItems.sort((a, b) => (a.distance > b.distance ? 1 : -1));
-
-    yield put(getAllPublicItemsSuccess(allItems));
   } catch (err) {
     yield put(getAllPublicItemsFailure(err.message));
+  }
+}
+
+function* searchItemsAsync({ payload }) {
+  console.log(payload);
+
+  try {
+    const response = yield call(axios, {
+      method: 'get',
+      url: 'api/publicitems/searchitems',
+      data: { ...payload }
+    });
+
+    yield put(searchItemsSuccess(response.data.items));
+  } catch (err) {
+    yield put(searchItemsFailure(err.message));
   }
 }
 
@@ -50,6 +54,10 @@ function* getItemsStart() {
   );
 }
 
+function* searchItemsStart() {
+  yield takeLatest(PublicItemsActionTypes.SEARCH_ITEMS_START, searchItemsAsync);
+}
+
 export default function* publicItemsSagas() {
-  yield all([call(getItemsStart)]);
+  yield all([call(getItemsStart), call(searchItemsStart)]);
 }

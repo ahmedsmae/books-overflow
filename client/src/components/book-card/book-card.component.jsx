@@ -8,7 +8,7 @@ import { selectUser } from '../../redux/current-user/current-user.selectors';
 import { setSelectedItem } from '../../redux/current-user/current-user.actions';
 
 import { PATHS } from '../../assets/list.types';
-import { fetchLatLng } from './handle-location.utils';
+import { fetchLatLng } from '../../assets/util-functions';
 
 import CustomButton from '../custom-button/custom-button.component';
 import UserImage from '../user-image/user-image.component';
@@ -41,7 +41,17 @@ const BookCard = ({ book, currentUser, setSelectedItem }) => {
     imageids
   } = book;
 
-  const { firstname, lastname, avatarid } = owner;
+  let firstname, lastname, avatarid;
+
+  if (owner.firstname) {
+    firstname = owner.firstname;
+    lastname = owner.lastname;
+    avatarid = owner.avatarid;
+  } else {
+    firstname = currentUser.firstname;
+    lastname = currentUser.lastname;
+    avatarid = currentUser.avatarid;
+  }
 
   useEffect(() => {
     fetchLatLng(latitude, longitude).then(address => setAddress(address));
