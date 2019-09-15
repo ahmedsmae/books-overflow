@@ -41,6 +41,8 @@ app.use(
 app.use('/api/notifications', require('./routes/notifications/admin'));
 app.use('/api/notifications', require('./routes/notifications/user'));
 
+app.use('/api/public', require('./routes/public/public'));
+
 // contains all event handlers
 require('./socket-io/main')(io);
 

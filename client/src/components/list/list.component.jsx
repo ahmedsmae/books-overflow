@@ -37,6 +37,22 @@ const List = ({ type, list }) => {
         </div>
       );
 
+    case SpecificListTypes.HOME_PAGE_ITEMS:
+      return (
+        <div className='card mt-4'>
+          <div className='card-body'>
+            {list.map((item, index) =>
+              // ! arrange array by createdAt date
+              item.hasOwnProperty('books') ? (
+                <CollectionCard collection={item} key={index} />
+              ) : (
+                <BookCard book={item} key={index} />
+              )
+            )}
+          </div>
+        </div>
+      );
+
     // other cases for other lists
 
     default:

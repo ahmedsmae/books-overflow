@@ -9,11 +9,14 @@ import {
   selectCollections,
   selectNotifications
 } from '../../redux/current-user/current-user.selectors';
+import { selectPublicItems } from '../../redux/public-items/public-items.selectors';
+
 import {
   getUserBooksStart,
   getUserCollectionsStart,
   getUserNotificationsStart
 } from '../../redux/current-user/current-user.actions';
+import { getAllPublicItemsStart } from '../../redux/public-items/public-items.actions';
 
 import WithSpinner from '../../components/with-spinner/with-spinner.component';
 import List from '../../components/list/list.component';
@@ -30,15 +33,20 @@ const ListContainer = ({
   userBooks,
   userCollections,
   userNotifications,
+  publicItems,
   getUserBooksStart,
   getUserCollectionsStart,
   getUserNotificationsStart,
+  getAllPublicItemsStart,
   location: { pathname },
-  type,
-  homePageList
+  type
 }) => {
   useEffect(() => {
     switch (pathname) {
+      case PATHS.LIST_CONTAINER_PATH:
+        !publicItems && getAllPublicItemsStart();
+        break;
+
       case PATHS.MY_LIBRARY_PATH:
         !userBooks && getUserBooksStart();
         !userCollections && getUserCollectionsStart();
@@ -52,9 +60,11 @@ const ListContainer = ({
     }
   }, [
     pathname,
+    publicItems,
     userBooks,
     userCollections,
     userNotifications,
+    getAllPublicItemsStart,
     getUserBooksStart,
     getUserCollectionsStart,
     getUserNotificationsStart
@@ -67,9 +77,9 @@ const ListContainer = ({
         <div>
           Home Page
           <ListWithSpinner
-            isLoading={homePageList ? false : true}
+            isLoading={publicItems ? false : true}
             type={SpecificListTypes.HOME_PAGE_ITEMS}
-            list={homePageList}
+            list={publicItems}
           />
         </div>
       );
@@ -105,13 +115,15 @@ const ListContainer = ({
 const mapStateToProps = createStructuredSelector({
   userBooks: selectBooks,
   userCollections: selectCollections,
-  userNotifications: selectNotifications
+  userNotifications: selectNotifications,
+  publicItems: selectPublicItems
 });
 
 const mapDispatchToProps = dispatch => ({
   getUserBooksStart: () => dispatch(getUserBooksStart()),
   getUserCollectionsStart: () => dispatch(getUserCollectionsStart()),
-  getUserNotificationsStart: () => dispatch(getUserNotificationsStart())
+  getUserNotificationsStart: () => dispatch(getUserNotificationsStart()),
+  getAllPublicItemsStart: () => dispatch(getAllPublicItemsStart())
 });
 
 export default connect(
