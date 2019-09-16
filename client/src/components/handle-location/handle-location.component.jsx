@@ -3,7 +3,6 @@ import Autocomplete from 'react-google-autocomplete';
 
 import { fetchLatLng } from '../../assets/util-functions';
 
-import FormInput from '../form-input/form-input.component';
 import CustomButton from '../custom-button/custom-button.component';
 
 import './handle-location.styles.scss';
@@ -46,12 +45,11 @@ class HandleLocation extends React.Component {
         {!isEditing ? (
           <Fragment>
             <div className='col col-md-10 pr-2'>
-              <h4>{address}</h4>
+              <h6>{address}</h6>
               {/* <FormInput value={address} readonly large /> */}
             </div>
             <div className='col col-md-2 pl-2'>
               <CustomButton
-                large
                 outline
                 primary
                 onClick={() =>
@@ -72,7 +70,7 @@ class HandleLocation extends React.Component {
             <div className='col col-md-10 pr-2'>
               <Autocomplete
                 className='form-control form-control-lg'
-                style={{ width: '100%' }}
+                style={{ width: '100%', height: '40px' }}
                 placeholder='enter location'
                 onPlaceSelected={place => {
                   const latitude = place.geometry.location.lat();
@@ -92,7 +90,6 @@ class HandleLocation extends React.Component {
 
             <div className='col col-md-2 pl-2'>
               <CustomButton
-                large
                 outline
                 primary
                 onClick={() => {

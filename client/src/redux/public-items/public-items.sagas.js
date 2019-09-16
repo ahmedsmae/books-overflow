@@ -19,7 +19,7 @@ function* getItemsAsync() {
 
     if (latitude && longitude) {
       const response = yield call(axios, {
-        method: 'get',
+        method: 'post',
         url: 'api/publicitems/all',
         data: { latitude, longitude }
       });
@@ -36,7 +36,7 @@ function* searchItemsAsync({ payload }) {
 
   try {
     const response = yield call(axios, {
-      method: 'get',
+      method: 'post',
       url: 'api/publicitems/searchitems',
       data: { ...payload }
     });

@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
 
 import {
   selectCategories,
@@ -8,6 +7,7 @@ import {
   selectLanguages
 } from '../../redux/constants/constants.selectors';
 import { selectSelectedItem } from '../../redux/current-user/current-user.selectors';
+import { selectGetPriceInUSD } from '../../redux/conversion-rates/conversion-rates.selectors';
 import { editCollectionStart } from '../../redux/current-user/current-user.actions';
 
 import FormInput from '../../components/form-input/form-input.component';
@@ -107,7 +107,15 @@ class BookDetails extends React.Component {
     console.log('Saving...');
     console.log({ ...this.state });
 
-    this.props.editCollectionStart({ ...this.state });
+    // convert the price to the price with USD
+    const newPrice = this.props.getPriceInUSD(
+      this.state.price,
+      this.state.currency
+    );
+
+    this.setState({ price: newPrice, currency: 'USD' }, () => {
+      this.props.editCollectionStart({ ...this.state });
+    });
   };
 
   render() {
@@ -250,11 +258,13 @@ class BookDetails extends React.Component {
   }
 }
 
-const mapStateToProps = createStructuredSelector({
-  categories: selectCategories,
-  languages: selectLanguages,
-  conditions: selectConditions,
-  selectedCollection: selectSelectedItem
+const mapStateToProps = state => ({
+  categories: selectCategories(state),
+  languages: selectLanguages(state),
+  conditions: selectConditions(state),
+  selectedCollection: selectSelectedItem(state),
+  getPriceInUSD: (price, fromCurrency) =>
+    selectGetPriceInUSD(price, fromCurrency)(state)
 });
 
 const mapDispatchToProps = dispatch => ({

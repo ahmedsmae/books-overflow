@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
 
 import { getLatLng } from '../../assets/util-functions';
 
@@ -9,6 +8,7 @@ import {
   selectConditions,
   selectLanguages
 } from '../../redux/constants/constants.selectors';
+import { selectGetPriceInUSD } from '../../redux/conversion-rates/conversion-rates.selectors';
 import {
   getAllPublicItemsStart,
   searchItemsStart
@@ -18,6 +18,7 @@ import HandleLocation from '../handle-location/handle-location.component';
 import CustomButton from '../custom-button/custom-button.component';
 import FormInput from '../form-input/form-input.component';
 import FormSelect from '../form-select/form-select.component';
+import HandleCurrency from '../handle-currency/handle-currency.component';
 
 class Search extends React.Component {
   state = {
@@ -31,7 +32,8 @@ class Search extends React.Component {
     language: '',
     condition: '',
     priceMin: '',
-    priceMax: '',
+    priceMax: null,
+    currency: '',
     searchLat: null,
     searchLng: null
   };
@@ -45,6 +47,12 @@ class Search extends React.Component {
       console.log(err);
     }
   }
+
+  updateCurrency = currency => {
+    this.setState({ currency }, () => {
+      console.log(this.state.currency);
+    });
+  };
 
   updateLocation = (searchLat, searchLng) => {
     this.setState({ searchLat, searchLng }, () => {
@@ -70,6 +78,7 @@ class Search extends React.Component {
       condition,
       priceMin,
       priceMax,
+      currency,
       searchLat,
       searchLng
     } = this.state;
@@ -84,9 +93,27 @@ class Search extends React.Component {
             <div className='col-md-2'>
               <CustomButton
                 small
-                onClick={() =>
-                  this.setState({ advancedSearch: !advancedSearch })
-                }
+                onClick={() => {
+                  if (advancedSearch) {
+                    // get the advanced search props to default
+                    this.setState({
+                      advancedSearch: false,
+                      booksIncluded: true,
+                      collectionsIncluded: true,
+                      distanceMax: 50,
+                      category: '',
+                      language: '',
+                      condition: '',
+                      priceMin: '',
+                      priceMax: null,
+                      currency: '',
+                      searchLat: null,
+                      searchLng: null
+                    });
+                  } else {
+                    this.setState({ advancedSearch: true });
+                  }
+                }}
               >
                 {advancedSearch ? 'Basic Search' : 'Advanced Search'}
               </CustomButton>
@@ -126,6 +153,12 @@ class Search extends React.Component {
                         name='priceMax'
                         value={priceMax}
                         onChange={this.handleChange}
+                      />
+                    </div>
+                    <div className='col'>
+                      <HandleCurrency
+                        originalCurrency={currency}
+                        updateCurrency={this.updateCurrency}
                       />
                     </div>
                   </div>
@@ -249,8 +282,22 @@ class Search extends React.Component {
               outline
               primary
               onClick={() => {
-                const { advancedSearch, ...otherState } = this.state;
-                this.props.searchItemsStart({ ...otherState });
+                // convert the price to the price with USD
+                const { priceMin, priceMax, currency } = this.state;
+                const minPriceInUSD =
+                  this.props.getPriceInUSD(priceMin, currency) || 0;
+                const maxPriceInUSD = this.props.getPriceInUSD(
+                  priceMax,
+                  currency
+                );
+
+                // get the search object from the state
+                const { advancedSearch, ...searchObject } = this.state;
+                // set the new price values in usd (without changing the component state)
+                searchObject.priceMin = minPriceInUSD;
+                searchObject.priceMax = maxPriceInUSD;
+                // search
+                this.props.searchItemsStart(searchObject);
               }}
             >
               <i className='fas fa-search' /> Search
@@ -262,10 +309,12 @@ class Search extends React.Component {
   }
 }
 
-const mapStateToProps = createStructuredSelector({
-  categories: selectCategories,
-  languages: selectLanguages,
-  conditions: selectConditions
+const mapStateToProps = state => ({
+  categories: selectCategories(state),
+  languages: selectLanguages(state),
+  conditions: selectConditions(state),
+  getPriceInUSD: (price, fromCurrency) =>
+    selectGetPriceInUSD(price, fromCurrency)(state)
 });
 
 const mapDispatchToProps = dispatch => ({

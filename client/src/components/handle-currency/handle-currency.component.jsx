@@ -26,20 +26,19 @@ class HandleCurrency extends React.Component {
     return (
       <div className='form-row'>
         {!!currency ? (
-          <div className='col col-md-12 row'>
+          <div className='row'>
             <div className='col'>
-              <FormInput large value={currency} readonly />
+              <h6>{currency}</h6>
             </div>
             <div className='col'>
               <CustomButton
                 primary
                 outline
-                large
                 onClick={() => {
                   this.setState({ currency: '' });
                 }}
               >
-                Change Currency
+                <i className='fas fa-pencil-alt' />
               </CustomButton>
             </div>
           </div>
@@ -62,12 +61,7 @@ class HandleCurrency extends React.Component {
               selectedItem
             }) => (
               <div className='col col-md-12'>
-                <FormInput
-                  large
-                  placeholder='enter currency'
-                  prepend='Currency'
-                  {...getInputProps()}
-                />
+                <FormInput placeholder='enter currency' {...getInputProps()} />
                 <ul
                   {...getMenuProps()}
                   style={{

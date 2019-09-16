@@ -7,13 +7,14 @@ export const selectRates = createSelector(
   conversionRates => conversionRates.rates
 );
 
-export const selectCurrencyList = createSelector(
-  [selectConversionRates],
-  conversionRates => Object.keys(conversionRates.rates)
-);
-
-export const selectRateBetween = (from, to) =>
+export const selectGetPriceInUSD = (price, fromCurrency) =>
   createSelector(
-    [selectConversionRates],
-    conversionRates => conversionRates[to] / conversionRates[from]
+    [selectRates],
+    rates => price / rates[fromCurrency]
+  );
+
+export const selectGetPriceInLocalCurrency = (price, toCurrency) =>
+  createSelector(
+    [selectRates],
+    rates => rates[toCurrency] * price
   );
