@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
-import { selectUser } from '../../redux/current-user/current-user.selectors';
+import { getSelectedUserStart } from '../../redux/selected-user/selected-user.actions';
+import { selectSelectedUser } from '../../redux/selected-user/selected-user.selectors';
 
 import WithSpinner from '../../components/with-spinner/with-spinner.component';
 import UserCard from '../../components/user-card/user-card.component';
@@ -11,37 +12,28 @@ import './profile.styles.scss';
 
 const UserCardWithSpinner = WithSpinner(UserCard);
 
-const Profile = ({ location: { pathname }, currentUser, selectedUser }) => {
-  const myProfile = pathname === '/profile/me';
+const Profile = ({ selectedUser, getSelectedUserStart, match }) => {
+  const userId = match.params.userid;
 
-  // useEffect(() => {
-  //   !myProfile && fetchSelectedUser();
-  // }, myProfile);
+  useEffect(() => {
+    getSelectedUserStart(userId);
+  }, [getSelectedUserStart, userId]);
 
   return (
-    <div>
-      {myProfile ? (
-        <UserCardWithSpinner
-          isLoading={currentUser ? false : true}
-          user={currentUser}
-          myProfile={myProfile}
-        />
-      ) : (
-        <UserCardWithSpinner
-          isLoading={selectedUser ? false : true}
-          user={selectedUser}
-          myProfile={!myProfile}
-        />
-      )}
-    </div>
+    <UserCardWithSpinner
+      isLoading={selectedUser ? false : true}
+      myProfile={false}
+    />
   );
 };
 
 const mapStateToProps = createStructuredSelector({
-  currentUser: selectUser
+  selectUser: selectSelectedUser
 });
 
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch => ({
+  getSelectedUserStart: id => dispatch(getSelectedUserStart(id))
+});
 
 export default connect(
   mapStateToProps,

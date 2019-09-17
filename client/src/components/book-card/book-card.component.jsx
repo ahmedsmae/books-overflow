@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
 import Lightbox from 'react-image-lightbox';
 
 import { selectUser } from '../../redux/current-user/current-user.selectors';
+import { selectGetPriceInLocalCurrency } from '../../redux/conversion-rates/conversion-rates.selectors';
 import { setSelectedItem } from '../../redux/current-user/current-user.actions';
 
 import { PATHS } from '../../assets/list.types';
@@ -16,7 +16,12 @@ import CustomImage from '../custom-image/custom-image.component';
 
 import './book-card.styles.scss';
 
-const BookCard = ({ book, currentUser, setSelectedItem }) => {
+const BookCard = ({
+  book,
+  currentUser,
+  setSelectedItem,
+  getPriceInLocalCurrency
+}) => {
   const [showMore, setShowMore] = useState(false);
   const [address, setAddress] = useState('');
   const [zoom, setZoom] = useState({ isZoomed: false, imageIndex: null });
@@ -41,16 +46,18 @@ const BookCard = ({ book, currentUser, setSelectedItem }) => {
     imageids
   } = book;
 
-  let firstname, lastname, avatarid;
+  let firstname, lastname, avatarid, ownerid;
 
   if (owner.firstname) {
     firstname = owner.firstname;
     lastname = owner.lastname;
     avatarid = owner.avatarid;
+    ownerid = owner._id;
   } else {
     firstname = currentUser.firstname;
     lastname = currentUser.lastname;
     avatarid = currentUser.avatarid;
+    ownerid = currentUser._id;
   }
 
   useEffect(() => {
@@ -67,7 +74,7 @@ const BookCard = ({ book, currentUser, setSelectedItem }) => {
             <h3>{title}</h3>
           </div>
           <div className='col-md-2'>
-            {currentUser._id === owner._id ? (
+            {currentUser && currentUser._id === owner._id ? (
               <Link to={PATHS.BOOK_DETAILS_PATH}>
                 <CustomButton
                   primary
@@ -94,8 +101,16 @@ const BookCard = ({ book, currentUser, setSelectedItem }) => {
       <div className='card-body'>
         <div className='row'>
           <div className='col-md-3'>
-            <UserImage source={`api/avatars/${avatarid}`} medium />
-            <h6>{`${firstname} ${lastname}`}</h6>
+            <Link
+              to={
+                currentUser && ownerid === currentUser._id
+                  ? PATHS.MY_PROFILE_PATH
+                  : PATHS.PROFILE_PATH_NO_ID + ownerid
+              }
+            >
+              <UserImage source={`api/avatars/${avatarid}`} medium />
+              <h6>{`${firstname} ${lastname}`}</h6>
+            </Link>
           </div>
 
           <div className='col-md-9'>
@@ -106,8 +121,11 @@ const BookCard = ({ book, currentUser, setSelectedItem }) => {
               <div className='col-md-10'>
                 <h5>
                   <i className='fas fa-dollar-sign' />{' '}
-                  {`${price} ${currency.toLowerCase()}`} |{' '}
-                  <i className='fas fa-map-marker-alt' />{' '}
+                  {`${Math.round(
+                    getPriceInLocalCurrency(price, currency),
+                    0
+                  )} ${currency.toLowerCase()}`}{' '}
+                  | <i className='fas fa-map-marker-alt' />{' '}
                   {`${Math.round(distance / 1000, 0)} km`}
                 </h5>
               </div>
@@ -181,8 +199,10 @@ const BookCard = ({ book, currentUser, setSelectedItem }) => {
   );
 };
 
-const mapStateToProps = createStructuredSelector({
-  currentUser: selectUser
+const mapStateToProps = state => ({
+  currentUser: selectUser(state),
+  getPriceInLocalCurrency: (price, toCurrency) =>
+    selectGetPriceInLocalCurrency(price, toCurrency)(state)
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -1,10 +1,10 @@
 const user = {
-  _id: 'uijshxdi73y2uhdewqwnjmsgbhtrftbtrj3ui',
+  _id: 'thisisarandomidforbooksoverflowapp',
   firstname: 'Ahmed',
   lastname: 'Afifi',
   email: 'ahmed.mohsen.afifi@gmail.com',
   password: 'PASS',
-  avatarid: 'snhjfdjkwehujkwekjejwhkjhijcewidjklcdjw',
+  avatarid: 'thisisarandomidforbooksoverflowapp',
   contactnumber: '+971 502138893', // give an option for the user while posting book or collection to give the access to his number with the book or collection
   // ! bookscount: 50, // this number will be counted based on the books the user post
   defaultlatitude: 102.04,
@@ -13,26 +13,26 @@ const user = {
   bio: 'Comment about yourself.',
   blockedusers: [
     {
-      userid: 'ujkwehdukqjwh,dikjhqwyuhguhwjqhjuhwqjukhijiqwuedu',
+      userid: 'thisisarandomidforbooksoverflowapp',
       reason: 'Whaever reason for blocking the user'
     }
   ],
   // chats will have an ownerid, so no need to add it in here
   notifications: [
     {
-      notificationid: 'jhdsewfjhwjehjjkfjewihjufhuhwerukhjwk',
+      notificationid: 'thisisarandomidforbooksoverflowapp',
       seen: 'true or false'
     }
   ],
   favourites: [
     {
       kind: 'BOOK or COLECTION',
-      fovouriteitemid: 'sghyujefhuhjkiwjkijfihjewoijiljweolijkcoiwerjile'
+      fovouriteitemid: 'thisisarandomidforbooksoverflowapp'
     }
   ],
   tokens: [
     {
-      token: 'cewjhudhkjwqhkdhikwehkuhcdukwehcukheukhwukkiwkquiwedhj'
+      token: 'thisisarandomtokenforbooksoverflowapp'
     }
   ],
   timestamp: 'createdAt, lastUpdated'

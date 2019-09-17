@@ -1,6 +1,6 @@
 const book = {
-  _id: 'hagyjdeywu3y782u3iwejsukdhjesaujdhwuiyieu8iw',
-  ownerid: 'anhsjhdhyhweysjhd3y7hweuhdjheyuhwiu38i',
+  _id: 'thisisarandomidforbooksoverflowapp',
+  ownerid: 'thisisarandomidforbooksoverflowapp',
   status: 'available, sold', // dropdown list - sold books will be disappeared after specific time from the last updated date
   title: 'Jurney to the center of the earth',
   author: 'Author Name',

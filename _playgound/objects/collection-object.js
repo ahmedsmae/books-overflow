@@ -1,6 +1,6 @@
 const collection = {
-  _id: 'ewhdhwuku4hy37wyjkhjdsh7ekjfdejeri',
-  ownerid: 'jashdjeuswhudhweukh74uyi3eji84983jui',
+  _id: 'thisisarandomidforbooksoverflowapp',
+  ownerid: 'thisisarandomidforbooksoverflowapp',
   status: 'available, sold', // dropdown list - sold collection will be disappeared after specific time from the last updated date
   title: 'Collection 1',
   numberofbooks: 10,

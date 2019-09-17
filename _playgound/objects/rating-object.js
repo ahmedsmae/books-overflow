@@ -1,7 +1,7 @@
 const rating = {
-  _id: 'huahewdhjwheghwukjejuiwjiejwijwjdwqew',
-  for: 'dshgjhewjkewhijsakhyeuhywkjushkahdxjsdk',
-  from: 'jsdhjhdfeywhujedijweukeuyuwy7hukwhsdh',
+  _id: 'thisisarandomidforbooksoverflowapp',
+  for: 'thisisarandomidforbooksoverflowapp',
+  from: 'thisisarandomidforbooksoverflowapp',
   score: 8,
   comment: 'Respectful'
 };

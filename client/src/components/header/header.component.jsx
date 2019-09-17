@@ -58,7 +58,12 @@ const Header = ({ currentUser, signoutUserStart, clearSelectedItem }) => {
           </Link>
 
           <Link to={PATHS.MY_PROFILE_PATH}>
-            <UserImage small source={`api/avatars/${currentUser.avatarid}`} />
+            <UserImage
+              small
+              source={
+                currentUser.avatarid && `api/avatars/${currentUser.avatarid}`
+              }
+            />
           </Link>
 
           <div className='my-auto ml-2'>

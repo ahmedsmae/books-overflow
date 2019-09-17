@@ -4,6 +4,8 @@ const auth = require('../../utils/auth');
 const { check, validationResult } = require('express-validator');
 
 const User = require('../../database/models/user');
+const Book = require('../../database/models/book');
+const Collection = require('../../database/models/collection');
 
 /**
  * @method - POST
@@ -147,14 +149,58 @@ router.get('/auth', auth, async (req, res) => {
  */
 router.get('/getuser/:userid', async (req, res) => {
   try {
-    const user = await User.findById(req.params.userid);
+    let user = await User.findById(req.params.userid);
+
+    if (!user) {
+      return res
+        .status(400)
+        .json({ errors: [{ msg: 'User does not exists' }] });
+    }
 
     // this will remove the private data of the user
     user = user.getPublicVersion();
 
-    // ! GET USER BOOKS AND COLLECTIONS
+    const books = await Book.find({ owner: req.params.userid }).populate(
+      'owner',
+      [
+        'firstname',
+        'lastname',
+        'email',
+        'avatarid',
+        'defaultlatitude',
+        'defaultlongitude',
+        'bio'
+      ]
+    );
 
-    res.json({ user });
+    const collections = await Collection.find({
+      owner: req.params.userid
+    }).populate('owner', [
+      'firstname',
+      'lastname',
+      'email',
+      'avatarid',
+      'defaultlatitude',
+      'defaultlongitude',
+      'bio'
+    ]);
+
+    const itemsArray = [];
+    for (let i = 0; i < books.length; i++) {
+      const bookObject = books[i].toObject();
+      itemsArray.push(bookObject);
+    }
+    for (let i = 0; i < collections.length; i++) {
+      const collectionObject = collections[i].toObject();
+      itemsArray.push(collectionObject);
+    }
+
+    // sort array by date
+    itemsArray.sort(function(a, b) {
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+
+    res.json({ user, items: itemsArray });
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ errors: [{ msg: err.message }] });

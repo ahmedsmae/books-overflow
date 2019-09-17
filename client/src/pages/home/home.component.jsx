@@ -6,6 +6,8 @@ import ListContainer from '../../components/list-container/list-container.compon
 
 import { getAllPublicItemsStart } from '../../redux/public-items/public-items.actions';
 
+import './home.styles.scss';
+
 const Home = ({ getAllPublicItemsStart }) => {
   useEffect(() => {
     getAllPublicItemsStart();

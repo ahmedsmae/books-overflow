@@ -1,5 +1,5 @@
 const bookImage = {
-  _id: 'hjejkwjkjekjkjjwkljeijijijjiwjeiiew9iw',
+  _id: 'thisisarandomidforbooksoverflowapp',
   image: 'binary',
   timestamp: 'createdAt, lastUpdated'
 };

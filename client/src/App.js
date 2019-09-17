@@ -6,93 +6,162 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import { selectUser } from './redux/current-user/current-user.selectors';
 import { loadingUserStart } from './redux/current-user/current-user.actions';
 import { getConversionRatesStart } from './redux/conversion-rates/conversion-rates.action';
-import {
-  getUserBooksStart,
-  getUserCollectionsStart,
-  getUserNotificationsStart
-} from './redux/current-user/current-user.actions';
-import { getAllPublicItemsStart } from './redux/public-items/public-items.actions';
 
 import { PATHS } from './assets/list.types';
 
 import Header from './components/header/header.component';
 import HomePage from './pages/home/home.component';
 import ProfilePage from './pages/profile/profile.component';
+import LibraryPage from './pages/library/library.components';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
 import EditProfilePage from './pages/edit-profile/edit-profile.component';
 import BookDetailsPage from './pages/book-details/book-details.component';
 import CollectionDetailsPage from './pages/collection-details/collection-details.component';
-import HelpPage from './pages/help/help.component';
 import ContactUsPage from './pages/contact-us/contact-us.component';
 import AboutPage from './pages/about/about.component';
+import ChangePasswordPage from './pages/change-password/change-password.component';
+import ForgetPasswordPage from './pages/forget-password/forget-password.component';
+import NotificationsPage from './pages/notifications/notifications.component';
+import BlockedUsersPage from './pages/blocked-users/blocked-users.component';
+import FavouritesPage from './pages/favourites/favourites.component';
+import MyLibraryPage from './pages/my-library/my-library.component';
+import MyProfilePage from './pages/my-profile/my-profile.component';
 
 import './App.scss';
 
-const App = ({
-  currentUser,
-  loadingUserStart,
-  getConversionRatesStart,
-  getUserBooksStart,
-  getUserCollectionsStart,
-  getUserNotificationsStart,
-  getAllPublicItemsStart
-}) => {
+const App = ({ currentUser, loadingUserStart, getConversionRatesStart }) => {
   useEffect(() => {
-    !currentUser && loadingUserStart();
-    getAllPublicItemsStart();
-    if (currentUser) {
-      getConversionRatesStart();
-      getUserBooksStart();
-      getUserCollectionsStart();
-      getUserNotificationsStart();
-    }
-  }, [
-    currentUser,
-    getAllPublicItemsStart,
-    loadingUserStart,
-    getConversionRatesStart,
-    getUserBooksStart,
-    getUserCollectionsStart,
-    getUserNotificationsStart
-  ]);
+    currentUser ? getConversionRatesStart() : loadingUserStart();
+  }, [currentUser, loadingUserStart, getConversionRatesStart]);
 
   return (
     <Fragment>
       <Header />
       <div className='container'>
         <Switch>
-          <Route exact path={PATHS.HOME_PATH} component={HomePage} />
+          {/* PRIVATE ROUTES */}
           <Route
             exact
-            path={PATHS.SIGN_IN_PATH}
+            path={PATHS.BOOK_DETAILS_PATH}
             render={props =>
               currentUser ? (
-                <Redirect to={PATHS.LIST_CONTAINER_PATH} />
+                <BookDetailsPage {...props} />
               ) : (
-                <SignInAndSignUpPage {...props} />
+                <Redirect to={PATHS.HOME_PATH} />
+              )
+            }
+          />
+          <Route
+            exact
+            path={PATHS.COLLECTION_DETAILS_PATH}
+            render={props =>
+              currentUser ? (
+                <CollectionDetailsPage {...props} />
+              ) : (
+                <Redirect to={PATHS.HOME_PATH} />
               )
             }
           />
           <Route
             exact
             path={PATHS.EDIT_PROFILE_PATH}
-            component={EditProfilePage}
+            render={props =>
+              currentUser ? (
+                <EditProfilePage {...props} />
+              ) : (
+                <Redirect to={PATHS.HOME_PATH} />
+              )
+            }
           />
           <Route
             exact
-            path={PATHS.BOOK_DETAILS_PATH}
-            component={BookDetailsPage}
+            path={PATHS.CHANGE_PASSWORD_PATH}
+            render={props =>
+              currentUser ? (
+                <ChangePasswordPage {...props} />
+              ) : (
+                <Redirect to={PATHS.HOME_PATH} />
+              )
+            }
           />
           <Route
             exact
-            path={PATHS.COLLECTION_DETAILS_PATH}
-            component={CollectionDetailsPage}
+            path={PATHS.NOTIFICATIONS_PATH}
+            render={props =>
+              currentUser ? (
+                <NotificationsPage {...props} />
+              ) : (
+                <Redirect to={PATHS.HOME_PATH} />
+              )
+            }
+          />
+          <Route
+            exact
+            path={PATHS.FAVOURITES_PATH}
+            render={props =>
+              currentUser ? (
+                <FavouritesPage {...props} />
+              ) : (
+                <Redirect to={PATHS.HOME_PATH} />
+              )
+            }
+          />
+          <Route
+            exact
+            path={PATHS.BLOCKED_USERS_PATH}
+            render={props =>
+              currentUser ? (
+                <BlockedUsersPage {...props} />
+              ) : (
+                <Redirect to={PATHS.HOME_PATH} />
+              )
+            }
+          />
+          <Route
+            exact
+            path={PATHS.MY_LIBRARY_PATH}
+            render={props =>
+              currentUser ? (
+                <MyLibraryPage {...props} />
+              ) : (
+                <Redirect to={PATHS.HOME_PATH} />
+              )
+            }
+          />
+          <Route
+            exact
+            path={PATHS.MY_PROFILE_PATH}
+            render={props =>
+              currentUser ? (
+                <MyProfilePage {...props} />
+              ) : (
+                <Redirect to={PATHS.HOME_PATH} />
+              )
+            }
+          />
+
+          {/* PUBLIC ROUTES */}
+          <Route exact path={PATHS.HOME_PATH} component={HomePage} />
+          <Route
+            exact
+            path={PATHS.SIGN_IN_PATH}
+            render={props =>
+              currentUser ? (
+                <Redirect to={PATHS.HOME_PATH} />
+              ) : (
+                <SignInAndSignUpPage {...props} />
+              )
+            }
           />
           <Route exact path={PATHS.ABOUT_PATH} component={AboutPage} />
           <Route exact path={PATHS.CONTACT_US_PATH} component={ContactUsPage} />
+          <Route
+            exact
+            path={PATHS.FORGET_PASSWORD_PATH}
+            component={ForgetPasswordPage}
+          />
+          <Route path={PATHS.LIBRARY_PATH} component={LibraryPage} />
           <Route path={PATHS.PROFILE_PATH} component={ProfilePage} />
-          <Route path={PATHS.HELP_PATH} component={HelpPage} />
-          {/* List container should be always at the bottom of the switch */}
         </Switch>
       </div>
     </Fragment>
@@ -105,11 +174,7 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = dispatch => ({
   loadingUserStart: () => dispatch(loadingUserStart()),
-  getConversionRatesStart: () => dispatch(getConversionRatesStart()),
-  getUserBooksStart: () => dispatch(getUserBooksStart()),
-  getUserCollectionsStart: () => dispatch(getUserCollectionsStart()),
-  getUserNotificationsStart: () => dispatch(getUserNotificationsStart()),
-  getAllPublicItemsStart: () => dispatch(getAllPublicItemsStart())
+  getConversionRatesStart: () => dispatch(getConversionRatesStart())
 });
 
 export default connect(

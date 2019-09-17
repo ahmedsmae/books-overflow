@@ -1,10 +1,10 @@
 const chat = {
-  _id: 'iksajjui8w3ujh8odjkaxmsnjhjkqwuieu3djewjweh',
-  ownerid: 'ahswjudhwueqhjdkejwksfhjuhsereujejwsojiew',
-  opponentid: 'skjdjhfjkcjsdvkklcvkdjsiljvhilsdjk;klvfkliodkl',
+  _id: 'thisisarandomidforbooksoverflowapp',
+  ownerid: 'thisisarandomidforbooksoverflowapp',
+  opponentid: 'thisisarandomidforbooksoverflowapp;klvfkliodkl',
   messages: [
     {
-      _id: 'xqwjdhuhewqudijiejiwe4ieu4yu4u3uejilf3ji',
+      _id: 'thisisarandomidforbooksoverflowapp',
       mymessage: 'true or false', //if true > it's from the owner of the chat | false > from the opponent of the chat
       text: 'Hello There!',
       createdAt: 'timestamp',

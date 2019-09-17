@@ -20,6 +20,8 @@ import FormInput from '../form-input/form-input.component';
 import FormSelect from '../form-select/form-select.component';
 import HandleCurrency from '../handle-currency/handle-currency.component';
 
+import './search-card.styles.scss';
+
 class Search extends React.Component {
   state = {
     titleQuery: '',
@@ -32,7 +34,7 @@ class Search extends React.Component {
     language: '',
     condition: '',
     priceMin: '',
-    priceMax: null,
+    priceMax: '',
     currency: '',
     searchLat: null,
     searchLng: null

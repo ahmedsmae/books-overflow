@@ -1,16 +1,24 @@
 export const PATHS = {
-  HOME_PATH: '/',
-  SIGN_IN_PATH: '/sign-in',
-  EDIT_PROFILE_PATH: '/edit-profile',
-  MY_PROFILE_PATH: '/profile/me',
-  MY_LIBRARY_PATH: '/my-library',
-  MY_FAVOURITES_PATH: '/my-favourites',
-  MY_NOTIFICATIONS_PATH: '/my-notifications',
-  MY_BLOCKED_USERS_PATH: '/my-blocked-users',
+  // PRIVATE ROUTES
   BOOK_DETAILS_PATH: '/book-details',
   COLLECTION_DETAILS_PATH: '/collection-details',
+  EDIT_PROFILE_PATH: '/edit-profile',
+  FAVOURITES_PATH: '/favourites',
+  NOTIFICATIONS_PATH: '/notifications',
+  BLOCKED_USERS_PATH: '/blocked-users',
+  CHANGE_PASSWORD_PATH: '/change-password',
+  MY_PROFILE_PATH: '/profile/me',
+  MY_LIBRARY_PATH: '/library/me',
+
+  // PUBLIC ROUTES
+  HOME_PATH: '/',
+  SIGN_IN_PATH: '/sign-in',
   ABOUT_PATH: '/about',
   CONTACT_US_PATH: '/contact-us',
-  PROFILE_PATH: '/profile',
-  HELP_PATH: '/help'
+  FORGET_PASSWORD_PATH: '/forget-password',
+  LIBRARY_PATH: '/library/:userid',
+  PROFILE_PATH: '/profile/:userid',
+
+  LIBRARY_PATH_NO_ID: '/library/',
+  PROFILE_PATH_NO_ID: '/profile/'
 };
