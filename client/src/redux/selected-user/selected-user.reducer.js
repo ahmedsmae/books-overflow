@@ -2,6 +2,7 @@ import SelectedUserActionTypes from './selected-user.types';
 
 const INITIAL_STATE = {
   selectedUser: null,
+  items: null,
   loading: false,
   errorMessage: ''
 };

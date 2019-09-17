@@ -8,7 +8,10 @@ import {
 } from '../../redux/constants/constants.selectors';
 import { selectSelectedItem } from '../../redux/current-user/current-user.selectors';
 import { selectGetPriceInUSD } from '../../redux/conversion-rates/conversion-rates.selectors';
-import { editBookStart } from '../../redux/current-user/current-user.actions';
+import {
+  editBookStart,
+  deleteBookStart
+} from '../../redux/current-user/current-user.actions';
 
 import FormInput from '../../components/form-input/form-input.component';
 import FormSelect from '../../components/form-select/form-select.component';
@@ -22,6 +25,7 @@ import './book-details.styles.scss';
 
 class BookDetails extends React.Component {
   state = {
+    _id: null,
     status: 'Available',
     title: '',
     author: '',
@@ -66,6 +70,7 @@ class BookDetails extends React.Component {
   static getDerivedStateFromProps(props, currentState) {
     if (props.selectedBook) {
       return {
+        _id: props.selectedBook._id,
         title: props.selectedBook.title,
         status: props.selectedBook.status,
         author: props.selectedBook.author,
@@ -139,6 +144,7 @@ class BookDetails extends React.Component {
 
   render() {
     const {
+      _id,
       // status,
       title,
       author,
@@ -253,7 +259,7 @@ class BookDetails extends React.Component {
             <div className=''>Photos</div>
             <HandleMultipleImages
               maxPhotos='3'
-              url='api/bookimages/'
+              url='/api/bookimages/'
               imageids={imageids}
               updateImageSources={this.updateImageSources}
               updateImageIds={this.updateImageIds}
@@ -282,6 +288,17 @@ class BookDetails extends React.Component {
               onChange={this.handleChange}
             />
             <div className='mt-4 text-right'>
+              {this.props.selectedBook && (
+                <CustomButton
+                  large
+                  danger
+                  onClick={() => {
+                    this.props.deleteBookStart(_id);
+                  }}
+                >
+                  Delete Book
+                </CustomButton>
+              )}
               <CustomButton large primary type='submit'>
                 {this.props.selectedBook ? 'Save Changes' : 'Save Book'}
               </CustomButton>
@@ -303,7 +320,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  editBookStart: bookInfo => dispatch(editBookStart(bookInfo))
+  editBookStart: bookInfo => dispatch(editBookStart(bookInfo)),
+  deleteBookStart: bookId => dispatch(deleteBookStart(bookId))
 });
 
 export default connect(

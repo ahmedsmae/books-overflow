@@ -8,15 +8,22 @@ import {
   signoutUserStart,
   clearSelectedItem
 } from '../../redux/current-user/current-user.actions';
+import { setAlert } from '../../redux/alert/alert.actions';
 
 import { PATHS } from '../../assets/list.types';
 
 import UserImage from '../user-image/user-image.component';
 import CustomButton from '../custom-button/custom-button.component';
+import Alert from '../alert/alert.component';
 
 import './header.styles.scss';
 
-const Header = ({ currentUser, signoutUserStart, clearSelectedItem }) => {
+const Header = ({
+  currentUser,
+  signoutUserStart,
+  clearSelectedItem,
+  setAlert
+}) => {
   return (
     <nav className='navbar navbar-light bg-light'>
       <span className='navbar-brand'>
@@ -27,7 +34,18 @@ const Header = ({ currentUser, signoutUserStart, clearSelectedItem }) => {
       {currentUser ? (
         <div className='d-flex'>
           <div className='my-auto mr-2'>
-            <CustomButton dark outline onClick={() => {}}>
+            <CustomButton
+              dark
+              outline
+              onClick={() => {
+                setAlert(
+                  'Family',
+                  ['Mohamed', 'Ahmed Afifi', 'Moustafa', 'Minna'],
+                  'danger',
+                  5000
+                );
+              }}
+            >
               <i className='fas fa-comments' /> Messages{' '}
               <span className='text-danger'>9</span>
             </CustomButton>
@@ -61,7 +79,7 @@ const Header = ({ currentUser, signoutUserStart, clearSelectedItem }) => {
             <UserImage
               small
               source={
-                currentUser.avatarid && `api/avatars/${currentUser.avatarid}`
+                currentUser.avatarid && `/api/avatars/${currentUser.avatarid}`
               }
             />
           </Link>
@@ -79,6 +97,7 @@ const Header = ({ currentUser, signoutUserStart, clearSelectedItem }) => {
           </CustomButton>
         </Link>
       )}
+      <Alert />
     </nav>
   );
 };
@@ -89,7 +108,8 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = dispatch => ({
   signoutUserStart: () => dispatch(signoutUserStart()),
-  clearSelectedItem: () => dispatch(clearSelectedItem())
+  clearSelectedItem: () => dispatch(clearSelectedItem()),
+  setAlert: (msg, type, to) => dispatch(setAlert(msg, type, to))
 });
 
 export default connect(

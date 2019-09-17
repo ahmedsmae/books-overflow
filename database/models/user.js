@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+const Book = require('./book');
+const Collection = require('./collection');
+
 const userSchema = new mongoose.Schema(
   {
     firstname: {
@@ -168,12 +171,12 @@ userSchema.pre('save', async function(next) {
   next();
 });
 
-// remove user entries after deleting themselves
-userSchema.post('remove', async function(next) {
+// remove user books and collections before deleting themselves
+userSchema.pre('remove', async function(next) {
   const user = this;
 
-  // ! delete all user books and collection as below
-  // await deleteAllUserContacts(user._id);
+  await Book.deleteMany({ owner: user._id });
+  await Collection.deleteMany({ owner: user._id });
 
   next();
 });

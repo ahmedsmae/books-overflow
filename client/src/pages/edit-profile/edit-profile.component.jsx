@@ -1,6 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+
+import { PATHS } from '../../assets/list.types';
 
 import { selectUser } from '../../redux/current-user/current-user.selectors';
 import { editUserProfileStart } from '../../redux/current-user/current-user.actions';
@@ -180,6 +183,12 @@ class EditProfile extends React.Component {
               />
             </div>
             <div className='text-right'>
+              <Link to={PATHS.CHANGE_PASSWORD_PATH}>
+                <CustomButton large danger>
+                  Change Password
+                </CustomButton>
+              </Link>
+
               <CustomButton
                 large
                 primary

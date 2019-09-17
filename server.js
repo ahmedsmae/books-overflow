@@ -29,10 +29,12 @@ app.use('/api/avatars', require('./routes/avatars/avatars'));
 
 app.use('/api/books', require('./routes/books/setters'));
 app.use('/api/books', require('./routes/books/getters'));
+app.use('/api/books', require('./routes/books/delete'));
 app.use('/api/bookimages', require('./routes/book-images/book-images'));
 
 app.use('/api/collections', require('./routes/collections/setters'));
 app.use('/api/collections', require('./routes/collections/getters'));
+app.use('/api/collections', require('./routes/collections/delete'));
 app.use(
   '/api/collectionimages',
   require('./routes/collection-images/collection-images')

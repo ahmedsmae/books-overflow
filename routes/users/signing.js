@@ -142,7 +142,7 @@ router.get('/auth', auth, async (req, res) => {
 
 /**
  * @method - GET
- * @url - 'api/users/getuser/:userid'
+ * @url - 'api/users/getuserdata/:userid'
  * @data - NO DATA
  * @action - get any user data by his id
  * @access - public

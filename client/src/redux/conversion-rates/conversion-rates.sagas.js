@@ -1,5 +1,6 @@
 import { call, put, takeLatest, all } from 'redux-saga/effects';
 import axios from 'axios';
+import { setAlert } from '../alert/alert.actions';
 
 import ConversioReatesActionTypes from './conversion-rates.types';
 import {
@@ -24,6 +25,7 @@ function* getRatesAsync() {
 
     yield put(getConversionRatesSuccess(response.data.rates));
   } catch (err) {
+    yield put(setAlert('Error!', err.message, 'danger', 5000));
     yield put(getConversionRatesFailure(err.message));
   }
 }

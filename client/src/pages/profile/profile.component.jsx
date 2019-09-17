@@ -28,7 +28,7 @@ const Profile = ({ selectedUser, getSelectedUserStart, match }) => {
 };
 
 const mapStateToProps = createStructuredSelector({
-  selectUser: selectSelectedUser
+  selectedUser: selectSelectedUser
 });
 
 const mapDispatchToProps = dispatch => ({

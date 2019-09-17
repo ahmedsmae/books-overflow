@@ -26,6 +26,7 @@ const UserCard = ({ myProfile, selectedUser, currentUser, notications }) => {
     defaultlongitude,
     createdAt,
     bio;
+
   if (myProfile) {
     _id = currentUser._id;
     firstname = currentUser.firstname;
@@ -89,21 +90,21 @@ const UserCard = ({ myProfile, selectedUser, currentUser, notications }) => {
 
             {myProfile && (
               <Fragment>
-                <Link to={PATHS.MY_FAVOURITES_PATH} className='mx-3'>
+                <Link to={PATHS.FAVOURITES_PATH} className='mx-3'>
                   <CustomButton primary>
                     <i className='fas fa-star text-warning' />
                     My Favourites
                   </CustomButton>
                 </Link>
 
-                <Link to={PATHS.MY_NOTIFICATIONS_PATH} className='mx-3'>
+                <Link to={PATHS.NOTIFICATIONS_PATH} className='mx-3'>
                   <CustomButton warning>
                     <i className='fas fa-clipboard' /> Notifications{' '}
                     <span className='text-danger'>5</span>
                   </CustomButton>
                 </Link>
 
-                <Link to={PATHS.MY_BLOCKED_USERS_PATH} className='mx-3'>
+                <Link to={PATHS.BLOCKED_USERS_PATH} className='mx-3'>
                   <CustomButton danger>
                     <i className='fas fa-user-lock' /> Blocked Users
                   </CustomButton>

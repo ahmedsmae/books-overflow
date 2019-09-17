@@ -16,7 +16,7 @@ import 'react-image-crop/lib/ReactCrop.scss';
 
 const HandleImage = ({ updateImage, avatarid }) => {
   const [image, setImage] = useState({
-    source: avatarid ? `api/avatars/${avatarid}` : BlankUser,
+    source: avatarid ? `/api/avatars/${avatarid}` : BlankUser,
     isImageSelected: false,
     crop: { aspect: 1 / 1, x: 10, y: 10, width: 250, height: 250 }
   });

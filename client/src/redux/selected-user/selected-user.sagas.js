@@ -1,5 +1,6 @@
 import { takeLatest, put, call, all } from 'redux-saga/effects';
 import axios from 'axios';
+import { setAlert } from '../alert/alert.actions';
 
 import SelectedUserActionTypes from './selected-user.types';
 import {
@@ -11,7 +12,7 @@ function* getUserAsync({ payload }) {
   try {
     const response = yield call(axios, {
       method: 'get',
-      url: 'api/users/getuser/' + payload
+      url: `/api/users/getuser/${payload}`
     });
 
     let user = response.data.user;
@@ -19,6 +20,7 @@ function* getUserAsync({ payload }) {
 
     yield put(getSelectedUserSuccess(user));
   } catch (err) {
+    yield put(setAlert('Error!', err.message, 'danger', 5000));
     yield put(getSelectedUserFailure(err.message));
   }
 }

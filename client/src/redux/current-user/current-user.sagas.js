@@ -1,5 +1,6 @@
 import { call, takeLatest, put, all } from 'redux-saga/effects';
 import axios from 'axios';
+import { setAlert } from '../alert/alert.actions';
 
 import setAuthToken from '../utils/setAuthToken';
 import { dataURLtoFile } from './current-user.utils';
@@ -27,14 +28,22 @@ import {
   getUserNotificationsSuccess,
   getUserNotificationsFailure,
   updateNotificationSuccess,
-  updateNotificationFailure
+  updateNotificationFailure,
+  deleteBookSuccess,
+  deleteBookFailure,
+  deleteCollectionSuccess,
+  deleteCollectionFailure,
+  forgetPasswordSuccess,
+  forgetPasswordFailure,
+  changePasswordSuccess,
+  changePasswordFailure
 } from './current-user.actions';
 
 function* signupUserAsync({ payload }) {
   try {
     const response = yield call(axios, {
       method: 'post',
-      url: 'api/users/signup',
+      url: '/api/users/signup',
       data: { ...payload }
     });
 
@@ -50,7 +59,7 @@ function* signInUserAsync({ payload }) {
   try {
     const response = yield call(axios, {
       method: 'post',
-      url: 'api/users/signin',
+      url: '/api/users/signin',
       data: { ...payload }
     });
 
@@ -58,6 +67,7 @@ function* signInUserAsync({ payload }) {
 
     yield put(signinUserSuccess(response.data.user));
   } catch (err) {
+    yield put(setAlert('Error!', err.message, 'danger', 5000));
     yield put(signinUserFailure(err.message));
   }
 }
@@ -68,11 +78,21 @@ function* loadingUserAsync() {
 
     const response = yield call(axios, {
       method: 'get',
-      url: 'api/users/auth'
+      url: '/api/users/auth'
     });
 
     yield put(loadingUserSuccess(response.data.user));
   } catch (err) {
+    console.log(err.response.data);
+
+    yield put(
+      setAlert(
+        'You are not authenticated!',
+        err.response.data.error,
+        'warning',
+        5000
+      )
+    );
     yield put(loadingUserFailure(err.message));
   }
 }
@@ -83,13 +103,14 @@ function* signoutUserAsync() {
 
     yield call(axios, {
       method: 'post',
-      url: 'api/users/signout'
+      url: '/api/users/signout'
     });
 
     yield localStorage.removeItem('token');
 
     yield put(signoutUserSuccess());
   } catch (err) {
+    yield put(setAlert('Error!', err.message, 'danger', 5000));
     yield put(signoutUserFailure(err.message));
   }
 }
@@ -108,12 +129,13 @@ function* editUserProfileAsync({ payload }) {
 
     const response = yield call(axios, {
       method: 'post',
-      url: 'api/users/profile',
+      url: '/api/users/profile',
       data: { ...otherInfo }
     });
 
     yield put(editUserProfileSuccess(response.data.user));
   } catch (err) {
+    yield put(setAlert('Error!', err.message, 'danger', 5000));
     yield put(editUserProfileFailure(err.message));
   }
 }
@@ -127,14 +149,15 @@ function* editBookAsync({ payload }) {
     // save book data first
     const response = yield call(axios, {
       method: 'post',
-      url: 'api/books',
+      url: '/api/books',
       data: { ...otherInfo }
     });
 
     const bookId = response.data.book._id;
 
     // save all new image sources
-    for (const newSource of newImageSources) {
+    let newSource;
+    for (newSource of newImageSources) {
       const fd = yield new FormData();
       const file = yield dataURLtoFile(newSource, 'bookImage.png');
       fd.append('image', file, file.name);
@@ -143,6 +166,7 @@ function* editBookAsync({ payload }) {
 
     yield put(editBookSuccess());
   } catch (err) {
+    yield put(setAlert('Error!', err.message, 'danger', 5000));
     yield put(editBookFailure(err.message));
   }
 }
@@ -153,11 +177,12 @@ function* getBooksAsync() {
 
     const response = yield call(axios, {
       method: 'get',
-      url: 'api/books/mybooks'
+      url: '/api/books/mybooks'
     });
 
     yield put(getUserBooksSuccess(response.data.books));
   } catch (err) {
+    yield put(setAlert('Error!', err.message, 'danger', 5000));
     yield put(getUserBooksFailure(err.message));
   }
 }
@@ -171,26 +196,28 @@ function* editCollectionAsync({ payload }) {
     // save collection data first
     const response = yield call(axios, {
       method: 'post',
-      url: 'api/collections',
+      url: '/api/collections',
       data: { ...otherInfo }
     });
 
     const collectionId = response.data.collection._id;
 
     // save all new image sources
-    for (const newSource of newImageSources) {
+    let newSource;
+    for (newSource of newImageSources) {
       const fd = yield new FormData();
       const file = yield dataURLtoFile(newSource, 'collectionImage.png');
       fd.append('image', file, file.name);
       yield call(
         axios.post,
-        `api/collectionimages/setimage/${collectionId}`,
+        `/api/collectionimages/setimage/${collectionId}`,
         fd
       );
     }
 
     yield put(editCollectionSuccess());
   } catch (err) {
+    yield put(setAlert('Error!', err.message, 'danger', 5000));
     yield put(editCollectionFailure(err.message));
   }
 }
@@ -201,11 +228,12 @@ function* getCollectionsAsync() {
 
     const response = yield call(axios, {
       method: 'get',
-      url: 'api/collections/mycollections'
+      url: '/api/collections/mycollections'
     });
 
     yield put(getUserCollectionsSuccess(response.data.collections));
   } catch (err) {
+    yield put(setAlert('Error!', err.message, 'danger', 5000));
     yield put(getUserCollectionsFailure(err.message));
   }
 }
@@ -216,11 +244,12 @@ function* getNotificationsAsync() {
 
     const response = yield call(axios, {
       method: 'get',
-      url: 'api/notifications/mynotifications'
+      url: '/api/notifications/mynotifications'
     });
 
     yield put(getUserNotificationsSuccess(response.data.notifications));
   } catch (err) {
+    yield put(setAlert('Error!', err.message, 'danger', 5000));
     yield put(getUserNotificationsFailure(err.message));
   }
 }
@@ -231,12 +260,77 @@ function* updateNotificationAsync({ payload }) {
 
     yield call(axios, {
       method: 'post',
-      url: `api/users/profile/updatenotificationseen/${payload}`
+      url: `/api/users/profile/updatenotificationseen/${payload}`
     });
 
     yield put(updateNotificationSuccess());
   } catch (err) {
+    yield put(setAlert('Error!', err.message, 'danger', 5000));
     yield put(updateNotificationFailure(err.message));
+  }
+}
+
+function* deleteBookAsync({ payload }) {
+  try {
+    yield setAuthToken();
+
+    yield call(axios, {
+      method: 'delete',
+      url: `/api/books/${payload}`
+    });
+
+    yield put(deleteBookSuccess());
+  } catch (err) {
+    yield put(setAlert('Error!', err.message, 'danger', 5000));
+    yield put(deleteBookFailure(err.message));
+  }
+}
+
+function* deleteCollectionAsync({ payload }) {
+  try {
+    yield setAuthToken();
+
+    yield call(axios, {
+      method: 'delete',
+      url: `/api/collections/${payload}`
+    });
+
+    yield put(deleteCollectionSuccess());
+  } catch (err) {
+    yield put(setAlert('Error!', err.message, 'danger', 5000));
+    yield put(deleteCollectionFailure(err.message));
+  }
+}
+
+function* forgetPasswordAsync({ payload }) {
+  try {
+    yield call(axios, {
+      method: 'post',
+      url: '/api/users/forgetpassword',
+      data: { email: payload }
+    });
+
+    yield put(forgetPasswordSuccess());
+  } catch (err) {
+    yield put(setAlert('Error!', err.message, 'danger', 5000));
+    yield put(forgetPasswordFailure(err.message));
+  }
+}
+
+function* changePasswordAsync({ payload }) {
+  try {
+    const response = yield call(axios, {
+      method: 'post',
+      url: '/api/users/changepassword',
+      data: { ...payload }
+    });
+
+    yield localStorage.setItem('token', response.data.token);
+
+    yield put(changePasswordSuccess(response.data.user));
+  } catch (err) {
+    yield put(setAlert('Error!', err.message, 'danger', 5000));
+    yield put(changePasswordFailure(err.message));
   }
 }
 
@@ -317,6 +411,38 @@ function* reloadNotificationsAfterUpdateOne() {
   );
 }
 
+function* deleteCollectionStart() {
+  yield takeLatest(
+    UserActionTypes.DELETE_COLLECTION_START,
+    deleteCollectionAsync
+  );
+}
+
+// this saga will listen to the success in the delete a collection then will run get collections again
+function* reloadCollectionsAfterDeleteCollection() {
+  yield takeLatest(
+    UserActionTypes.DELETE_COLLECTION_SUCCESS,
+    getCollectionsAsync
+  );
+}
+
+function* deleteBookStart() {
+  yield takeLatest(UserActionTypes.DELETE_BOOK_START, deleteBookAsync);
+}
+
+// this saga will listen to the success in the delete a book then will run get collections again
+function* reloadBooksAfterDeleteBook() {
+  yield takeLatest(UserActionTypes.DELETE_BOOK_SUCCESS, getBooksAsync);
+}
+
+function* changePasswordStart() {
+  yield takeLatest(UserActionTypes.CHANGE_PASSWORD_START, changePasswordAsync);
+}
+
+function* forgetPasswordStart() {
+  yield takeLatest(UserActionTypes.FORGET_PASSWORD_START, forgetPasswordAsync);
+}
+
 export default function* userSagas() {
   yield all([
     call(loadingUserStart),
@@ -332,6 +458,12 @@ export default function* userSagas() {
     call(reloadCollectionsAfterEditCollection),
     call(getNotificationsStart),
     call(updateNotificationStart),
-    call(reloadNotificationsAfterUpdateOne)
+    call(reloadNotificationsAfterUpdateOne),
+    call(deleteCollectionStart),
+    call(reloadCollectionsAfterDeleteCollection),
+    call(deleteBookStart),
+    call(reloadBooksAfterDeleteBook),
+    call(changePasswordStart),
+    call(forgetPasswordStart)
   ]);
 }

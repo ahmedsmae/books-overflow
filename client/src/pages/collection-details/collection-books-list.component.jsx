@@ -119,7 +119,7 @@ class CollectionBooksList extends React.Component {
                     this.props.updateBooksArray(newArray);
                   }}
                 >
-                  <i class='fas fa-times' />
+                  <i className='fas fa-times' />
                 </CustomButton>
               </div>
             </div>

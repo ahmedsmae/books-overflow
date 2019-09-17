@@ -167,6 +167,66 @@ export const updateNotificationFailure = errorMessage => ({
   payload: errorMessage
 });
 
+// DELETE BOOK
+export const deleteBookStart = bookId => ({
+  type: UserActionTypes.DELETE_BOOK_START,
+  payload: bookId
+});
+
+export const deleteBookSuccess = () => ({
+  type: UserActionTypes.DELETE_BOOK_SUCCESS
+});
+
+export const deleteBookFailure = errorMessage => ({
+  type: UserActionTypes.DELETE_BOOK_FAILURE,
+  payload: errorMessage
+});
+
+// DELETE COLLECTION
+export const deleteCollectionStart = collectionId => ({
+  type: UserActionTypes.DELETE_COLLECTION_START,
+  payload: collectionId
+});
+
+export const deleteCollectionSuccess = () => ({
+  type: UserActionTypes.DELETE_COLLECTION_SUCCESS
+});
+
+export const deleteCollectionFailure = errorMessage => ({
+  type: UserActionTypes.DELETE_COLLECTION_FAILURE,
+  payload: errorMessage
+});
+
+// FORGET PASSWORD
+export const forgetPasswordStart = email => ({
+  type: UserActionTypes.FORGET_PASSWORD_START,
+  payload: email
+});
+
+export const forgetPasswordSuccess = () => ({
+  type: UserActionTypes.FORGET_PASSWORD_SUCCESS
+});
+
+export const forgetPasswordFailure = errorMessage => ({
+  type: UserActionTypes.FORGET_PASSWORD_FAILURE,
+  payload: errorMessage
+});
+
+// CHANGE PASSWORD
+export const changePasswordStart = (oldPassword, newPassword) => ({
+  type: UserActionTypes.CHANGE_PASSWORD_START,
+  payload: { oldPassword, newPassword }
+});
+
+export const changePasswordSuccess = () => ({
+  type: UserActionTypes.CHANGE_PASSWORD_SUCCESS
+});
+
+export const changePasswordFailure = errorMessage => ({
+  type: UserActionTypes.CHANGE_PASSWORD_FAILURE,
+  payload: errorMessage
+});
+
 // SELECTED ITEM
 export const setSelectedItem = selectedItem => ({
   type: UserActionTypes.SET_SELECTED_ITEM,

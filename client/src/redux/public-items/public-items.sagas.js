@@ -1,5 +1,6 @@
 import { takeLatest, call, put, all } from 'redux-saga/effects';
 import axios from 'axios';
+import { setAlert } from '../alert/alert.actions';
 
 import { getLatLng } from './public-items.utils';
 
@@ -20,13 +21,14 @@ function* getItemsAsync() {
     if (latitude && longitude) {
       const response = yield call(axios, {
         method: 'post',
-        url: 'api/publicitems/all',
+        url: '/api/publicitems/all',
         data: { latitude, longitude }
       });
 
       yield put(getAllPublicItemsSuccess(response.data.items));
     }
   } catch (err) {
+    yield put(setAlert('Error!', err.message, 'danger', 5000));
     yield put(getAllPublicItemsFailure(err.message));
   }
 }
@@ -37,12 +39,13 @@ function* searchItemsAsync({ payload }) {
   try {
     const response = yield call(axios, {
       method: 'post',
-      url: 'api/publicitems/searchitems',
+      url: '/api/publicitems/searchitems',
       data: { ...payload }
     });
 
     yield put(searchItemsSuccess(response.data.items));
   } catch (err) {
+    yield put(setAlert('Error!', err.message, 'danger', 5000));
     yield put(searchItemsFailure(err.message));
   }
 }

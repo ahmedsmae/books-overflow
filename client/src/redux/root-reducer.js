@@ -8,6 +8,7 @@ import constantsReducer from './constants/constants.reducer';
 import convertionRatesReducer from './conversion-rates/conversion-rates.reducer';
 import publicItemsReducer from './public-items/public-items.reducer';
 import selectedUserReducer from './selected-user/selected-user.reducer';
+import alertReducer from './alert/alert.reducer';
 
 const persistConfig = {
   key: 'root',
@@ -22,7 +23,8 @@ const rootReducer = combineReducers({
   constants: constantsReducer,
   conversionRates: convertionRatesReducer,
   public: publicItemsReducer,
-  selectedUser: selectedUserReducer
+  selectedUser: selectedUserReducer,
+  alert: alertReducer
 });
 
 export default persistReducer(persistConfig, rootReducer);

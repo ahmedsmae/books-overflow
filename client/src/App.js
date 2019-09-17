@@ -31,8 +31,9 @@ import './App.scss';
 
 const App = ({ currentUser, loadingUserStart, getConversionRatesStart }) => {
   useEffect(() => {
-    currentUser ? getConversionRatesStart() : loadingUserStart();
-  }, [currentUser, loadingUserStart, getConversionRatesStart]);
+    loadingUserStart();
+    getConversionRatesStart();
+  }, [loadingUserStart, getConversionRatesStart]);
 
   return (
     <Fragment>

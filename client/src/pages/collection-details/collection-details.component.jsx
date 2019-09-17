@@ -8,7 +8,10 @@ import {
 } from '../../redux/constants/constants.selectors';
 import { selectSelectedItem } from '../../redux/current-user/current-user.selectors';
 import { selectGetPriceInUSD } from '../../redux/conversion-rates/conversion-rates.selectors';
-import { editCollectionStart } from '../../redux/current-user/current-user.actions';
+import {
+  editCollectionStart,
+  deleteCollectionStart
+} from '../../redux/current-user/current-user.actions';
 
 import FormInput from '../../components/form-input/form-input.component';
 import FormSelect from '../../components/form-select/form-select.component';
@@ -23,6 +26,7 @@ import './collection-details.styles.scss';
 
 class BookDetails extends React.Component {
   state = {
+    _id: null,
     status: 'Available',
     title: '',
     numberofbooks: '',
@@ -42,6 +46,7 @@ class BookDetails extends React.Component {
   static getDerivedStateFromProps(props, currentState) {
     if (props.selectedCollection) {
       return {
+        _id: props.selectedCollection._id,
         status: props.selectedCollection.status,
         title: props.selectedCollection.title,
         numberofbooks: props.selectedCollection.numberofbooks,
@@ -120,6 +125,7 @@ class BookDetails extends React.Component {
 
   render() {
     const {
+      _id,
       // status,
       title,
       numberofbooks,
@@ -216,7 +222,7 @@ class BookDetails extends React.Component {
             <div className=''>Photos</div>
             <HandleMultipleImages
               maxPhotos='5'
-              url='api/collectionimages/'
+              url='/api/collectionimages/'
               imageids={imageids}
               updateImageSources={this.updateImageSources}
               updateImageIds={this.updateImageIds}
@@ -245,6 +251,17 @@ class BookDetails extends React.Component {
               onChange={this.handleChange}
             />
             <div className='mt-4 text-right'>
+              {this.props.selectedCollection && (
+                <CustomButton
+                  large
+                  danger
+                  onClick={() => {
+                    this.props.deleteCollectionStart(_id);
+                  }}
+                >
+                  Delete Collection
+                </CustomButton>
+              )}
               <CustomButton large primary type='submit'>
                 {this.props.selectedCollection
                   ? 'Save Changes'
@@ -268,7 +285,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  editCollectionStart: bookInfo => dispatch(editCollectionStart(bookInfo))
+  editCollectionStart: bookInfo => dispatch(editCollectionStart(bookInfo)),
+  deleteCollectionStart: collectionId =>
+    dispatch(deleteCollectionStart(collectionId))
 });
 
 export default connect(

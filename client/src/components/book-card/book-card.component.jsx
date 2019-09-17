@@ -108,7 +108,7 @@ const BookCard = ({
                   : PATHS.PROFILE_PATH_NO_ID + ownerid
               }
             >
-              <UserImage source={`api/avatars/${avatarid}`} medium />
+              <UserImage source={`/api/avatars/${avatarid}`} medium />
               <h6>{`${firstname} ${lastname}`}</h6>
             </Link>
           </div>

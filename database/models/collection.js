@@ -78,8 +78,8 @@ const collectionSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// remove user entries after deleting themselves
-collectionSchema.post('remove', async function(next) {
+// remove collection images before deleting themselves
+collectionSchema.pre('remove', async function(next) {
   const collection = this;
 
   const collectionImageIds = collection.imageids;

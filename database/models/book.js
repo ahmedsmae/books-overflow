@@ -66,8 +66,8 @@ const bookSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// remove user entries after deleting themselves
-bookSchema.post('remove', async function(next) {
+// remove book images before deleting themselves
+bookSchema.pre('remove', async function(next) {
   const book = this;
 
   const bookImageIds = book.imageids;

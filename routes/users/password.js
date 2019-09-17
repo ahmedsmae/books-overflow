@@ -29,6 +29,7 @@ router.post(
     }
 
     const { email } = req.body;
+    console.log(email);
 
     try {
       let user = await User.findOne({ email });
@@ -68,9 +69,7 @@ router.post(
         // html: '<b>New Password</b>' // html body
       });
 
-      console.log(info);
-
-      res.json({ msg: `Password sent successfully to ${email}` });
+      // console.log(info);
 
       // set password to user
       user.password = newPassword;
@@ -78,6 +77,8 @@ router.post(
       // clear the user tokens
       user.tokens = [];
       await user.save();
+
+      res.json({ msg: `Password sent successfully to ${email}` });
     } catch (err) {
       console.error(err.message);
       res.status(400).json({ errors: [{ msg: err.message }] });
@@ -88,7 +89,7 @@ router.post(
 /**
  * @method - POST
  * @url - 'api/users/changepassword'
- * @data - {email, oldPassword, newPassword}
+ * @data - {oldPassword, newPassword}
  * @action - get the user, change his password with the new one and delete all his tokens
  * @access - private
  */
@@ -97,9 +98,6 @@ router.post(
   [
     auth,
     [
-      check('email', 'Email is required')
-        .not()
-        .isEmpty(),
       check('oldPassword', 'Old password is required')
         .not()
         .isEmpty(),
@@ -122,10 +120,10 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { email, oldPassword, newPassword } = req.body;
+    const { oldPassword, newPassword } = req.body;
 
     try {
-      const user = await User.findByCredentials(email, oldPassword);
+      const user = await User.findByCredentials(req.user.email, oldPassword);
 
       if (!user) {
         return res

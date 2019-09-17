@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
-import { selectUser } from '../../redux/current-user/current-user.selectors';
+// import { selectUser } from '../../redux/current-user/current-user.selectors';
 import {
   getUserBooksStart,
   getUserCollectionsStart,
@@ -17,13 +17,12 @@ import './my-profile.styles.scss';
 const UserCardWithSpinner = WithSpinner(UserCard);
 
 const MyProfile = ({
-  currentUser,
+  // currentUser,
   getUserBooksStart,
   getUserCollectionsStart,
   getUserNotificationsStart
 }) => {
   useEffect(() => {
-    // TODO: MERGE THESE 3 ROUTES INTO ONE WILL BRING TO YOU ALL USER DATA (BOOKS, COLLECTIONS, NOTIFICATIONS, BLOCKED USERS, FAVOURITES)
     getUserBooksStart();
     getUserCollectionsStart();
     getUserNotificationsStart();
@@ -33,7 +32,7 @@ const MyProfile = ({
     <div>
       My Profile
       <UserCardWithSpinner
-        isLoading={currentUser ? false : true}
+        // isLoading={currentUser ? false : true}
         myProfile={true}
       />
     </div>
@@ -41,7 +40,7 @@ const MyProfile = ({
 };
 
 const mapStateToProps = createStructuredSelector({
-  currentUser: selectUser
+  // currentUser: selectUser
 });
 
 // fetch selected user

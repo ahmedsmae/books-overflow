@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
+import { PATHS } from '../../assets/list.types';
+
 import { signinUserStart } from '../../redux/current-user/current-user.actions';
 
 import FormInput from '../form-input/form-input.component';
@@ -62,7 +64,7 @@ const SignIn = ({ signinUserStart }) => {
           </CustomButton>
         </form>
 
-        <Link to='/help/forget-password'>
+        <Link to={PATHS.FORGET_PASSWORD_PATH}>
           <div className='text-center mt-3 p-1'>Forget Password ?</div>
         </Link>
       </div>

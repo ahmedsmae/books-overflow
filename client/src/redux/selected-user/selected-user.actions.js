@@ -1,5 +1,6 @@
 import SelectedUserActionTypes from './selected-user.types';
 
+// GET SELECTED USER
 export const getSelectedUserStart = id => ({
   type: SelectedUserActionTypes.GET_SELECTED_USER_START,
   payload: id

@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
+
+import { forgetPasswordStart } from '../../redux/current-user/current-user.actions';
 
 import FormInput from '../../components/form-input/form-input.component';
 import CustomButton from '../../components/custom-button/custom-button.component';
 
 import './forget-password.styles.scss';
 
-const ForgetPassword = () => {
+const ForgetPassword = ({ forgetPasswordStart }) => {
   const [email, setEmail] = useState('');
 
   return (
@@ -15,7 +18,7 @@ const ForgetPassword = () => {
         <form
           onSubmit={e => {
             e.preventDefault();
-            // run action
+            forgetPasswordStart(email);
           }}
         >
           <FormInput
@@ -37,4 +40,11 @@ const ForgetPassword = () => {
   );
 };
 
-export default ForgetPassword;
+const mapDispatchToProps = dispatch => ({
+  forgetPasswordStart: email => dispatch(forgetPasswordStart(email))
+});
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(ForgetPassword);

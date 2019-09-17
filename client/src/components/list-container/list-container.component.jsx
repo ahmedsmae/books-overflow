@@ -8,8 +8,7 @@ import { PATHS } from '../../assets/list.types';
 import {
   selectBooks,
   selectCollections,
-  selectNotifications,
-  selectUser
+  selectNotifications
 } from '../../redux/current-user/current-user.selectors';
 import { selectPublicItems } from '../../redux/public-items/public-items.selectors';
 import { selectSelectedUser } from '../../redux/selected-user/selected-user.selectors';
@@ -50,7 +49,7 @@ const ListContainer = ({
         </div>
       );
 
-    case PATHS.LIBRARY_PATH + '/' + selectUser._id:
+    case PATHS.LIBRARY_PATH_NO_ID + selectedUser._id:
       return (
         <div>
           <ListWithSpinner
