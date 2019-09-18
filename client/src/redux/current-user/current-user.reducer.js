@@ -115,12 +115,12 @@ export default (state = INITIAL_STATE, { type, payload }) => {
       };
 
     // THESES ROUTES WILL NOT REACH THE REDUCER BECAUSE OF THE CATCHING SAGAS
-    case UserActionTypes.EDIT_BOOK_SUCCESS:
-    case UserActionTypes.EDIT_COLLECTION_SUCCESS:
-    case UserActionTypes.DELETE_BOOK_SUCCESS:
-    case UserActionTypes.DELETE_COLLECTION_SUCCESS:
-    case UserActionTypes.UPDATE_NOTIFICATION_SUCCESS:
-      break;
+    // case UserActionTypes.EDIT_BOOK_SUCCESS:
+    // case UserActionTypes.EDIT_COLLECTION_SUCCESS:
+    // case UserActionTypes.DELETE_BOOK_SUCCESS:
+    // case UserActionTypes.DELETE_COLLECTION_SUCCESS:
+    // case UserActionTypes.UPDATE_NOTIFICATION_SUCCESS:
+    //   break;
 
     default:
       return state;

@@ -20,6 +20,7 @@ import CustomButton from '../../components/custom-button/custom-button.component
 import HandleLocation from '../../components/handle-location/handle-location.component';
 import HandleCurrency from '../../components/handle-currency/handle-currency.component';
 import HandleMultipleImages from '../../components/handle-multiple-images/handle-multiple-images.component';
+import ConfirmDialog from '../../components/confirm-dialog/confirm-dialog.component';
 
 import './book-details.styles.scss';
 
@@ -40,7 +41,8 @@ class BookDetails extends React.Component {
     longitude: null,
     keywords: '',
     imageids: [],
-    newImageSources: []
+    newImageSources: [],
+    displayConfirmDialog: false
   };
 
   // state = {
@@ -158,7 +160,8 @@ class BookDetails extends React.Component {
       latitude,
       longitude,
       keywords,
-      imageids
+      imageids,
+      displayConfirmDialog
     } = this.state;
     console.log(imageids);
 
@@ -292,12 +295,23 @@ class BookDetails extends React.Component {
                 <CustomButton
                   large
                   danger
-                  onClick={() => {
-                    this.props.deleteBookStart(_id);
-                  }}
+                  onClick={() => this.setState({ displayConfirmDialog: true })}
                 >
                   Delete Book
                 </CustomButton>
+              )}
+              {displayConfirmDialog && (
+                <ConfirmDialog
+                  title='Confirm Delete'
+                  message='You really want to delete that book ?'
+                  display={displayConfirmDialog}
+                  updateDisplay={display =>
+                    this.setState({ displayConfirmDialog: display })
+                  }
+                  onChoose={response => {
+                    response && this.props.deleteBookStart(_id);
+                  }}
+                />
               )}
               <CustomButton large primary type='submit'>
                 {this.props.selectedBook ? 'Save Changes' : 'Save Book'}
