@@ -1,0 +1,7 @@
+const ContactUsActionTypes = {
+  CONTACT_US_START: 'CONTACT_US_START',
+  CONTACT_US_SUCCESS: 'CONTACT_US_SUCCESS',
+  CONTACT_US_FAILURE: 'CONTACT_US_FAILURE'
+};
+
+export default ContactUsActionTypes;

@@ -45,6 +45,8 @@ app.use('/api/notifications', require('./routes/notifications/user'));
 
 app.use('/api/publicitems', require('./routes/public-items/public-items'));
 
+app.use('/api/contact', require('./routes/contact-us/contact'));
+
 // contains all event handlers
 require('./socket-io/main')(io);
 

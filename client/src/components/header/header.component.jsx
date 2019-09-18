@@ -26,10 +26,12 @@ const Header = ({
 }) => {
   return (
     <nav className='navbar navbar-light bg-light'>
-      <span className='navbar-brand'>
-        <i className='fas fa-book h1 d-inline' />
-        <p className='h1 d-inline'> BOOKS OVERFLOW</p>
-      </span>
+      <Link to={PATHS.HOME_PATH}>
+        <span className='navbar-brand'>
+          <i className='fas fa-book h1 d-inline' />
+          <p className='h1 d-inline'> BOOKS OVERFLOW</p>
+        </span>
+      </Link>
 
       {currentUser ? (
         <div className='d-flex'>

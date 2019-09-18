@@ -10,6 +10,7 @@ import { getConversionRatesStart } from './redux/conversion-rates/conversion-rat
 import { PATHS } from './assets/list.types';
 
 import Header from './components/header/header.component';
+import Footer from './components/footer/footer.component';
 import HomePage from './pages/home/home.component';
 import ProfilePage from './pages/profile/profile.component';
 import LibraryPage from './pages/library/library.components';
@@ -165,6 +166,7 @@ const App = ({ currentUser, loadingUserStart, getConversionRatesStart }) => {
           <Route path={PATHS.PROFILE_PATH} component={ProfilePage} />
         </Switch>
       </div>
+      <Footer />
     </Fragment>
   );
 };
