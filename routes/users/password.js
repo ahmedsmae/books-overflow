@@ -62,7 +62,7 @@ router.post(
       });
 
       let info = await transporter.sendMail({
-        from: `"${process.env.ADMIN_NAME}" <${process.env.MAILING_ADDRESS}>`,
+        from: `"${process.env.APP_NAME}" <${process.env.MAILING_ADDRESS}>`,
         to: email,
         subject: `Your new ${process.env.APP_NAME} password`,
         text: `Your new password for ${email} is ${newPassword}`

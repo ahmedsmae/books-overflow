@@ -28,6 +28,7 @@ import FavouritesPage from './pages/favourites/favourites.component';
 import MyLibraryPage from './pages/my-library/my-library.component';
 import MyProfilePage from './pages/my-profile/my-profile.component';
 import DeleteUserPage from './pages/delete-user/delete-user.component';
+import Page404 from './pages/page-404/page-404.component';
 
 import './App.scss';
 
@@ -176,6 +177,9 @@ const App = ({ currentUser, loadingUserStart, getConversionRatesStart }) => {
           />
           <Route path={PATHS.LIBRARY_PATH} component={LibraryPage} />
           <Route path={PATHS.PROFILE_PATH} component={ProfilePage} />
+
+          {/* if nothing matches so far > 404 */}
+          <Route component={Page404} />
         </Switch>
       </div>
       <Footer />

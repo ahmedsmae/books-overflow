@@ -30,6 +30,10 @@ export default (state = INITIAL_STATE, { type, payload }) => {
     case UserActionTypes.DELETE_COLLECTION_START:
     case UserActionTypes.FORGET_PASSWORD_START:
     case UserActionTypes.CHANGE_PASSWORD_START:
+    case UserActionTypes.DELETE_USER_START:
+    case UserActionTypes.ADD_FAVOURITE_START:
+    case UserActionTypes.REMOVE_FAVOURITE_START:
+    case UserActionTypes.GET_USER_FAVOURITES_START:
       return {
         ...state,
         loading: true,
@@ -42,6 +46,8 @@ export default (state = INITIAL_STATE, { type, payload }) => {
     case UserActionTypes.SIGNOUT_USER_SUCCESS:
     case UserActionTypes.EDIT_USER_PROFILE_SUCCESS:
     case UserActionTypes.CHANGE_PASSWORD_SUCCESS:
+    case UserActionTypes.ADD_FAVOURITE_SUCCESS:
+    case UserActionTypes.REMOVE_FAVOURITE_SUCCESS:
       return {
         ...state,
         user: payload,
@@ -53,6 +59,7 @@ export default (state = INITIAL_STATE, { type, payload }) => {
     case UserActionTypes.SIGNIN_USER_FAILURE:
     case UserActionTypes.LOADING_USER_FAILURE:
     case UserActionTypes.FORGET_PASSWORD_SUCCESS: // REMOVE USER WHEN U CHANGE THE PASSWORD
+    case UserActionTypes.DELETE_USER_SUCCESS:
       return {
         ...state,
         user: null,
@@ -72,6 +79,10 @@ export default (state = INITIAL_STATE, { type, payload }) => {
     case UserActionTypes.DELETE_COLLECTION_FAILURE:
     case UserActionTypes.FORGET_PASSWORD_FAILURE:
     case UserActionTypes.CHANGE_PASSWORD_FAILURE:
+    case UserActionTypes.DELETE_USER_FAILURE:
+    case UserActionTypes.ADD_FAVOURITE_FAILURE:
+    case UserActionTypes.REMOVE_FAVOURITE_FAILURE:
+    case UserActionTypes.GET_USER_FAVOURITES_FAILURE:
       return {
         ...state,
         loading: false,
@@ -98,6 +109,14 @@ export default (state = INITIAL_STATE, { type, payload }) => {
       return {
         ...state,
         notifications: payload,
+        loading: false,
+        errorMessage: ''
+      };
+
+    case UserActionTypes.GET_USER_FAVOURITES_SUCCESS:
+      return {
+        ...state,
+        favourites: payload,
         loading: false,
         errorMessage: ''
       };

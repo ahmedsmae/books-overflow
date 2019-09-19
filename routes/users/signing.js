@@ -58,6 +58,11 @@ router.post(
 
       user = new User({ firstname, lastname, email, password });
 
+      // inject welcome notification id
+      user.notifications = [
+        { notificationid: '5d7d1474cfb4996bc8c26a3e', seen: false }
+      ];
+
       // hashing the password will be done automatically in the User model before save()
       await user.save();
 

@@ -4,7 +4,7 @@ import { createStructuredSelector } from 'reselect';
 
 import { selectUser } from '../../redux/current-user/current-user.selectors';
 import { selectReasons } from '../../redux/constants/constants.selectors';
-import {} from '../../redux/current-user/current-user.actions';
+import { deleteUserStart } from '../../redux/current-user/current-user.actions';
 
 import FormSelect from '../../components/form-select/form-select.component';
 import FormTextArea from '../../components/form-text-area/form-text-area.component';
@@ -13,14 +13,14 @@ import CustomButton from '../../components/custom-button/custom-button.component
 
 import './delete-user.styles.scss';
 
-const DeleteUser = ({ currentUser, reasons }) => {
+const DeleteUser = ({ currentUser, reasons, deleteUserStart }) => {
   const [explanation, setExplanation] = useState({
     reason: '',
-    description: '',
+    details: '',
     email: '',
     password: ''
   });
-  const { reason, description, email, password } = explanation;
+  const { reason, details, email, password } = explanation;
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -29,7 +29,7 @@ const DeleteUser = ({ currentUser, reasons }) => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    // run deleteUser()
+    deleteUserStart(explanation);
   };
 
   return (
@@ -57,8 +57,8 @@ const DeleteUser = ({ currentUser, reasons }) => {
           />
           <FormTextArea
             placeholder='have more to say ?'
-            name='description'
-            value={description}
+            name='details'
+            value={details}
             onChange={handleChange}
           />
           <hr />
@@ -101,7 +101,9 @@ const mapStateToProps = createStructuredSelector({
   reasons: selectReasons
 });
 
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch => ({
+  deleteUserStart: explanation => dispatch(deleteUserStart(explanation))
+});
 
 export default connect(
   mapStateToProps,

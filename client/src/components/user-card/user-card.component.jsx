@@ -9,7 +9,7 @@ import { PATHS } from '../../assets/list.types';
 
 import {
   selectUser,
-  selectNotifications
+  selectUnseenNotificationsCount
 } from '../../redux/current-user/current-user.selectors';
 import { selectSelectedUser } from '../../redux/selected-user/selected-user.selectors';
 
@@ -19,7 +19,12 @@ import CustomButton from '../custom-button/custom-button.component';
 
 import './user-card.styles.scss';
 
-const UserCard = ({ myProfile, selectedUser, currentUser, notications }) => {
+const UserCard = ({
+  myProfile,
+  selectedUser,
+  currentUser,
+  unseenNoticationsCount
+}) => {
   const [address, setAddress] = useState('');
 
   let _id,
@@ -113,7 +118,11 @@ const UserCard = ({ myProfile, selectedUser, currentUser, notications }) => {
               <Link to={PATHS.NOTIFICATIONS_PATH} className='col m-2'>
                 <CustomButton warning outline className='w-100'>
                   <i className='fas fa-clipboard' /> Notifications{' '}
-                  <span className='text-danger'>5</span>
+                  {unseenNoticationsCount > 0 && (
+                    <span className='text-danger'>
+                      {unseenNoticationsCount}
+                    </span>
+                  )}
                 </CustomButton>
               </Link>
 
@@ -139,7 +148,7 @@ const UserCard = ({ myProfile, selectedUser, currentUser, notications }) => {
 const mapStateToProps = createStructuredSelector({
   currentUser: selectUser,
   selectedUser: selectSelectedUser,
-  notications: selectNotifications
+  unseenNoticationsCount: selectUnseenNotificationsCount
 });
 
 export default connect(mapStateToProps)(UserCard);

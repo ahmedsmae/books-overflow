@@ -4,10 +4,10 @@ const sharp = require('sharp');
 const { check, validationResult } = require('express-validator');
 
 const auth = require('../../utils/auth');
-const upload = require('../../utils/upload');
 
 const User = require('../../database/models/user');
-const Avatar = require('../../database/models/avatar');
+const Book = require('../../database/models/book');
+const Collection = require('../../database/models/collection');
 
 /**
  * @method - POST
@@ -222,29 +222,15 @@ router.post(
 
 /**
  * @method - DELETE
- * @url - 'api/users/profile/favourites'
- * @data - {favouriteitemid}
+ * @url - 'api/users/profile/favourites/:favouriteitemid'
+ * @data - token header
  * @action - remove a favourite book or collection from favourites list
  * @access - private
  */
 router.delete(
-  '/profile/favourites',
-  [
-    auth,
-    [
-      check('favouriteitemid', 'Favourite item id is required')
-        .not()
-        .isEmpty()
-    ]
-  ],
+  '/profile/favourites/:favouriteitemid',
+  auth,
   async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
-    const { favouriteitemid } = req.body;
-
     try {
       const user = await User.findById(req.user.id);
 
@@ -255,7 +241,7 @@ router.delete(
       }
 
       user.favourites = user.favourites.filter(
-        fav => fav.favouriteitemid !== favouriteitemid
+        fav => fav.favouriteitemid != req.params.favouriteitemid
       );
 
       await user.save();
@@ -267,6 +253,46 @@ router.delete(
     }
   }
 );
+
+/**
+ * @method - GET
+ * @url - 'api/users/profile/getfavourites'
+ * @data - token header
+ * @action - set notification to be seen: true
+ * @access - private
+ */
+router.post('/profile/getfavourites', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+      return res
+        .status(400)
+        .json({ errors: [{ msg: 'User does not exists' }] });
+    }
+
+    const userFavouritesIds = user.favourites;
+
+    const favourites = [];
+    let i;
+    for (i = 0; i < userFavouritesIds.length; i++) {
+      if (userFavouritesIds[i].kind === 'TYPE_BOOK') {
+        const book = await Book.findById(userFavouritesIds[i].favouriteitemid);
+        if (book) favourites.push(book);
+      } else if (userFavouritesIds[i].kind === 'TYPE_COLLECTION') {
+        const collection = await Collection.findById(
+          userFavouritesIds[i].favouriteitemid
+        );
+        if (collection) favourites.push(collection);
+      }
+    }
+
+    res.json({ favourites });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ errors: [{ msg: err.message }] });
+  }
+});
 
 /**
  * @method - POST

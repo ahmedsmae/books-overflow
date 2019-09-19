@@ -7,6 +7,11 @@ export const selectUser = createSelector(
   currentUser => currentUser.user
 );
 
+export const selectUserFavourtiteIds = createSelector(
+  [selectUser],
+  user => user && user.favourites.map(fav => fav.favouriteitemid)
+);
+
 export const selectBooks = createSelector(
   [selectCurrentUser],
   currentUser => currentUser.books
@@ -20,6 +25,17 @@ export const selectCollections = createSelector(
 export const selectNotifications = createSelector(
   [selectCurrentUser],
   currentUser => currentUser.notifications
+);
+
+export const selectUnseenNotificationsCount = createSelector(
+  [selectNotifications],
+  notifications =>
+    notifications &&
+    notifications.reduce(
+      (accumalatedQuantity, note) =>
+        !note.seen ? accumalatedQuantity + 1 : accumalatedQuantity,
+      0
+    )
 );
 
 export const selectChats = createSelector(

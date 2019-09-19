@@ -3,11 +3,19 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Lightbox from 'react-image-lightbox';
 
-import { selectUser } from '../../redux/current-user/current-user.selectors';
+import {
+  selectUser,
+  selectUserFavourtiteIds
+} from '../../redux/current-user/current-user.selectors';
 import { selectGetPriceInLocalCurrency } from '../../redux/conversion-rates/conversion-rates.selectors';
-import { setSelectedItem } from '../../redux/current-user/current-user.actions';
+import {
+  setSelectedItem,
+  addFavouriteStart,
+  removeFavouriteStart
+} from '../../redux/current-user/current-user.actions';
 
 import { PATHS } from '../../assets/list.types';
+import { ITEM_TYPES } from '../../assets/item.types';
 import { fetchLatLng } from '../../assets/util-functions';
 
 import UserImage from '../user-image/user-image.component';
@@ -19,7 +27,10 @@ const CollectionCard = ({
   collection,
   currentUser,
   setSelectedItem,
-  getPriceInLocalCurrency
+  getPriceInLocalCurrency,
+  favouriteIds,
+  addFavouriteStart,
+  removeFavouriteStart
 }) => {
   const [showMore, setShowMore] = useState(false);
   const [address, setAddress] = useState('');
@@ -27,6 +38,7 @@ const CollectionCard = ({
   const { isZoomed, imageIndex } = zoom;
 
   const {
+    _id,
     owner,
     // status,
     title,
@@ -83,10 +95,30 @@ const CollectionCard = ({
             ) : (
               // NOT THE OWNER OF THE BOOK
               currentUser && (
-                // TODO: CHECK IF U ARE REGISTERED BEFORE YOU CAN MESSAGE THE OWNER
-                <Link to='' onClick={() => {}}>
-                  <i className='fas fa-comments' />
-                </Link>
+                <Fragment>
+                  <Link
+                    className='col-0.5 nav-link text-light text-center mr-2'
+                    onClick={() =>
+                      favouriteIds.includes(_id)
+                        ? removeFavouriteStart(_id)
+                        : addFavouriteStart(ITEM_TYPES.TYPE_COLLECTION, _id)
+                    }
+                  >
+                    {favouriteIds.includes(_id) ? (
+                      <i className='fas fa-star text-warning' />
+                    ) : (
+                      <i className='far fa-star' />
+                    )}
+                  </Link>
+                  {/* TODO: CHECK IF U ARE REGISTERED BEFORE YOU CAN MESSAGE OWNER */}
+                  <Link
+                    to=''
+                    onClick={() => {}}
+                    className='col-0.5 nav-link text-light text-center mr-2'
+                  >
+                    <i className='fas fa-comments' />
+                  </Link>
+                </Fragment>
               )
             )}
             <Link
@@ -211,14 +243,15 @@ const CollectionCard = ({
           onCloseRequest={() => setZoom({ ...zoom, isZoomed: false })}
           onMovePrevRequest={() =>
             setZoom({
-              imageIndex: (imageIndex + 1) % sourceArray.length
+              ...zoom,
+              imageIndex:
+                (imageIndex + sourceArray.length - 1) % sourceArray.length
             })
           }
           onMoveNextRequest={() =>
             setZoom({
               ...zoom,
-              imageIndex:
-                (imageIndex + sourceArray.length - 1) % sourceArray.length
+              imageIndex: (imageIndex + 1) % sourceArray.length
             })
           }
         />
@@ -230,11 +263,16 @@ const CollectionCard = ({
 const mapStateToProps = state => ({
   currentUser: selectUser(state),
   getPriceInLocalCurrency: (price, toCurrency) =>
-    selectGetPriceInLocalCurrency(price, toCurrency)(state)
+    selectGetPriceInLocalCurrency(price, toCurrency)(state),
+  favouriteIds: selectUserFavourtiteIds(state)
 });
 
 const mapDispatchToProps = dispatch => ({
-  setSelectedItem: item => dispatch(setSelectedItem(item))
+  setSelectedItem: item => dispatch(setSelectedItem(item)),
+  addFavouriteStart: (kind, favouriteitemid) =>
+    dispatch(addFavouriteStart(kind, favouriteitemid)),
+  removeFavouriteStart: favouriteitemid =>
+    dispatch(removeFavouriteStart(favouriteitemid))
 });
 
 export default connect(

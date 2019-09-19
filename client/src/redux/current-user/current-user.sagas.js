@@ -36,7 +36,15 @@ import {
   forgetPasswordSuccess,
   forgetPasswordFailure,
   changePasswordSuccess,
-  changePasswordFailure
+  changePasswordFailure,
+  deleteUserSuccess,
+  deleteUserFailure,
+  addFavouriteSuccess,
+  addFavouriteFailure,
+  removeFavouriteSuccess,
+  removeFavouriteFailure,
+  getUserFavouriteSuccess,
+  getUserFavouriteFailure
 } from './current-user.actions';
 
 function* signupUserAsync({ payload }) {
@@ -334,6 +342,74 @@ function* changePasswordAsync({ payload }) {
   }
 }
 
+function* deleteUserAsync({ payload }) {
+  try {
+    yield setAuthToken();
+
+    yield call(axios, {
+      method: 'delete',
+      url: '/api/users/deleteuser',
+      data: { ...payload }
+    });
+
+    yield localStorage.removeItem('token');
+
+    yield put(deleteUserSuccess());
+  } catch (err) {
+    yield put(setAlert('Error!', err.message, 'danger', 5000));
+    yield put(deleteUserFailure(err.message));
+  }
+}
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+function* addFavouriteAsync({ payload }) {
+  try {
+    yield setAuthToken();
+
+    const response = yield call(axios, {
+      method: 'post',
+      url: '/api/users/profile/favourites',
+      data: { ...payload }
+    });
+
+    yield put(addFavouriteSuccess(response.data.user));
+  } catch (err) {
+    yield put(setAlert('Error!', err.message, 'danger', 5000));
+    yield put(addFavouriteFailure(err.message));
+  }
+}
+
+function* removeFavouriteAsync({ payload }) {
+  try {
+    yield setAuthToken();
+
+    const response = yield call(axios, {
+      method: 'delete',
+      url: `/api/users/profile/favourites/${payload}`
+    });
+
+    yield put(removeFavouriteSuccess(response.data.user));
+  } catch (err) {
+    yield put(setAlert('Error!', err.message, 'danger', 5000));
+    yield put(removeFavouriteFailure(err.message));
+  }
+}
+
+function* getUserFavouritesAsync() {
+  try {
+    yield setAuthToken();
+
+    const response = yield call(axios, {
+      method: 'get',
+      url: '/api/users/profile/getfavourites'
+    });
+
+    yield put(getUserFavouriteSuccess(response.data.favourites));
+  } catch (err) {
+    yield put(setAlert('Error!', err.message, 'danger', 5000));
+    yield put(getUserFavouriteFailure(err.message));
+  }
+}
+
 function* loadingUserStart() {
   yield takeLatest(UserActionTypes.LOADING_USER_START, loadingUserAsync);
 }
@@ -443,6 +519,28 @@ function* forgetPasswordStart() {
   yield takeLatest(UserActionTypes.FORGET_PASSWORD_START, forgetPasswordAsync);
 }
 
+function* deleteUserStart() {
+  yield takeLatest(UserActionTypes.DELETE_USER_START, deleteUserAsync);
+}
+
+function* addFavouriteStart() {
+  yield takeLatest(UserActionTypes.ADD_FAVOURITE_START, addFavouriteAsync);
+}
+
+function* removeFavouriteStart() {
+  yield takeLatest(
+    UserActionTypes.REMOVE_FAVOURITE_START,
+    removeFavouriteAsync
+  );
+}
+
+function* getUserFavouritesStart() {
+  yield takeLatest(
+    UserActionTypes.GET_USER_FAVOURITES_START,
+    getUserFavouritesAsync
+  );
+}
+
 export default function* userSagas() {
   yield all([
     call(loadingUserStart),
@@ -464,6 +562,10 @@ export default function* userSagas() {
     call(deleteBookStart),
     call(reloadBooksAfterDeleteBook),
     call(changePasswordStart),
-    call(forgetPasswordStart)
+    call(forgetPasswordStart),
+    call(deleteUserStart),
+    call(addFavouriteStart),
+    call(removeFavouriteStart),
+    call(getUserFavouritesStart)
   ]);
 }

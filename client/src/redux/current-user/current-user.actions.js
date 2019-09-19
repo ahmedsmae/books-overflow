@@ -227,6 +227,68 @@ export const changePasswordFailure = errorMessage => ({
   payload: errorMessage
 });
 
+// DELETE USER
+export const deleteUserStart = explanation => ({
+  type: UserActionTypes.DELETE_USER_START,
+  payload: explanation
+});
+
+export const deleteUserSuccess = () => ({
+  type: UserActionTypes.DELETE_USER_SUCCESS
+});
+
+export const deleteUserFailure = errorMessage => ({
+  type: UserActionTypes.DELETE_USER_FAILURE,
+  payload: errorMessage
+});
+
+// ADD FAVOURITE
+export const addFavouriteStart = (kind, favouriteitemid) => ({
+  type: UserActionTypes.ADD_FAVOURITE_START,
+  payload: { kind, favouriteitemid }
+});
+
+export const addFavouriteSuccess = user => ({
+  type: UserActionTypes.ADD_FAVOURITE_SUCCESS,
+  payload: user
+});
+
+export const addFavouriteFailure = errorMessage => ({
+  type: UserActionTypes.ADD_FAVOURITE_FAILURE,
+  payload: errorMessage
+});
+
+// ADD FAVOURITE
+export const removeFavouriteStart = itemid => ({
+  type: UserActionTypes.REMOVE_FAVOURITE_START,
+  payload: itemid
+});
+
+export const removeFavouriteSuccess = user => ({
+  type: UserActionTypes.REMOVE_FAVOURITE_SUCCESS,
+  payload: user
+});
+
+export const removeFavouriteFailure = errorMessage => ({
+  type: UserActionTypes.REMOVE_FAVOURITE_FAILURE,
+  payload: errorMessage
+});
+
+// GET FAVOURITES
+export const getUserFavouriteStart = () => ({
+  type: UserActionTypes.GET_USER_FAVOURITES_START
+});
+
+export const getUserFavouriteSuccess = favourites => ({
+  type: UserActionTypes.GET_USER_FAVOURITES_SUCCESS,
+  payload: favourites
+});
+
+export const getUserFavouriteFailure = errorMessage => ({
+  type: UserActionTypes.GET_USER_FAVOURITES_FAILURE,
+  payload: errorMessage
+});
+
 // SELECTED ITEM
 export const setSelectedItem = selectedItem => ({
   type: UserActionTypes.SET_SELECTED_ITEM,
