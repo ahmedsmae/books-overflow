@@ -5,12 +5,7 @@ import ListContainer from '../../components/list-container/list-container.compon
 import './my-library.styles.scss';
 
 const MyLibrary = () => {
-  return (
-    <div>
-      My Library
-      <ListContainer />
-    </div>
-  );
+  return <ListContainer />;
 };
 
 export default MyLibrary;

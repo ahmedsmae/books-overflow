@@ -1,7 +1,9 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import Moment from 'react-moment';
+import moment from 'moment';
 
 import { PATHS } from '../../assets/list.types';
 
@@ -11,12 +13,15 @@ import {
 } from '../../redux/current-user/current-user.selectors';
 import { selectSelectedUser } from '../../redux/selected-user/selected-user.selectors';
 
+import { fetchLatLng } from '../../assets/util-functions';
 import UserImage from '../user-image/user-image.component';
 import CustomButton from '../custom-button/custom-button.component';
 
 import './user-card.styles.scss';
 
 const UserCard = ({ myProfile, selectedUser, currentUser, notications }) => {
+  const [address, setAddress] = useState('');
+
   let _id,
     avatarid,
     firstname,
@@ -26,6 +31,14 @@ const UserCard = ({ myProfile, selectedUser, currentUser, notications }) => {
     defaultlongitude,
     createdAt,
     bio;
+
+  useEffect(() => {
+    defaultlatitude &&
+      defaultlongitude &&
+      fetchLatLng(defaultlatitude, defaultlongitude).then(add =>
+        setAddress(add)
+      );
+  }, [defaultlongitude, defaultlatitude]);
 
   if (myProfile) {
     _id = currentUser._id;
@@ -50,7 +63,7 @@ const UserCard = ({ myProfile, selectedUser, currentUser, notications }) => {
   }
 
   return (
-    <div className='card mt-4 mx-auto'>
+    <div className='card'>
       <div className='card-body'>
         <div className='row'>
           <div className='col-md-6 text-center'>
@@ -60,64 +73,63 @@ const UserCard = ({ myProfile, selectedUser, currentUser, notications }) => {
           <div className='col-md-6'>
             <h1>{`${firstname} ${lastname}`}</h1>
 
-            <h3>{email}</h3>
+            <p className='lead'>{email}</p>
 
-            {defaultlatitude && defaultlongitude && (
-              <h3>{`${defaultlatitude} ${defaultlongitude}`}</h3>
-            )}
+            {address.length && <p className='lead'>{address}</p>}
 
-            <p>
-              <small>{`Join Date: ${createdAt}`}</small>
+            <p className='lead'>
+              Join Date:{' '}
+              <Moment format='YYYY/MM/DD'>{moment.utc(createdAt)}</Moment>
             </p>
-
-            <p className='lead mt-4'>{bio && bio}</p>
           </div>
-          <div className='mx-auto mt-4'>
-            <Link
-              to={
-                myProfile
-                  ? PATHS.MY_LIBRARY_PATH
-                  : PATHS.LIBRARY_PATH_NO_ID + _id
-              }
-              className='mx-3'
-            >
-              <CustomButton primary>
-                <i className='fas fa-book' />
-                {myProfile ? ' My ' : ` ${firstname}'s `}
-                Library
-              </CustomButton>
-            </Link>
+        </div>
+        <p className='lead mt-4 d-block'>{bio && bio}</p>
 
-            {myProfile && (
-              <Fragment>
-                <Link to={PATHS.FAVOURITES_PATH} className='mx-3'>
-                  <CustomButton primary>
-                    <i className='fas fa-star text-warning' />
-                    My Favourites
-                  </CustomButton>
-                </Link>
+        <hr />
 
-                <Link to={PATHS.NOTIFICATIONS_PATH} className='mx-3'>
-                  <CustomButton warning>
-                    <i className='fas fa-clipboard' /> Notifications{' '}
-                    <span className='text-danger'>5</span>
-                  </CustomButton>
-                </Link>
+        <div className='row'>
+          <Link
+            className='col m-2'
+            to={
+              myProfile ? PATHS.MY_LIBRARY_PATH : PATHS.LIBRARY_PATH_NO_ID + _id
+            }
+          >
+            <CustomButton primary outline className='w-100'>
+              <i className='fas fa-book' />
+              {myProfile ? ' My ' : ` ${firstname}'s `}
+              Library
+            </CustomButton>
+          </Link>
 
-                <Link to={PATHS.BLOCKED_USERS_PATH} className='mx-3'>
-                  <CustomButton danger>
-                    <i className='fas fa-user-lock' /> Blocked Users
-                  </CustomButton>
-                </Link>
+          {myProfile && (
+            <Fragment>
+              <Link to={PATHS.FAVOURITES_PATH} className='col m-2'>
+                <CustomButton primary outline className='w-100'>
+                  <i className='fas fa-star text-warning' />
+                  My Favourites
+                </CustomButton>
+              </Link>
 
-                <Link to={PATHS.EDIT_PROFILE_PATH} className='mx-3'>
-                  <CustomButton primary>
-                    <i className='fas fa-edit' /> Edit Profile
-                  </CustomButton>
-                </Link>
-              </Fragment>
-            )}
-          </div>
+              <Link to={PATHS.NOTIFICATIONS_PATH} className='col m-2'>
+                <CustomButton warning outline className='w-100'>
+                  <i className='fas fa-clipboard' /> Notifications{' '}
+                  <span className='text-danger'>5</span>
+                </CustomButton>
+              </Link>
+
+              <Link to={PATHS.BLOCKED_USERS_PATH} className='col m-2'>
+                <CustomButton danger outline className='w-100'>
+                  <i className='fas fa-user-lock' /> Blocked Users
+                </CustomButton>
+              </Link>
+
+              <Link to={PATHS.EDIT_PROFILE_PATH} className='col m-2'>
+                <CustomButton primary outline className='w-100'>
+                  <i className='fas fa-edit' /> Edit Profile
+                </CustomButton>
+              </Link>
+            </Fragment>
+          )}
         </div>
       </div>
     </div>

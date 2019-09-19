@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { connect } from 'react-redux';
 
 import SearchCard from '../../components/search-card/search-card.component';
@@ -14,10 +14,10 @@ const Home = ({ getAllPublicItemsStart }) => {
   }, [getAllPublicItemsStart]);
 
   return (
-    <div>
+    <Fragment>
       <SearchCard />
       <ListContainer />
-    </div>
+    </Fragment>
   );
 };
 

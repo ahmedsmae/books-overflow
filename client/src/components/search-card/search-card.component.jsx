@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { Fragment } from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { getLatLng } from '../../assets/util-functions';
@@ -15,7 +16,6 @@ import {
 } from '../../redux/public-items/public-items.actions';
 
 import HandleLocation from '../handle-location/handle-location.component';
-import CustomButton from '../custom-button/custom-button.component';
 import FormInput from '../form-input/form-input.component';
 import FormSelect from '../form-select/form-select.component';
 import HandleCurrency from '../handle-currency/handle-currency.component';
@@ -86,58 +86,94 @@ class Search extends React.Component {
     } = this.state;
 
     return (
-      <div className='card mt-4'>
-        <div className='card-header'>
+      <div className='card mb-4'>
+        <div className='card-header bg-secondary text-white'>
           <div className='row'>
-            <div className='col-md-10'>
-              <h4>Search Items</h4>
+            <div className='col'>
+              <h5>Search Items</h5>
             </div>
-            <div className='col-md-2'>
-              <CustomButton
-                small
-                onClick={() => {
-                  if (advancedSearch) {
-                    // get the advanced search props to default
-                    this.setState({
-                      advancedSearch: false,
-                      booksIncluded: true,
-                      collectionsIncluded: true,
-                      distanceMax: 50,
-                      category: '',
-                      language: '',
-                      condition: '',
-                      priceMin: '',
-                      priceMax: null,
-                      currency: '',
-                      searchLat: null,
-                      searchLng: null
-                    });
-                  } else {
-                    this.setState({ advancedSearch: true });
-                  }
-                }}
-              >
-                {advancedSearch ? 'Basic Search' : 'Advanced Search'}
-              </CustomButton>
-            </div>
+            <Link
+              className='col-1.5 nav-link text-light text-center mr-2'
+              onClick={() => {
+                if (advancedSearch) {
+                  // get the advanced search props to default
+                  this.setState({
+                    advancedSearch: false,
+                    booksIncluded: true,
+                    collectionsIncluded: true,
+                    distanceMax: 50,
+                    category: '',
+                    language: '',
+                    condition: '',
+                    priceMin: '',
+                    priceMax: null,
+                    currency: '',
+                    searchLat: null,
+                    searchLng: null
+                  });
+                } else {
+                  this.setState({ advancedSearch: true });
+                }
+              }}
+            >
+              {advancedSearch ? 'Basic' : 'Advanced'}
+            </Link>
+            <Link
+              className='col-0.5 nav-link text-light text-center mr-2'
+              onClick={() => {
+                // convert the price to the price with USD
+                const { priceMin, priceMax, currency } = this.state;
+                const minPriceInUSD =
+                  this.props.getPriceInUSD(priceMin, currency) || 0;
+                const maxPriceInUSD = this.props.getPriceInUSD(
+                  priceMax,
+                  currency
+                );
+
+                // get the search object from the state
+                const { advancedSearch, ...searchObject } = this.state;
+                // set the new price values in usd (without changing the component state)
+                searchObject.priceMin = minPriceInUSD;
+                searchObject.priceMax = maxPriceInUSD;
+                // search
+                this.props.searchItemsStart(searchObject);
+              }}
+            >
+              <i className='fas fa-search' />
+            </Link>
+            <Link
+              className='col-0.5 nav-link text-light text-center'
+              onClick={() => {
+                this.props.getAllPublicItemsStart();
+              }}
+            >
+              <i className='fas fa-power-off' />
+            </Link>
           </div>
         </div>
 
         <div className='card-body'>
-          <FormInput
-            placeholder='book title'
-            name='titleQuery'
-            value={titleQuery}
-            onChange={this.handleChange}
-          />
-          <FormInput
-            placeholder='author name'
-            name='authorQuery'
-            value={authorQuery}
-            onChange={this.handleChange}
-          />
+          <div className='row'>
+            <div className='col-md-6'>
+              <FormInput
+                placeholder='book title'
+                name='titleQuery'
+                value={titleQuery}
+                onChange={this.handleChange}
+              />
+            </div>
+            <div className='col-md-6'>
+              <FormInput
+                placeholder='author name'
+                name='authorQuery'
+                value={authorQuery}
+                onChange={this.handleChange}
+              />
+            </div>
+          </div>
           {advancedSearch && (
-            <div>
+            <Fragment>
+              <hr />
               <div className='row'>
                 <div className='col-md-6'>
                   <div className='row'>
@@ -165,6 +201,7 @@ class Search extends React.Component {
                     </div>
                   </div>
                 </div>
+
                 <div className='col-md-6'>
                   <div className='row'>
                     <div className='col'>
@@ -218,28 +255,27 @@ class Search extends React.Component {
                 </div>
               </div>
 
+              <hr />
+
               <div className='row'>
-                <div className='col-md-4'>
+                <div className='col'>
                   <FormSelect
-                    small
                     list={['Select category ...', ...this.props.categories]}
                     name='category'
                     value={category}
                     onChange={this.handleChange}
                   />
                 </div>
-                <div className='col-md-4'>
+                <div className='col'>
                   <FormSelect
-                    small
                     list={['Select language ...', ...this.props.languages]}
                     name='language'
                     value={language}
                     onChange={this.handleChange}
                   />
                 </div>
-                <div className='col-md-4'>
+                <div className='col'>
                   <FormSelect
-                    small
                     list={['Select condition ...', ...this.props.conditions]}
                     name='condition'
                     value={condition}
@@ -247,15 +283,18 @@ class Search extends React.Component {
                   />
                 </div>
               </div>
+
+              <hr />
+
               <div className='row'>
-                <div className='col-md-10'>
+                <div className='col'>
                   <HandleLocation
                     updateLocation={this.updateLocation}
                     latitude={searchLat}
                     longitude={searchLng}
                   />
                 </div>
-                <div className='col-md-2'>
+                <div className='col-2'>
                   <FormInput
                     placeholder='max distance'
                     name='distanceMax'
@@ -264,47 +303,8 @@ class Search extends React.Component {
                   />
                 </div>
               </div>
-            </div>
+            </Fragment>
           )}
-        </div>
-        <div className='card-footer'>
-          <div className='text-right'>
-            <CustomButton
-              small
-              outline
-              primary
-              onClick={() => {
-                this.props.getAllPublicItemsStart();
-              }}
-            >
-              Cancel Search
-            </CustomButton>
-            <CustomButton
-              small
-              outline
-              primary
-              onClick={() => {
-                // convert the price to the price with USD
-                const { priceMin, priceMax, currency } = this.state;
-                const minPriceInUSD =
-                  this.props.getPriceInUSD(priceMin, currency) || 0;
-                const maxPriceInUSD = this.props.getPriceInUSD(
-                  priceMax,
-                  currency
-                );
-
-                // get the search object from the state
-                const { advancedSearch, ...searchObject } = this.state;
-                // set the new price values in usd (without changing the component state)
-                searchObject.priceMin = minPriceInUSD;
-                searchObject.priceMax = maxPriceInUSD;
-                // search
-                this.props.searchItemsStart(searchObject);
-              }}
-            >
-              <i className='fas fa-search' /> Search
-            </CustomButton>
-          </div>
         </div>
       </div>
     );

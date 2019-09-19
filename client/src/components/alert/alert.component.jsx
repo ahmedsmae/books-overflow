@@ -43,10 +43,8 @@ const Alert = ({
           <p className='my-auto'>{message}</p>
         ) : (
           message.map((msg, index) => (
-            <div>
-              <p className='my-auto' key={index}>
-                {msg}
-              </p>
+            <div key={index}>
+              <p className='my-auto'>{msg}</p>
               {index < message.length - 1 && <hr />}
             </div>
           ))

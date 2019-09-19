@@ -37,11 +37,11 @@ const ContactUs = ({ currentUser, contactUsStart }) => {
   };
 
   return (
-    <div className='card my-4'>
+    <div className='card'>
       <div className='card-body'>
+        <h3 className='text-center'>Contact US</h3>
         <form onSubmit={handleSubmit}>
           <FormInput
-            large
             label='Email'
             type='email'
             name='email'
@@ -50,7 +50,6 @@ const ContactUs = ({ currentUser, contactUsStart }) => {
             required
           />
           <FormInput
-            large
             label='Subject'
             text='text'
             name='subject'
@@ -59,15 +58,15 @@ const ContactUs = ({ currentUser, contactUsStart }) => {
             required
           />
           <FormTextArea
-            large
             label='Message'
+            rows='5'
             name='message'
             value={message}
             onChange={handleChange}
             required
           />
           <div className='text-right'>
-            <CustomButton large primary outline type='submit'>
+            <CustomButton primary outline type='submit'>
               Send Email
             </CustomButton>
           </div>

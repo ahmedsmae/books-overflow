@@ -15,12 +15,7 @@ const Library = ({ match, getSelectedUserStart, selectedUser }) => {
     !selectedUser && getSelectedUserStart(userId);
   }, [selectedUser, getSelectedUserStart, userId]);
 
-  return (
-    <div>
-      Library
-      <ListContainer />
-    </div>
-  );
+  return <ListContainer />;
 };
 
 const mapStateToProps = createStructuredSelector({

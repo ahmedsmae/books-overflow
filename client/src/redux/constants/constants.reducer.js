@@ -2,12 +2,14 @@ import CONDITIONS_LIST from './list.conditions';
 import LANGUAGES_LIST from './list.languages';
 import CATEGORIES_LIST from './list.categories';
 import CURRENCIES_LIST from './list.currencies';
+import REASONS_LIST from './list.reasons';
 
 const INITIAL_STATE = {
   conditions: CONDITIONS_LIST,
   languages: LANGUAGES_LIST,
   categories: CATEGORIES_LIST,
-  currencies: CURRENCIES_LIST
+  currencies: CURRENCIES_LIST,
+  reasons: REASONS_LIST
 };
 
 const constantsReducer = (state = INITIAL_STATE, { type, payload }) => {

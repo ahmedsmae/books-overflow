@@ -4,6 +4,7 @@ import Autocomplete from 'react-google-autocomplete';
 import { fetchLatLng } from '../../assets/util-functions';
 
 import CustomButton from '../custom-button/custom-button.component';
+import FormInput from '../form-input/form-input.component';
 
 import './handle-location.styles.scss';
 
@@ -41,14 +42,13 @@ class HandleLocation extends React.Component {
     const { address, isEditing } = this.state;
 
     return (
-      <div className='form-row'>
+      <Fragment>
         {!isEditing ? (
-          <Fragment>
-            <div className='col col-md-10 pr-2'>
-              <h6>{address}</h6>
-              {/* <FormInput value={address} readonly large /> */}
+          <div className='row'>
+            <div className='col'>
+              <FormInput value={address} disabled />
             </div>
-            <div className='col col-md-2 pl-2'>
+            <div className='col-2'>
               <CustomButton
                 outline
                 primary
@@ -64,12 +64,12 @@ class HandleLocation extends React.Component {
                 Change
               </CustomButton>
             </div>
-          </Fragment>
+          </div>
         ) : (
-          <Fragment>
-            <div className='col col-md-10 pr-2'>
+          <div className='row'>
+            <div className='col'>
               <Autocomplete
-                className='form-control form-control-lg'
+                className='form-control'
                 style={{ width: '100%', height: '40px' }}
                 placeholder='enter location'
                 onPlaceSelected={place => {
@@ -88,7 +88,7 @@ class HandleLocation extends React.Component {
               />
             </div>
 
-            <div className='col col-md-2 pl-2'>
+            <div className='col-2'>
               <CustomButton
                 outline
                 primary
@@ -105,9 +105,9 @@ class HandleLocation extends React.Component {
                 <i className='fas fa-street-view' /> Current
               </CustomButton>
             </div>
-          </Fragment>
+          </div>
         )}
-      </div>
+      </Fragment>
     );
   }
 }

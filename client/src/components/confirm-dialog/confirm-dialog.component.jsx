@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import CustomButton from '../custom-button/custom-button.component';
 
@@ -9,7 +10,6 @@ const ConfirmDialog = ({
   message,
   confirmText,
   cancelText,
-  updateDisplay,
   onChoose
 }) => {
   return (
@@ -17,52 +17,39 @@ const ConfirmDialog = ({
       <div className='card confirm-dialog'>
         <div className='card-header'>
           <div className='row'>
-            <div className='col-md-11 text-left'>
-              <h3>{title}</h3>
+            <div className='col'>
+              <h4>{title}</h4>
             </div>
-            <div className='col-md-1 close'>
-              <CustomButton
-                small
-                outline
-                dark
-                onClick={() => updateDisplay(false)}
-              >
-                X
-              </CustomButton>
-            </div>
+            <Link
+              className='col-0.5 nav-link mr-1'
+              onClick={() => onChoose(false)}
+            >
+              <i className='fas fa-power-off' />
+            </Link>
           </div>
         </div>
 
-        <div className='card-body text-left'>
+        <div className='card-body'>
           <p className='lead'>{message}</p>
         </div>
 
         <div className='card-footer'>
-          <div className='row text-right'>
-            <div className='col-md-2 m-2'>
-              <CustomButton
-                outline
-                dark
-                onClick={() => {
-                  updateDisplay(false);
-                  onChoose(false);
-                }}
-              >
-                {cancelText || 'Cancel'}
-              </CustomButton>
-            </div>
-            <div className='col-md-2 m-2'>
-              <CustomButton
-                outline
-                danger
-                onClick={() => {
-                  updateDisplay(false);
-                  onChoose(true);
-                }}
-              >
-                {confirmText || 'Confirm'}
-              </CustomButton>
-            </div>
+          <div className='row'>
+            <div className='col' />
+            <CustomButton
+              className='col-2 m-2'
+              dark
+              onClick={() => onChoose(false)}
+            >
+              {cancelText || 'Cancel'}
+            </CustomButton>
+            <CustomButton
+              className='col-2 m-2'
+              danger
+              onClick={() => onChoose(true)}
+            >
+              {confirmText || 'Confirm'}
+            </CustomButton>
           </div>
         </div>
       </div>

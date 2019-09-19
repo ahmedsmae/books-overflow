@@ -7,7 +7,6 @@ import './notifications.styles.scss';
 const Notification = () => {
   return (
     <div>
-      Notifications
       <ListContainer />
     </div>
   );

@@ -48,7 +48,7 @@ const SignUp = ({ signupUserStart }) => {
           Sign up with your name, email and password
         </p>
         <form onSubmit={handleSubmit}>
-          <div className='form-row'>
+          <div className='row'>
             <div className='col'>
               <FormInput
                 large

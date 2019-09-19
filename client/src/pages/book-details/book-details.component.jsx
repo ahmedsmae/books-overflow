@@ -166,15 +166,14 @@ class BookDetails extends React.Component {
     console.log(imageids);
 
     return (
-      <div className='card mt-4'>
+      <div className='card'>
         <div className='card-body'>
           <p className='lead'>Edit Book Details</p>
           <form onSubmit={this.handleSubmit}>
             <label>General Details</label>
             <div className='form-row'>
-              <div className='col-md-6 pr-2'>
+              <div className='col-md-6'>
                 <FormInput
-                  large
                   prepend='Title'
                   placeholder='eg.: Journey to the center of the earth.'
                   name='title'
@@ -182,7 +181,6 @@ class BookDetails extends React.Component {
                   onChange={this.handleChange}
                 />
                 <FormInput
-                  large
                   prepend='Author'
                   placeholder='eg.: Ahmed Afifi.'
                   name='author'
@@ -190,7 +188,6 @@ class BookDetails extends React.Component {
                   onChange={this.handleChange}
                 />
                 <FormInput
-                  large
                   type='date'
                   prepend='Date'
                   placeholder='select date ...'
@@ -203,9 +200,8 @@ class BookDetails extends React.Component {
                   onChange={this.handleChange}
                 />
               </div>
-              <div className='col-md-6 pl-2'>
+              <div className='col-md-6'>
                 <FormSelect
-                  large
                   prepend='Category'
                   list={['Select ...', ...this.props.categories]}
                   name='category'
@@ -213,7 +209,6 @@ class BookDetails extends React.Component {
                   onChange={this.handleChange}
                 />
                 <FormSelect
-                  large
                   prepend='Language'
                   list={['Select ...', ...this.props.languages]}
                   name='language'
@@ -221,7 +216,6 @@ class BookDetails extends React.Component {
                   onChange={this.handleChange}
                 />
                 <FormSelect
-                  large
                   prepend='Condition'
                   list={['Select ...', ...this.props.conditions]}
                   name='condition'
@@ -233,9 +227,8 @@ class BookDetails extends React.Component {
             <hr />
             <label>Pricing details</label>
             <div className='form-row'>
-              <div className='col-md-6 pr-2'>
+              <div className='col-md-6'>
                 <FormInput
-                  large
                   prepend='Price'
                   placeholder='enter price'
                   name='price'
@@ -243,7 +236,7 @@ class BookDetails extends React.Component {
                   onChange={this.handleChange}
                 />
               </div>
-              <div className='col-md-6 pl-2'>
+              <div className='col-md-6'>
                 <HandleCurrency
                   originalCurrency={currency}
                   updateCurrency={this.updateCurrency}
@@ -259,7 +252,7 @@ class BookDetails extends React.Component {
             />
 
             <hr />
-            <div className=''>Photos</div>
+            <label>Photos</label>
             <HandleMultipleImages
               maxPhotos='3'
               url='/api/bookimages/'
@@ -274,7 +267,6 @@ class BookDetails extends React.Component {
 
             <label>Book Description</label>
             <FormTextArea
-              large
               placeholder='tell us more about this book.'
               name='summary'
               value={summary}
@@ -282,7 +274,6 @@ class BookDetails extends React.Component {
             />
             <hr />
             <FormInput
-              large
               label='Keywords'
               placeholder='eg.: forex, stocks.'
               hint='Use comma "," to separate between keywords. Keywords will help others to find your book easily'
@@ -290,32 +281,31 @@ class BookDetails extends React.Component {
               value={keywords}
               onChange={this.handleChange}
             />
-            <div className='mt-4 text-right'>
+            <div className='row'>
+              <div className='col' />
               {this.props.selectedBook && (
                 <CustomButton
-                  large
+                  className='col-2 m-2'
                   danger
                   onClick={() => this.setState({ displayConfirmDialog: true })}
                 >
                   Delete Book
                 </CustomButton>
               )}
+              <CustomButton primary type='submit' className='col-2 m-2'>
+                {this.props.selectedBook ? 'Save Changes' : 'Save Book'}
+              </CustomButton>
               {displayConfirmDialog && (
                 <ConfirmDialog
                   title='Confirm Delete'
                   message='You really want to delete that book ?'
                   display={displayConfirmDialog}
-                  updateDisplay={display =>
-                    this.setState({ displayConfirmDialog: display })
-                  }
                   onChoose={response => {
                     response && this.props.deleteBookStart(_id);
+                    this.setState({ displayConfirmDialog: false });
                   }}
                 />
               )}
-              <CustomButton large primary type='submit'>
-                {this.props.selectedBook ? 'Save Changes' : 'Save Book'}
-              </CustomButton>
             </div>
           </form>
         </div>

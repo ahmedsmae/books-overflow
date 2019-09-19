@@ -105,7 +105,7 @@ class EditProfile extends React.Component {
     console.log(defaultlatitude, defaultlongitude);
 
     return (
-      <div className='card mt-4'>
+      <div className='card'>
         <div className='card-body'>
           <form onSubmit={this.handleSubmit}>
             <div className='row'>
@@ -116,10 +116,9 @@ class EditProfile extends React.Component {
                 />
               </div>
               <div className='col-md-6'>
-                <div className='form-row'>
-                  <div className='col'>
+                <div className='row'>
+                  <div className='col-md-6'>
                     <FormInput
-                      large
                       label='First Name'
                       placeholder='enter first name'
                       type='text'
@@ -129,9 +128,8 @@ class EditProfile extends React.Component {
                       required
                     />
                   </div>
-                  <div className='col'>
+                  <div className='col-md-6'>
                     <FormInput
-                      large
                       label='Last Name'
                       placeholder='enter last name'
                       type='text'
@@ -144,14 +142,12 @@ class EditProfile extends React.Component {
                 </div>
                 <FormInput
                   disabled
-                  large
                   label='Email'
                   type='email'
                   name='email'
                   value={email}
                 />
                 <FormInput
-                  large
                   label='Contact Number'
                   type='text'
                   name='contactnumber'
@@ -173,7 +169,6 @@ class EditProfile extends React.Component {
             </div>
             <div className='mt-3'>
               <FormTextArea
-                large
                 rows='3'
                 name='bio'
                 value={bio}
@@ -182,15 +177,24 @@ class EditProfile extends React.Component {
                 placeholder='your bio...'
               />
             </div>
-            <div className='text-right'>
-              <Link to={PATHS.CHANGE_PASSWORD_PATH}>
-                <CustomButton large danger>
+            <hr />
+            <div className='row'>
+              <div className='col' />
+
+              <Link to={PATHS.DELETE_USER_PATH} className='col-2 m-2'>
+                <CustomButton danger className='w-100'>
+                  Delete User
+                </CustomButton>
+              </Link>
+
+              <Link to={PATHS.CHANGE_PASSWORD_PATH} className='col-2 m-2'>
+                <CustomButton danger className='w-100'>
                   Change Password
                 </CustomButton>
               </Link>
 
               <CustomButton
-                large
+                className='col-2 m-2'
                 primary
                 type='submit'
                 disabled={this.state.profileChanged ? false : true}

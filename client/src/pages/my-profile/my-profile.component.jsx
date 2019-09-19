@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
-// import { selectUser } from '../../redux/current-user/current-user.selectors';
 import {
   getUserBooksStart,
   getUserCollectionsStart,
@@ -17,7 +16,6 @@ import './my-profile.styles.scss';
 const UserCardWithSpinner = WithSpinner(UserCard);
 
 const MyProfile = ({
-  // currentUser,
   getUserBooksStart,
   getUserCollectionsStart,
   getUserNotificationsStart
@@ -28,20 +26,10 @@ const MyProfile = ({
     getUserNotificationsStart();
   }, [getUserBooksStart, getUserCollectionsStart, getUserNotificationsStart]);
 
-  return (
-    <div>
-      My Profile
-      <UserCardWithSpinner
-        // isLoading={currentUser ? false : true}
-        myProfile={true}
-      />
-    </div>
-  );
+  return <UserCardWithSpinner myProfile={true} />;
 };
 
-const mapStateToProps = createStructuredSelector({
-  // currentUser: selectUser
-});
+const mapStateToProps = createStructuredSelector({});
 
 // fetch selected user
 const mapDispatchToProps = dispatch => ({

@@ -27,6 +27,7 @@ import BlockedUsersPage from './pages/blocked-users/blocked-users.component';
 import FavouritesPage from './pages/favourites/favourites.component';
 import MyLibraryPage from './pages/my-library/my-library.component';
 import MyProfilePage from './pages/my-profile/my-profile.component';
+import DeleteUserPage from './pages/delete-user/delete-user.component';
 
 import './App.scss';
 
@@ -136,6 +137,17 @@ const App = ({ currentUser, loadingUserStart, getConversionRatesStart }) => {
             render={props =>
               currentUser ? (
                 <MyProfilePage {...props} />
+              ) : (
+                <Redirect to={PATHS.HOME_PATH} />
+              )
+            }
+          />
+          <Route
+            exact
+            path={PATHS.DELETE_USER_PATH}
+            render={props =>
+              currentUser ? (
+                <DeleteUserPage {...props} />
               ) : (
                 <Redirect to={PATHS.HOME_PATH} />
               )

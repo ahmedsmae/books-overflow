@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import Downshift from 'downshift';
@@ -24,13 +24,13 @@ class HandleCurrency extends React.Component {
     const { currency, currencyList } = this.state;
 
     return (
-      <div className='form-row'>
+      <Fragment>
         {!!currency ? (
           <div className='row'>
             <div className='col'>
-              <h6>{currency}</h6>
+              <FormInput value={currency} disabled />
             </div>
-            <div className='col'>
+            <div className='col-4'>
               <CustomButton
                 primary
                 outline
@@ -60,7 +60,7 @@ class HandleCurrency extends React.Component {
               highlightedIndex,
               selectedItem
             }) => (
-              <div className='col col-md-12'>
+              <div className='w-100'>
                 <FormInput placeholder='enter currency' {...getInputProps()} />
                 <ul
                   {...getMenuProps()}
@@ -106,7 +106,7 @@ class HandleCurrency extends React.Component {
             )}
           </Downshift>
         )}
-      </div>
+      </Fragment>
     );
   }
 }

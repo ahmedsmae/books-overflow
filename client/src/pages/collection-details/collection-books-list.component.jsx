@@ -9,7 +9,6 @@ import FormInput from '../../components/form-input/form-input.component';
 import FormSelect from '../../components/form-select/form-select.component';
 
 class CollectionBooksList extends React.Component {
-  // updateBooksArray - conditions
   state = {
     booksArray: [],
     addingBook: false,
@@ -77,18 +76,21 @@ class CollectionBooksList extends React.Component {
       <div className='card'>
         <div className='card-header'>
           <div className='row'>
-            <label className='col my-auto'>Books details</label>
-            <div className='d-inline mr-2'>
-              <CustomButton outline primary onClick={this.openAddingBook}>
-                Add Book
-              </CustomButton>
-            </div>
+            <label className='col'>Books details</label>
+            <CustomButton
+              className='col-1.5 mr-2'
+              outline
+              primary
+              onClick={this.openAddingBook}
+            >
+              Add Book
+            </CustomButton>
           </div>
         </div>
         <div className='card-body'>
           {booksArray.map((book, index) => (
             <div className='row' key={index}>
-              <div className='col-md-5'>
+              <div className='col-5'>
                 <FormInput small prepend='Title' value={book.title} disabled />
               </div>
               <div className='col-md-3'>
@@ -99,7 +101,7 @@ class CollectionBooksList extends React.Component {
                   disabled
                 />
               </div>
-              <div className='col-md-3'>
+              <div className='col-3'>
                 <FormInput
                   small
                   prepend='Condition'
@@ -107,10 +109,9 @@ class CollectionBooksList extends React.Component {
                   disabled
                 />
               </div>
-              <div className='col-md-1'>
+              <div className='col-1'>
                 <CustomButton
                   outline
-                  success
                   danger
                   onClick={() => {
                     const newArray = booksArray;
@@ -128,7 +129,7 @@ class CollectionBooksList extends React.Component {
         {addingBook && (
           <div className='card-footer'>
             <div className='row'>
-              <div className='col-md-5'>
+              <div className='col-5'>
                 <FormInput
                   prepend='Title'
                   placeholder='eg.: Journey to the center of the earth.'
@@ -138,7 +139,7 @@ class CollectionBooksList extends React.Component {
                   required
                 />
               </div>
-              <div className='col-md-3'>
+              <div className='col-3'>
                 <FormInput
                   prepend='Author'
                   placeholder='eg.: Ahmed Afifi'
@@ -148,7 +149,7 @@ class CollectionBooksList extends React.Component {
                   required
                 />
               </div>
-              <div className='col-md-3'>
+              <div className='col-3'>
                 <FormSelect
                   prepend='Condition'
                   list={['Select ...', ...this.props.conditions]}
@@ -157,7 +158,7 @@ class CollectionBooksList extends React.Component {
                   onChange={this.handleChange}
                 />
               </div>
-              <div className='col-md-1'>
+              <div className='col-1'>
                 <CustomButton outline success onClick={this.handleSubmit}>
                   <i className='fas fa-check' />
                 </CustomButton>

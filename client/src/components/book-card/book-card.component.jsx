@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Lightbox from 'react-image-lightbox';
@@ -10,7 +10,6 @@ import { setSelectedItem } from '../../redux/current-user/current-user.actions';
 import { PATHS } from '../../assets/list.types';
 import { fetchLatLng } from '../../assets/util-functions';
 
-import CustomButton from '../custom-button/custom-button.component';
 import UserImage from '../user-image/user-image.component';
 import CustomImage from '../custom-image/custom-image.component';
 
@@ -67,108 +66,126 @@ const BookCard = ({
   const sourceArray = imageids.map(id => `/api/bookimages/${id}`);
 
   return (
-    <div className='card m-3'>
-      <div className='card-header'>
+    <div className='card my-2'>
+      <div className='card-header bg-primary text-white'>
         <div className='row'>
-          <div className='col-md-10'>
-            <h3>{title}</h3>
+          <div className='col'>
+            <h4>{title}</h4>
           </div>
-          <div className='col-md-2'>
+          <Fragment>
             {currentUser && currentUser._id === owner._id ? (
-              <Link to={PATHS.BOOK_DETAILS_PATH}>
-                <CustomButton
-                  primary
-                  outline
-                  onClick={() => setSelectedItem(book)}
-                >
-                  <i className='fas fa-edit' /> Edit Book
-                </CustomButton>
+              <Link
+                className='col-0.5 nav-link text-light text-center mr-2'
+                to={PATHS.BOOK_DETAILS_PATH}
+                onClick={() => setSelectedItem(book)}
+              >
+                <i className='fas fa-edit' />
               </Link>
             ) : (
               // NOT THE OWNER OF THE BOOK
               currentUser && (
                 // TODO: CHECK IF U ARE REGISTERED BEFORE YOU CAN MESSAGE THE OWNER
-                <Link to=''>
-                  <CustomButton primary outline onClick={() => {}}>
-                    <i className='fas fa-comments' /> Message Owner
-                  </CustomButton>
+                <Link
+                  to=''
+                  onClick={() => {}}
+                  className='col-2 nav-link text-light text-center mr-2'
+                >
+                  <i className='fas fa-comments' /> Message Owner
                 </Link>
               )
             )}
-          </div>
+            <Link
+              className='col-1.5 nav-link text-light text-center mr-2'
+              onClick={() => setShowMore(!showMore)}
+            >
+              {showMore ? 'Show less...' : 'Show more...'}
+            </Link>
+          </Fragment>
         </div>
       </div>
+
       <div className='card-body'>
         <div className='row'>
-          <div className='col-md-3'>
-            <Link
-              to={
-                currentUser && ownerid === currentUser._id
-                  ? PATHS.MY_PROFILE_PATH
-                  : PATHS.PROFILE_PATH_NO_ID + ownerid
-              }
-            >
-              <UserImage source={`/api/avatars/${avatarid}`} medium />
-              <h6>{`${firstname} ${lastname}`}</h6>
-            </Link>
-          </div>
+          <Link
+            className='col-3 text-center'
+            to={
+              currentUser && ownerid === currentUser._id
+                ? PATHS.MY_PROFILE_PATH
+                : PATHS.PROFILE_PATH_NO_ID + ownerid
+            }
+          >
+            <UserImage source={`/api/avatars/${avatarid}`} medium />
+            <p className='lead mt-3'>{`${firstname} ${lastname}`}</p>
+          </Link>
 
-          <div className='col-md-9'>
-            <h6>{author}</h6>
-            <h5>{`${category} | ${language} | ${condition}`}</h5>
+          <div className='col'>
+            <div>
+              <small>Author: </small>
+              <span className='lead'>{author}</span>
+            </div>
+
+            <hr />
 
             <div className='row'>
-              <div className='col-md-10'>
-                <h5>
-                  <i className='fas fa-dollar-sign' />{' '}
-                  {`${Math.round(
-                    getPriceInLocalCurrency(price, currency),
-                    0
-                  )} ${currency.toLowerCase()}`}{' '}
-                  | <i className='fas fa-map-marker-alt' />{' '}
-                  {`${Math.round(distance / 1000, 0)} km`}
-                </h5>
+              <div className='col'>
+                <small>Category</small>
+                <p className='lead'>{category}</p>
               </div>
-              <div className='col-md-2'>
-                <CustomButton
-                  primary
-                  outline
-                  onClick={() => setShowMore(!showMore)}
-                >
-                  {showMore ? (
-                    <i className='fas fa-chevron-up'></i>
-                  ) : (
-                    <i className='fas fa-chevron-down' />
-                  )}
-                </CustomButton>
+              <div className='col'>
+                <small>Language</small>
+                <p className='lead'>{language}</p>
+              </div>
+              <div className='col'>
+                <small>Condition</small>
+                <p className='lead'>{condition}</p>
+              </div>
+            </div>
+
+            <hr />
+
+            <div className='row'>
+              <div className='col'>
+                <small>Price: </small>
+                <span className='lead'>{`${Math.round(
+                  getPriceInLocalCurrency(price, currency),
+                  0
+                )} ${currency.toLowerCase()}`}</span>
+              </div>
+              <div className='col'>
+                <small>How far: </small>
+                <span className='lead'>{`${Math.round(
+                  distance / 1000,
+                  0
+                )} km`}</span>
               </div>
             </div>
           </div>
         </div>
         {showMore && (
-          <div>
+          <Fragment>
             <hr />
-            <div className='row'>
-              <div className='col-md-8'>
-                {/* get location from lat lng */}
-                <h5>{address}</h5>
-                <p>{summary}</p>
-                <h6>{keywords}</h6>
-              </div>
-              <div className='col-md-4'>
-                {sourceArray.map((src, index) => (
-                  <CustomImage
-                    key={index}
-                    source={src}
-                    height='100px'
-                    onClick={() =>
-                      setZoom({ isZoomed: true, imageIndex: index })
-                    }
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
+            <h5>{address}</h5>
+            <hr />
+
+            {sourceArray.map((src, index) => (
+              <CustomImage
+                key={index}
+                source={src}
+                height='100px'
+                onClick={() => setZoom({ isZoomed: true, imageIndex: index })}
+              />
+            ))}
+
+            <hr />
+
+            <small>Summary</small>
+            <p className='lead'>{summary}</p>
+
+            <hr />
+
+            <small>Keywords</small>
+            <p className='lead'>{keywords}</p>
+          </Fragment>
         )}
       </div>
       {isZoomed && (

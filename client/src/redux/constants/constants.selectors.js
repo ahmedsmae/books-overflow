@@ -21,3 +21,8 @@ export const selectCurrencies = createSelector(
   [selectConstants],
   constants => constants.currencies
 );
+
+export const selectReasons = createSelector(
+  [selectConstants],
+  constants => constants.reasons
+);

@@ -26,13 +26,6 @@ class HandleMultipleImages extends React.Component {
       isPhotoEnlarged: false,
       enlargedPhotoSource: null
     };
-    // this.state = {
-    //   maxPhotos: this.props.maxPhotos ? this.props.maxPhotos : 3,
-    //   imageids: this.props.imageids.length ? this.props.imageids : [],
-    //   selectedPhotos: [], // will contain the photo sources that has been selected here
-    //   isPhotoEnlarged: false,
-    //   enlargedPhotoSource: null
-    // };
   }
 
   static getDerivedStateFromProps(props, currentState) {
@@ -97,9 +90,9 @@ class HandleMultipleImages extends React.Component {
     } = this.state;
 
     return (
-      <div className='form-row'>
+      <div className='row px-3'>
         <div
-          className='col-md-10 pr-2 text-center'
+          className='col text-center'
           style={{ border: '1px solid lightgrey', borderRadius: '5px' }}
         >
           {imageids.map((id, index) => (
@@ -174,9 +167,8 @@ class HandleMultipleImages extends React.Component {
           ))}
         </div>
         {this.canAddMore() && (
-          <div className='col-md-2 text-center'>
+          <div className='col-2'>
             <CustomButton
-              large
               outline
               primary
               onClick={() => {

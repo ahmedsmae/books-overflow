@@ -40,33 +40,27 @@ const ListContainer = ({
 
     case PATHS.MY_LIBRARY_PATH:
       return (
-        <div>
-          <ListWithSpinner
-            // ! check for both books and collections
-            isLoading={userBooks && userCollections ? false : true}
-            list={[...userBooks, ...userCollections]}
-          />
-        </div>
+        <ListWithSpinner
+          // ! check for both books and collections
+          isLoading={userBooks && userCollections ? false : true}
+          list={[...userBooks, ...userCollections]}
+        />
       );
 
     case PATHS.LIBRARY_PATH_NO_ID + selectedUser._id:
       return (
-        <div>
-          <ListWithSpinner
-            isLoading={selectedUser ? false : true}
-            list={selectedUser.items}
-          />
-        </div>
+        <ListWithSpinner
+          isLoading={selectedUser ? false : true}
+          list={selectedUser.items}
+        />
       );
 
-    case PATHS.MY_NOTIFICATIONS_PATH:
+    case PATHS.NOTIFICATIONS_PATH:
       return (
-        <div>
-          <ListWithSpinner
-            isLoading={userNotifications ? false : true}
-            list={userNotifications}
-          />
-        </div>
+        <ListWithSpinner
+          isLoading={userNotifications ? false : true}
+          list={userNotifications}
+        />
       );
 
     default:

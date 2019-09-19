@@ -18,6 +18,7 @@ const CustomButton = ({
   large,
   disabled,
   type,
+  className,
   ...props
 }) => (
   <button
@@ -40,7 +41,8 @@ const CustomButton = ({
       ${dark && outline && 'btn-outline-dark'} 
       ${small && 'btn-sm'} 
       ${large && 'btn-lg'} 
-      ${block && 'btn-block'}`}
+      ${block && 'btn-block'} 
+      ${className && className}`}
     disabled={disabled ? true : false}
     type={type ? type : 'button'}
     {...props}

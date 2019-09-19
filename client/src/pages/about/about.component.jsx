@@ -6,7 +6,7 @@ import './about.styles.scss';
 
 const About = () => {
   return (
-    <div className='card mt-4'>
+    <div className='card'>
       <div className='card-body'>
         <div className='text-center mb-3'>
           <h3>What is Books Overflow ?</h3>

@@ -21,6 +21,7 @@ import HandleLocation from '../../components/handle-location/handle-location.com
 import HandleCurrency from '../../components/handle-currency/handle-currency.component';
 import HandleMultipleImages from '../../components/handle-multiple-images/handle-multiple-images.component';
 import CollectionBooksList from './collection-books-list.component';
+import ConfirmDialog from '../../components/confirm-dialog/confirm-dialog.component';
 
 import './collection-details.styles.scss';
 
@@ -40,7 +41,8 @@ class BookDetails extends React.Component {
     longitude: null,
     keywords: '',
     imageids: [],
-    newImageSources: []
+    newImageSources: [],
+    displayConfirmDialog: false
   };
 
   static getDerivedStateFromProps(props, currentState) {
@@ -138,19 +140,19 @@ class BookDetails extends React.Component {
       latitude,
       longitude,
       keywords,
-      imageids
+      imageids,
+      displayConfirmDialog
     } = this.state;
 
     return (
-      <div className='card mt-4'>
+      <div className='card'>
         <div className='card-body'>
           <p className='lead'>Edit Collection Details</p>
           <form onSubmit={this.handleSubmit}>
             <label>General Details</label>
             <div className='form-row'>
-              <div className='col-md-6 pr-2'>
+              <div className='col-md-6'>
                 <FormInput
-                  large
                   prepend='Title'
                   placeholder='eg.: Journey to the center of the earth.'
                   name='title'
@@ -158,7 +160,6 @@ class BookDetails extends React.Component {
                   onChange={this.handleChange}
                 />
                 <FormInput
-                  large
                   prepend='Number of books'
                   placeholder='eg.: 9'
                   name='numberofbooks'
@@ -166,9 +167,8 @@ class BookDetails extends React.Component {
                   onChange={this.handleChange}
                 />
               </div>
-              <div className='col-md-6 pl-2'>
+              <div className='col-md-6'>
                 <FormSelect
-                  large
                   prepend='Category'
                   list={['Select ...', ...this.props.categories]}
                   name='category'
@@ -176,7 +176,6 @@ class BookDetails extends React.Component {
                   onChange={this.handleChange}
                 />
                 <FormSelect
-                  large
                   prepend='Language'
                   list={['Select ...', ...this.props.languages]}
                   name='language'
@@ -193,9 +192,8 @@ class BookDetails extends React.Component {
             <hr />
             <label>Pricing details</label>
             <div className='form-row'>
-              <div className='col-md-6 pr-2'>
+              <div className='col-md-6'>
                 <FormInput
-                  large
                   prepend='Price'
                   placeholder='enter price'
                   name='price'
@@ -203,7 +201,7 @@ class BookDetails extends React.Component {
                   onChange={this.handleChange}
                 />
               </div>
-              <div className='col-md-6 pl-2'>
+              <div className='col-md-6'>
                 <HandleCurrency
                   originalCurrency={currency}
                   updateCurrency={this.updateCurrency}
@@ -219,7 +217,7 @@ class BookDetails extends React.Component {
             />
 
             <hr />
-            <div className=''>Photos</div>
+            <label>Photos</label>
             <HandleMultipleImages
               maxPhotos='5'
               url='/api/collectionimages/'
@@ -234,7 +232,6 @@ class BookDetails extends React.Component {
 
             <label>Collection Description</label>
             <FormTextArea
-              large
               placeholder='tell us more about this collection.'
               name='summary'
               value={summary}
@@ -242,7 +239,6 @@ class BookDetails extends React.Component {
             />
             <hr />
             <FormInput
-              large
               label='Keywords'
               placeholder='eg.: forex, stocks.'
               hint='Use comma "," to separate between keywords. Keywords will help others to find your collection easily'
@@ -250,23 +246,33 @@ class BookDetails extends React.Component {
               value={keywords}
               onChange={this.handleChange}
             />
-            <div className='mt-4 text-right'>
+            <div className='row'>
+              <div className='col' />
               {this.props.selectedCollection && (
                 <CustomButton
-                  large
+                  className='col-2 m-2'
                   danger
-                  onClick={() => {
-                    this.props.deleteCollectionStart(_id);
-                  }}
+                  onClick={() => this.setState({ displayConfirmDialog: true })}
                 >
                   Delete Collection
                 </CustomButton>
               )}
-              <CustomButton large primary type='submit'>
+              <CustomButton primary type='submit' className='col-2 m-2'>
                 {this.props.selectedCollection
                   ? 'Save Changes'
                   : 'Save Collection'}
               </CustomButton>
+              {displayConfirmDialog && (
+                <ConfirmDialog
+                  title='Confirm Delete'
+                  message='You really want to delete that collection ?'
+                  display={displayConfirmDialog}
+                  onChoose={response => {
+                    response && this.props.deleteCollectionStart(_id);
+                    this.setState({ displayConfirmDialog: false });
+                  }}
+                />
+              )}
             </div>
           </form>
         </div>

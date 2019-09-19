@@ -7,6 +7,7 @@ export const PATHS = {
   NOTIFICATIONS_PATH: '/notifications',
   BLOCKED_USERS_PATH: '/blocked-users',
   CHANGE_PASSWORD_PATH: '/change-password',
+  DELETE_USER_PATH: '/delete-user',
   MY_PROFILE_PATH: '/profile/me',
   MY_LIBRARY_PATH: '/library/me',
 

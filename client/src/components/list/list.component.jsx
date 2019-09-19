@@ -17,7 +17,7 @@ const List = ({ location: { pathname }, list }) => {
   ) {
     // it's an items list
     return (
-      <div className='card m-4'>
+      <div className='card'>
         <div className='card-body'>
           {list.map((item, index) =>
             // ! arrange array by createdAt date
