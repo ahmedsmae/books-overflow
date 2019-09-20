@@ -11,15 +11,18 @@ import { selectGetPriceInLocalCurrency } from '../../redux/conversion-rates/conv
 import {
   setSelectedItem,
   addFavouriteStart,
-  removeFavouriteStart
+  removeFavouriteStart,
+  addBlockedUserStart
 } from '../../redux/current-user/current-user.actions';
 
 import { PATHS } from '../../assets/list.types';
 import { ITEM_TYPES } from '../../assets/item.types';
 import { fetchLatLng } from '../../assets/util-functions';
 
+import BlockReasonDialog from '../block-reason-dialog/block-reason-dialog.component';
 import UserImage from '../user-image/user-image.component';
 import CustomImage from '../custom-image/custom-image.component';
+import CustomButton from '../custom-button/custom-button.component';
 
 import './book-card.styles.scss';
 
@@ -30,10 +33,12 @@ const BookCard = ({
   getPriceInLocalCurrency,
   favouriteIds,
   addFavouriteStart,
-  removeFavouriteStart
+  removeFavouriteStart,
+  addBlockedUserStart
 }) => {
   const [showMore, setShowMore] = useState(false);
   const [address, setAddress] = useState('');
+  const [showBlock, setShowBlock] = useState(false);
   const [zoom, setZoom] = useState({ isZoomed: false, imageIndex: null });
   const { isZoomed, imageIndex } = zoom;
 
@@ -134,17 +139,36 @@ const BookCard = ({
 
       <div className='card-body'>
         <div className='row'>
-          <Link
-            className='col-3 text-center'
-            to={
-              currentUser && ownerid === currentUser._id
-                ? PATHS.MY_PROFILE_PATH
-                : PATHS.PROFILE_PATH_NO_ID + ownerid
-            }
-          >
-            <UserImage source={`/api/avatars/${avatarid}`} medium />
-            <p className='lead mt-3'>{`${firstname} ${lastname}`}</p>
-          </Link>
+          <div className='col-3 text-center'>
+            <Link
+              to={
+                currentUser && ownerid === currentUser._id
+                  ? PATHS.MY_PROFILE_PATH
+                  : PATHS.PROFILE_PATH_NO_ID + ownerid
+              }
+            >
+              <UserImage source={`/api/avatars/${avatarid}`} medium />
+              <p className='lead mt-3'>{`${firstname} ${lastname}`}</p>
+            </Link>
+
+            {/* You can't block urself */}
+            {currentUser && ownerid !== currentUser._id && (
+              <CustomButton
+                small
+                dark
+                outline
+                onClick={() => setShowBlock(true)}
+              >
+                Block User
+              </CustomButton>
+            )}
+            {showBlock && (
+              <BlockReasonDialog
+                onCancel={() => setShowBlock(false)}
+                onResonSelect={reason => addBlockedUserStart(ownerid, reason)}
+              />
+            )}
+          </div>
 
           <div className='col'>
             <div>
@@ -257,7 +281,9 @@ const mapDispatchToProps = dispatch => ({
   addFavouriteStart: (kind, favouriteitemid) =>
     dispatch(addFavouriteStart(kind, favouriteitemid)),
   removeFavouriteStart: favouriteitemid =>
-    dispatch(removeFavouriteStart(favouriteitemid))
+    dispatch(removeFavouriteStart(favouriteitemid)),
+  addBlockedUserStart: (userid, reason) =>
+    dispatch(addBlockedUserStart(userid, reason))
 });
 
 export default connect(

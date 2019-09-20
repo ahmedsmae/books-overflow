@@ -8,7 +8,9 @@ import { PATHS } from '../../assets/list.types';
 import {
   selectBooks,
   selectCollections,
-  selectNotifications
+  selectNotifications,
+  selectFavourites,
+  selectBlockedUsers
 } from '../../redux/current-user/current-user.selectors';
 import { selectPublicItems } from '../../redux/public-items/public-items.selectors';
 import { selectSelectedUser } from '../../redux/selected-user/selected-user.selectors';
@@ -24,8 +26,10 @@ const ListContainer = ({
   userBooks,
   userCollections,
   userNotifications,
+  userFavourites,
   publicItems,
   selectedUser,
+  blockedUsers,
   location: { pathname }
 }) => {
   switch (pathname) {
@@ -63,6 +67,22 @@ const ListContainer = ({
         />
       );
 
+    case PATHS.FAVOURITES_PATH:
+      return (
+        <ListWithSpinner
+          isLoading={userFavourites ? false : true}
+          list={userFavourites}
+        />
+      );
+
+    case PATHS.BLOCKED_USERS_PATH:
+      return (
+        <ListWithSpinner
+          isLoading={blockedUsers ? false : true}
+          list={blockedUsers}
+        />
+      );
+
     default:
       return <div>List Container</div>;
   }
@@ -73,7 +93,9 @@ const mapStateToProps = createStructuredSelector({
   userCollections: selectCollections,
   userNotifications: selectNotifications,
   publicItems: selectPublicItems,
-  selectedUser: selectSelectedUser
+  selectedUser: selectSelectedUser,
+  userFavourites: selectFavourites,
+  blockedUsers: selectBlockedUsers
 });
 
 export default withRouter(connect(mapStateToProps)(ListContainer));

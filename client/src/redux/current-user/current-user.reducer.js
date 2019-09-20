@@ -34,6 +34,9 @@ export default (state = INITIAL_STATE, { type, payload }) => {
     case UserActionTypes.ADD_FAVOURITE_START:
     case UserActionTypes.REMOVE_FAVOURITE_START:
     case UserActionTypes.GET_USER_FAVOURITES_START:
+    case UserActionTypes.ADD_BLOCKED_USER_START:
+    case UserActionTypes.REMOVE_BLOCKED_USER_START:
+    case UserActionTypes.GET_BLOCKED_USERS_START:
       return {
         ...state,
         loading: true,
@@ -48,6 +51,8 @@ export default (state = INITIAL_STATE, { type, payload }) => {
     case UserActionTypes.CHANGE_PASSWORD_SUCCESS:
     case UserActionTypes.ADD_FAVOURITE_SUCCESS:
     case UserActionTypes.REMOVE_FAVOURITE_SUCCESS:
+    case UserActionTypes.ADD_BLOCKED_USER_SUCCESS:
+    case UserActionTypes.REMOVE_BLOCKED_USER_SUCCESS:
       return {
         ...state,
         user: payload,
@@ -83,6 +88,9 @@ export default (state = INITIAL_STATE, { type, payload }) => {
     case UserActionTypes.ADD_FAVOURITE_FAILURE:
     case UserActionTypes.REMOVE_FAVOURITE_FAILURE:
     case UserActionTypes.GET_USER_FAVOURITES_FAILURE:
+    case UserActionTypes.ADD_BLOCKED_USER_FAILURE:
+    case UserActionTypes.REMOVE_BLOCKED_USER_FAILURE:
+    case UserActionTypes.GET_BLOCKED_USERS_FAILURE:
       return {
         ...state,
         loading: false,
@@ -117,6 +125,14 @@ export default (state = INITIAL_STATE, { type, payload }) => {
       return {
         ...state,
         favourites: payload,
+        loading: false,
+        errorMessage: ''
+      };
+
+    case UserActionTypes.GET_BLOCKED_USERS_SUCCESS:
+      return {
+        ...state,
+        blockedUsers: payload,
         loading: false,
         errorMessage: ''
       };

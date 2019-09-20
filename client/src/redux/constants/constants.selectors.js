@@ -26,3 +26,8 @@ export const selectReasons = createSelector(
   [selectConstants],
   constants => constants.reasons
 );
+
+export const selectBlockReasons = createSelector(
+  [selectConstants],
+  constants => constants.blockReasons
+);

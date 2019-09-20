@@ -4,7 +4,7 @@ const router = express.Router();
 const Book = require('../../database/models/book');
 const Collection = require('../../database/models/collection');
 
-const { distance } = require('./public-items.utils');
+const { sortArrayByDistance } = require('../utils/sort-array-by-destance');
 
 /**
  * @method - POST
@@ -40,29 +40,9 @@ router.post('/all', async (req, res) => {
     // merge books and collections
     const allItems = [...books, ...collections];
 
-    const newArray = [];
+    const items = sortArrayByDistance(latitude, longitude, allItems);
 
-    if (latitude && longitude) {
-      // calculate the distance of the item from the user and add it as a distance prop into the item itself
-      for (let i = 0; i < allItems.length; i++) {
-        const itemDistance = distance(
-          latitude,
-          longitude,
-          allItems[i].latitude,
-          allItems[i].longitude
-        );
-
-        // convert mongoose model to js object
-        const newItem = { ...allItems[i].toObject(), distance: itemDistance };
-        newArray.push(newItem);
-        allItems[i].distance = itemDistance;
-      }
-
-      // arrange the array from the closest to the farest
-      newArray.sort((a, b) => (a.distance > b.distance ? 1 : -1));
-    }
-
-    res.json({ items: newArray });
+    res.json({ items });
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ errors: [{ msg: err.message }] });
@@ -154,32 +134,9 @@ router.post('/searchitems', async (req, res) => {
     if (books) allItems = [...allItems, ...books];
     if (collections) allItems = [...allItems, ...collections];
 
-    let finalItems = [];
-    if (searchLat && searchLng) {
-      // calculate the distance of the item from the user and add it as a distance prop into the item itself
-      for (let i = 0; i < allItems.length; i++) {
-        const itemDistance = distance(
-          searchLat,
-          searchLng,
-          allItems[i].latitude,
-          allItems[i].longitude
-        );
-        console.log(itemDistance);
+    const items = sortArrayByDistance(searchLat, searchLng, allItems);
 
-        if (!distanceMax || itemDistance <= distanceMax * 1000) {
-          const item = allItems[i].toObject();
-          item.distance = itemDistance;
-          finalItems.push(item);
-        }
-      }
-
-      // arrange the array from the closest to the farest
-      finalItems.sort((a, b) => (a.distance > b.distance ? 1 : -1));
-    }
-
-    // console.log(finalItems);
-
-    res.json({ items: finalItems });
+    res.json({ items });
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ errors: [{ msg: err.message }] });

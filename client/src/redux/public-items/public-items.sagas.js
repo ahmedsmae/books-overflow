@@ -2,7 +2,7 @@ import { takeLatest, call, put, all } from 'redux-saga/effects';
 import axios from 'axios';
 import { setAlert } from '../alert/alert.actions';
 
-import { getLatLng } from './public-items.utils';
+import getLatLng from '../utils/get-lat-lng';
 
 import PublicItemsActionTypes from './public-items.types';
 import {

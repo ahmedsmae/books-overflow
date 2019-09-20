@@ -1,4 +1,4 @@
-export const getLatLng = () => {
+const getLatLng = () => {
   return new Promise((resolve, reject) => {
     navigator.geolocation.getCurrentPosition(
       async position => {
@@ -13,3 +13,5 @@ export const getLatLng = () => {
     );
   });
 };
+
+export default getLatLng;

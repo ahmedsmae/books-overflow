@@ -12,6 +12,11 @@ export const selectUserFavourtiteIds = createSelector(
   user => user && user.favourites.map(fav => fav.favouriteitemid)
 );
 
+export const selectUserBlockedUsersIds = createSelector(
+  [selectUser],
+  user => user && user.blockedusers.map(bUser => bUser.userid)
+);
+
 export const selectBooks = createSelector(
   [selectCurrentUser],
   currentUser => currentUser.books

@@ -21,4 +21,26 @@ const distance = (lat1, lon1, lat2, lon2) => {
   return Math.round(d * 1000);
 };
 
-module.exports = { distance };
+const sortArrayByDistance = (userLat, userLng, itemsArray) => {
+  const finalArray = [];
+  if (userLat && userLng) {
+    // calculate the distance of the item from the user and add it as a distance prop into the item itself
+    for (let i = 0; i < itemsArray.length; i++) {
+      const itemDistance = distance(
+        userLat,
+        userLng,
+        itemsArray[i].userLat,
+        itemsArray[i].userLng
+      );
+
+      // convert mongoose model to js object
+      const newItem = { ...itemsArray[i].toObject(), distance: itemDistance };
+      finalArray.push(newItem);
+    }
+
+    // arrange the array from the closest to the farest
+    return finalArray.sort((a, b) => (a.distance > b.distance ? 1 : -1));
+  }
+};
+
+module.exports = { sortArrayByDistance };

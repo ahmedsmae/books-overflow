@@ -4,6 +4,7 @@ import { setAlert } from '../alert/alert.actions';
 
 import setAuthToken from '../utils/setAuthToken';
 import { dataURLtoFile } from './current-user.utils';
+import getLatLng from '../utils/get-lat-lng';
 
 import UserActionTypes from './current-user.types';
 import {
@@ -44,7 +45,13 @@ import {
   removeFavouriteSuccess,
   removeFavouriteFailure,
   getUserFavouriteSuccess,
-  getUserFavouriteFailure
+  getUserFavouriteFailure,
+  addBlockedUserSuccess,
+  addBlockedUserFailure,
+  removeBlockedUserSuccess,
+  removeBlockedUserFailure,
+  getBlockedUsersSuccess,
+  getBlockedUsersFailure
 } from './current-user.actions';
 
 function* signupUserAsync({ payload }) {
@@ -398,15 +405,70 @@ function* getUserFavouritesAsync() {
   try {
     yield setAuthToken();
 
-    const response = yield call(axios, {
-      method: 'get',
-      url: '/api/users/profile/getfavourites'
-    });
+    // get user lat lng
+    const { latitude, longitude } = yield call(getLatLng);
+    console.log(latitude, longitude);
 
-    yield put(getUserFavouriteSuccess(response.data.favourites));
+    if (latitude && longitude) {
+      const response = yield call(axios, {
+        method: 'post',
+        url: '/api/users/profile/getfavourites',
+        data: { latitude, longitude }
+      });
+      yield put(getUserFavouriteSuccess(response.data.favourites));
+    }
   } catch (err) {
     yield put(setAlert('Error!', err.message, 'danger', 5000));
     yield put(getUserFavouriteFailure(err.message));
+  }
+}
+
+function* addBlockedUserAsync({ payload }) {
+  try {
+    yield setAuthToken();
+
+    const response = yield call(axios, {
+      method: 'post',
+      url: '/api/users/profile/blockedusers',
+      data: { ...payload }
+    });
+
+    yield put(addBlockedUserSuccess(response.data.user));
+  } catch (err) {
+    yield put(setAlert('Error!', err.message, 'danger', 5000));
+    yield put(addBlockedUserFailure(err.message));
+  }
+}
+
+function* removeBlockedUserAsync({ payload }) {
+  try {
+    yield setAuthToken();
+
+    const response = yield call(axios, {
+      method: 'delete',
+      url: `/api/users/profile/blockedusers/${payload}`
+    });
+
+    yield put(removeBlockedUserSuccess(response.data.user));
+  } catch (err) {
+    yield put(setAlert('Error!', err.message, 'danger', 5000));
+    yield put(removeBlockedUserFailure(err.message));
+  }
+}
+
+function* getBlockedUsersAsync() {
+  try {
+    yield setAuthToken();
+
+    const response = yield call(axios, {
+      method: 'get',
+      url: '/api/users/profile/blockedusers'
+    });
+
+    yield put(getBlockedUsersSuccess(response.data.blockedUsers));
+  } catch (err) {
+    yield put(setAlert('Error!', err.message, 'danger', 5000));
+    yield put(getBlockedUsersFailure(err.message));
   }
 }
 
@@ -541,6 +603,31 @@ function* getUserFavouritesStart() {
   );
 }
 
+function* addBlockedUserStart() {
+  yield takeLatest(UserActionTypes.ADD_BLOCKED_USER_START, addBlockedUserAsync);
+}
+
+function* removeBlockedUserStart() {
+  yield takeLatest(
+    UserActionTypes.REMOVE_BLOCKED_USER_START,
+    removeBlockedUserAsync
+  );
+}
+
+// function* reloadBlockedUsersAfterRemoveBlockedUser() {
+//   yield takeLatest(
+//     UserActionTypes.REMOVE_BLOCKED_USER_SUCCESS,
+//     getBlockedUsersAsync
+//   );
+// }
+
+function* getBlockedUsersStart() {
+  yield takeLatest(
+    UserActionTypes.GET_BLOCKED_USERS_START,
+    getBlockedUsersAsync
+  );
+}
+
 export default function* userSagas() {
   yield all([
     call(loadingUserStart),
@@ -566,6 +653,9 @@ export default function* userSagas() {
     call(deleteUserStart),
     call(addFavouriteStart),
     call(removeFavouriteStart),
-    call(getUserFavouritesStart)
+    call(getUserFavouritesStart),
+    call(addBlockedUserStart),
+    call(removeBlockedUserStart),
+    call(getBlockedUsersStart)
   ]);
 }

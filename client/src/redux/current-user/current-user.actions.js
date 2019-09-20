@@ -289,6 +289,53 @@ export const getUserFavouriteFailure = errorMessage => ({
   payload: errorMessage
 });
 
+// ADD BLOCKED USER
+export const addBlockedUserStart = (userid, reason) => ({
+  type: UserActionTypes.ADD_BLOCKED_USER_START,
+  payload: { userid, reason }
+});
+
+export const addBlockedUserSuccess = user => ({
+  type: UserActionTypes.ADD_BLOCKED_USER_SUCCESS,
+  payload: user
+});
+
+export const addBlockedUserFailure = errorMessage => ({
+  type: UserActionTypes.ADD_BLOCKED_USER_FAILURE,
+  payload: errorMessage
+});
+
+// REMOVE BLOCKED USER
+export const removeBlockedUserStart = userid => ({
+  type: UserActionTypes.REMOVE_BLOCKED_USER_START,
+  payload: userid
+});
+
+export const removeBlockedUserSuccess = user => ({
+  type: UserActionTypes.REMOVE_BLOCKED_USER_SUCCESS,
+  payload: user
+});
+
+export const removeBlockedUserFailure = errorMessage => ({
+  type: UserActionTypes.REMOVE_BLOCKED_USER_FAILURE,
+  payload: errorMessage
+});
+
+// GET BLOCKED USERS
+export const getBlockedUsersStart = () => ({
+  type: UserActionTypes.GET_BLOCKED_USERS_START
+});
+
+export const getBlockedUsersSuccess = blockedUsers => ({
+  type: UserActionTypes.GET_BLOCKED_USERS_SUCCESS,
+  payload: blockedUsers
+});
+
+export const getBlockedUsersFailure = errorMessage => ({
+  type: UserActionTypes.GET_BLOCKED_USERS_FAILURE,
+  payload: errorMessage
+});
+
 // SELECTED ITEM
 export const setSelectedItem = selectedItem => ({
   type: UserActionTypes.SET_SELECTED_ITEM,

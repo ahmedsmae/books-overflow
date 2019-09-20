@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const sharp = require('sharp');
 const { check, validationResult } = require('express-validator');
 
 const auth = require('../../utils/auth');
+const { sortArrayByDistance } = require('../utils/sort-array-by-destance');
 
 const User = require('../../database/models/user');
 const Book = require('../../database/models/book');
@@ -124,30 +124,15 @@ router.post(
 
 /**
  * @method - DELETE
- * @url - 'api/users/profile/blockedusers'
- * @data - {userid}
+ * @url - 'api/users/profile/blockedusers/:blockeduserid'
+ * @data - token header
  * @action - remove a user from blockedusers list
  * @access - private
  */
 router.delete(
-  '/profile/blockedusers',
-  [
-    auth,
-    [
-      check('userid', 'User id is required')
-        .not()
-        .isEmpty()
-    ]
-  ],
+  '/profile/blockedusers/:blockeduserid',
+  auth,
   async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
-    const { userid } = req.body;
-    console.log(userid);
-
     try {
       const user = await User.findById(req.user.id);
 
@@ -158,7 +143,7 @@ router.delete(
       }
 
       user.blockedusers = user.blockedusers.filter(
-        blockedUser => blockedUser.userid != userid
+        blockedUser => blockedUser.userid != req.params.blockeduserid
       );
 
       await user.save();
@@ -170,6 +155,44 @@ router.delete(
     }
   }
 );
+
+/**
+ * @method - GET
+ * @url - 'api/users/profile/blockedusers'
+ * @data - token header
+ * @action - get all blocked users
+ * @access - private
+ */
+router.get('/profile/blockedusers', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+      return res
+        .status(400)
+        .json({ errors: [{ msg: 'User does not exists' }] });
+    }
+
+    const blockedUsers = [];
+    let i;
+    for (i = 0; i < user.blockedusers.length; i++) {
+      let bUser = await User.findById(user.blockedusers[i].userid);
+
+      if (bUser) {
+        bUser = bUser.getPublicVersion();
+
+        bUser.reason = user.blockedusers[i].reason;
+
+        blockedUsers.push(bUser);
+      }
+    }
+
+    res.json({ blockedUsers });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ errors: [{ msg: err.message }] });
+  }
+});
 
 /**
  * @method - POST
@@ -255,13 +278,15 @@ router.delete(
 );
 
 /**
- * @method - GET
+ * @method - POST
  * @url - 'api/users/profile/getfavourites'
- * @data - token header
+ * @data - { latitude, longitude }
  * @action - set notification to be seen: true
  * @access - private
  */
 router.post('/profile/getfavourites', auth, async (req, res) => {
+  const { latitude, longitude } = req.body;
+
   try {
     const user = await User.findById(req.user.id);
 
@@ -271,21 +296,36 @@ router.post('/profile/getfavourites', auth, async (req, res) => {
         .json({ errors: [{ msg: 'User does not exists' }] });
     }
 
-    const userFavouritesIds = user.favourites;
+    const userFavouriteIds = user.favourites.map(fav => fav.favouriteitemid);
 
-    const favourites = [];
-    let i;
-    for (i = 0; i < userFavouritesIds.length; i++) {
-      if (userFavouritesIds[i].kind === 'TYPE_BOOK') {
-        const book = await Book.findById(userFavouritesIds[i].favouriteitemid);
-        if (book) favourites.push(book);
-      } else if (userFavouritesIds[i].kind === 'TYPE_COLLECTION') {
-        const collection = await Collection.findById(
-          userFavouritesIds[i].favouriteitemid
-        );
-        if (collection) favourites.push(collection);
-      }
-    }
+    const books = await Book.find({ _id: { $in: userFavouriteIds } }).populate(
+      'owner',
+      [
+        'firstname',
+        'lastname',
+        'email',
+        'avatarid',
+        'defaultlatitude',
+        'defaultlongitude',
+        'bio'
+      ]
+    );
+
+    const collections = await Collection.find({
+      _id: { $in: userFavouriteIds }
+    }).populate('owner', [
+      'firstname',
+      'lastname',
+      'email',
+      'avatarid',
+      'defaultlatitude',
+      'defaultlongitude',
+      'bio'
+    ]);
+
+    const allItems = [...books, ...collections];
+
+    const favourites = sortArrayByDistance(latitude, longitude, allItems);
 
     res.json({ favourites });
   } catch (err) {
