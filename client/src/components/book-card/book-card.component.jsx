@@ -14,6 +14,7 @@ import {
   removeFavouriteStart,
   addBlockedUserStart
 } from '../../redux/current-user/current-user.actions';
+import { getChatStart } from '../../redux/chats/chats.actions';
 
 import { PATHS } from '../../assets/list.types';
 import { ITEM_TYPES } from '../../assets/item.types';
@@ -34,7 +35,8 @@ const BookCard = ({
   favouriteIds,
   addFavouriteStart,
   removeFavouriteStart,
-  addBlockedUserStart
+  addBlockedUserStart,
+  getChatStart
 }) => {
   const [showMore, setShowMore] = useState(false);
   const [address, setAddress] = useState('');
@@ -103,6 +105,7 @@ const BookCard = ({
               currentUser && (
                 <Fragment>
                   <Link
+                    to='#'
                     className='col-0.5 nav-link text-light text-center mr-2'
                     onClick={() =>
                       favouriteIds.includes(_id)
@@ -118,8 +121,8 @@ const BookCard = ({
                   </Link>
                   {/* TODO: CHECK IF U ARE REGISTERED BEFORE YOU CAN MESSAGE OWNER */}
                   <Link
-                    to=''
-                    onClick={() => {}}
+                    to={PATHS.CURRENT_CHAT_PATH}
+                    onClick={() => getChatStart(ownerid)}
                     className='col-0.5 nav-link text-light text-center mr-2'
                   >
                     <i className='fas fa-comments' />
@@ -128,6 +131,7 @@ const BookCard = ({
               )
             )}
             <Link
+              to='#'
               className='col-1.5 nav-link text-light text-center mr-2'
               onClick={() => setShowMore(!showMore)}
             >
@@ -283,7 +287,8 @@ const mapDispatchToProps = dispatch => ({
   removeFavouriteStart: favouriteitemid =>
     dispatch(removeFavouriteStart(favouriteitemid)),
   addBlockedUserStart: (userid, reason) =>
-    dispatch(addBlockedUserStart(userid, reason))
+    dispatch(addBlockedUserStart(userid, reason)),
+  getChatStart: opponentid => dispatch(getChatStart(opponentid))
 });
 
 export default connect(

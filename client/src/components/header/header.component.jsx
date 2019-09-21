@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
 
 import { selectUser } from '../../redux/current-user/current-user.selectors';
+import { selectUnseenMsgsCount } from '../../redux/chats/chats.selectors';
 import {
   signoutUserStart,
   clearSelectedItem
@@ -16,7 +17,12 @@ import Alert from '../alert/alert.component';
 
 import './header.styles.scss';
 
-const Header = ({ currentUser, signoutUserStart, clearSelectedItem }) => {
+const Header = ({
+  currentUser,
+  signoutUserStart,
+  clearSelectedItem,
+  unseenMsgsCount
+}) => {
   return (
     <nav className='navbar navbar-expand-sm navbar-dark bg-dark mb-3'>
       <div className='container'>
@@ -29,9 +35,11 @@ const Header = ({ currentUser, signoutUserStart, clearSelectedItem }) => {
         {currentUser ? (
           <ul className='navbar-nav'>
             <li className='nav-item mr-2'>
-              <Link to='#' className='nav-link align-bottom' onClick={() => {}}>
+              <Link to={PATHS.CHATS_PATH} className='nav-link align-bottom'>
                 <i className='fas fa-comments' /> Messages{' '}
-                <span className='text-danger'>9</span>
+                {unseenMsgsCount > 0 && (
+                  <span className='text-danger'>{unseenMsgsCount}</span>
+                )}
               </Link>
             </li>
 
@@ -97,7 +105,8 @@ const Header = ({ currentUser, signoutUserStart, clearSelectedItem }) => {
 };
 
 const mapStateToProps = createStructuredSelector({
-  currentUser: selectUser
+  currentUser: selectUser,
+  unseenMsgsCount: selectUnseenMsgsCount
 });
 
 const mapDispatchToProps = dispatch => ({

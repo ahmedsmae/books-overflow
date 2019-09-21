@@ -42,6 +42,7 @@ const Alert = ({
         {typeof message == 'string' ? (
           <p className='my-auto'>{message}</p>
         ) : (
+          message &&
           message.map((msg, index) => (
             <div key={index}>
               <p className='my-auto'>{msg}</p>

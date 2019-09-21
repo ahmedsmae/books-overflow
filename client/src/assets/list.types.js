@@ -10,6 +10,8 @@ export const PATHS = {
   DELETE_USER_PATH: '/delete-user',
   MY_PROFILE_PATH: '/profile/me',
   MY_LIBRARY_PATH: '/library/me',
+  CHATS_PATH: '/chats',
+  CURRENT_CHAT_PATH: '/current-chat',
 
   // PUBLIC ROUTES
   HOME_PATH: '/',

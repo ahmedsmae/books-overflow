@@ -5,7 +5,7 @@ const chat = {
   messages: [
     {
       _id: 'thisisarandomidforbooksoverflowapp',
-      mymessage: 'true or false', //if true > it's from the owner of the chat | false > from the opponent of the chat
+      ownerid: 'thisisarandomidforbooksoverflowapp',
       text: 'Hello There!',
       createdAt: 'timestamp',
       seen: 'true or false'

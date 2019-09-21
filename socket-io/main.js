@@ -1,27 +1,33 @@
-const SocketEvents = require('../client/utils/socket-events');
-// const Chat = require('../models/Chat');
+const SocketEvents = require('../client/src/assets/socket-events');
+const Chat = require('../database/models/chat');
 
 module.exports = io =>
   io.on('connection', socket => {
-    // console.log('New WebSocket connection | id = ', socket.id);
+    console.log('New WebSocket connection | id = ', socket.id);
 
-    // let chat;
+    let userChat;
+    let opponentChat;
 
-    // socket.on(SocketEvents.FIRST_CONNECTION, async chatId => {
-    //   chat = await Chat.findOne({ _id: chatId });
+    socket.on(
+      SocketEvents.FIRST_CONNECTION,
+      async ({ ownerId, opponentId }) => {
+        userChat = await Chat.findOne({ owner: ownerId, opponent: opponentId });
+        opponentChat = await Chat.findOne({
+          owner: opponentId,
+          opponent: ownerId
+        });
+      }
+    );
 
-    //   socket.emit(SocketEvents.RECIEVE_MESSAGES, chat.messages);
-    // });
+    socket.on(SocketEvents.SEND_MESSAGE, async message => {
+      userChat.messages.push(message);
+      userChat.save();
 
-    // socket.on(SocketEvents.SEND_MESSAGE, async message => {
-    //   chat.messages.push(message);
+      opponentChat.messages.push(message);
+      opponentChat.save();
 
-    //   await chat.save();
-
-    //   chat = await Chat.findOne({ _id: chat._id });
-
-    //   io.emit(SocketEvents.RECIEVE_MESSAGES, chat.messages);
-    // });
+      io.emit(SocketEvents.RECIEVE_MESSAGE, message);
+    });
 
     require('./disconnect')(io, socket);
   });

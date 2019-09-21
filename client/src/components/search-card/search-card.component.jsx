@@ -93,6 +93,7 @@ class Search extends React.Component {
               <h5>Search Items</h5>
             </div>
             <Link
+              to='#'
               className='col-1.5 nav-link text-light text-center mr-2'
               onClick={() => {
                 if (advancedSearch) {
@@ -119,6 +120,7 @@ class Search extends React.Component {
               {advancedSearch ? 'Basic' : 'Advanced'}
             </Link>
             <Link
+              to='#'
               className='col-0.5 nav-link text-light text-center mr-2'
               onClick={() => {
                 // convert the price to the price with USD
@@ -142,6 +144,7 @@ class Search extends React.Component {
               <i className='fas fa-search' />
             </Link>
             <Link
+              to='#'
               className='col-0.5 nav-link text-light text-center'
               onClick={() => {
                 this.props.getAllPublicItemsStart();

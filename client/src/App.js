@@ -6,6 +6,7 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import { selectUser } from './redux/current-user/current-user.selectors';
 import { loadingUserStart } from './redux/current-user/current-user.actions';
 import { getConversionRatesStart } from './redux/conversion-rates/conversion-rates.action';
+import { getUserUnseenMsgsCountStart } from './redux/chats/chats.actions';
 
 import { PATHS } from './assets/list.types';
 
@@ -28,15 +29,23 @@ import FavouritesPage from './pages/favourites/favourites.component';
 import MyLibraryPage from './pages/my-library/my-library.component';
 import MyProfilePage from './pages/my-profile/my-profile.component';
 import DeleteUserPage from './pages/delete-user/delete-user.component';
+import ChatsPage from './pages/chats/chats.component';
+import CurrentChatPage from './pages/current-chat/current-chat.component';
 import Page404 from './pages/page-404/page-404.component';
 
 import './App.scss';
 
-const App = ({ currentUser, loadingUserStart, getConversionRatesStart }) => {
+const App = ({
+  currentUser,
+  loadingUserStart,
+  getConversionRatesStart,
+  getUserUnseenMsgsCountStart
+}) => {
   useEffect(() => {
     loadingUserStart();
     getConversionRatesStart();
-  }, [loadingUserStart, getConversionRatesStart]);
+    getUserUnseenMsgsCountStart();
+  }, [loadingUserStart, getConversionRatesStart, getUserUnseenMsgsCountStart]);
 
   return (
     <Fragment>
@@ -154,6 +163,28 @@ const App = ({ currentUser, loadingUserStart, getConversionRatesStart }) => {
               )
             }
           />
+          <Route
+            exact
+            path={PATHS.CHATS_PATH}
+            render={props =>
+              currentUser ? (
+                <ChatsPage {...props} />
+              ) : (
+                <Redirect to={PATHS.HOME_PATH} />
+              )
+            }
+          />
+          <Route
+            exact
+            path={PATHS.CURRENT_CHAT_PATH}
+            render={props =>
+              currentUser ? (
+                <CurrentChatPage {...props} />
+              ) : (
+                <Redirect to={PATHS.HOME_PATH} />
+              )
+            }
+          />
 
           {/* PUBLIC ROUTES */}
           <Route exact path={PATHS.HOME_PATH} component={HomePage} />
@@ -193,7 +224,8 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = dispatch => ({
   loadingUserStart: () => dispatch(loadingUserStart()),
-  getConversionRatesStart: () => dispatch(getConversionRatesStart())
+  getConversionRatesStart: () => dispatch(getConversionRatesStart()),
+  getUserUnseenMsgsCountStart: () => dispatch(getUserUnseenMsgsCountStart())
 });
 
 export default connect(

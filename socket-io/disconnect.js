@@ -1,4 +1,4 @@
-const SocketEvents = require('../client/utils/socket-events');
+const SocketEvents = require('../client/src/assets/socket-events ');
 const { generateMessage } = require('./socket-io.utils');
 
 module.exports = (io, socket) =>

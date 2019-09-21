@@ -9,12 +9,19 @@ import convertionRatesReducer from './conversion-rates/conversion-rates.reducer'
 import publicItemsReducer from './public-items/public-items.reducer';
 import selectedUserReducer from './selected-user/selected-user.reducer';
 import alertReducer from './alert/alert.reducer';
+import chatsReducer from './chats/chats.reducer';
 
 const persistConfig = {
   key: 'root',
   storage,
   // add reducers that uoi want to persist
-  whitelist: ['currentUser', 'conversionRates', 'public', 'selectedUser']
+  whitelist: [
+    'currentUser',
+    'conversionRates',
+    'public',
+    'selectedUser',
+    'chats'
+  ]
 };
 
 const rootReducer = combineReducers({
@@ -24,7 +31,8 @@ const rootReducer = combineReducers({
   conversionRates: convertionRatesReducer,
   public: publicItemsReducer,
   selectedUser: selectedUserReducer,
-  alert: alertReducer
+  alert: alertReducer,
+  chats: chatsReducer
 });
 
 export default persistReducer(persistConfig, rootReducer);
