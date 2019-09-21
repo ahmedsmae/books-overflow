@@ -70,7 +70,7 @@ const Header = ({
             <li className='nav-item mr-2'>
               <Link to={PATHS.MY_PROFILE_PATH}>
                 <UserImage
-                  small
+                  xsmall
                   source={
                     currentUser.avatarid &&
                     `/api/avatars/${currentUser.avatarid}`

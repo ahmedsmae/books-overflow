@@ -20,9 +20,6 @@ app.use(compression());
 app.use(express.json({ extended: false }));
 app.use(cors());
 
-// contains all event handlers
-// require('./socket-io/main')(io);
-
 // Define Routers
 app.use('/api/users', require('./routes/users/signing'));
 app.use('/api/users', require('./routes/users/profile'));
@@ -52,9 +49,12 @@ app.use('/api/contact', require('./routes/contact-us/contact'));
 
 app.use('/api/chats', require('./routes/chats/chats'));
 
+// contains all event handlers
+require('./socket-io/main')(io);
+
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static('client/build'));
-  // app.use(enforce.HTTPS({ trustProtoHeader: true }));
+  app.use(enforce.HTTPS({ trustProtoHeader: true }));
 
   app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));

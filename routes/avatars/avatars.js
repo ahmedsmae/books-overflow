@@ -40,7 +40,7 @@ router.get('/:avatarid', async (req, res) => {
  */
 router.post('/setavatar', auth, upload.single('avatar'), async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user._id);
 
     if (!user) {
       return res

@@ -14,7 +14,7 @@ const Notification = require('../../database/models/notification');
  */
 router.get('/mynotifications', auth, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user._id);
 
     if (!user) {
       return res.status(400).json({ errors: [{ msg: 'User does not exist' }] });

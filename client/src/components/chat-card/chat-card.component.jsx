@@ -1,35 +1,67 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { PATHS } from '../../assets/list.types';
 
-import { getChatStart } from '../../redux/chats/chats.actions';
+import {
+  getChatStart,
+  removeChatCopyStart
+} from '../../redux/chats/chats.actions';
 
 import UserImage from '../user-image/user-image.component';
+import CustomButton from '../custom-button/custom-button.component';
+import ConfirmDialog from '../confirm-dialog/confirm-dialog.component';
 
 import './chat-card.styles.scss';
 
-const ChatCard = ({
-  chat: {
+const ChatCard = ({ chat, getChatStart, removeChatCopyStart }) => {
+  const [displayDialog, setDisplayDialog] = useState(false);
+
+  const {
     opponent: { _id, firstname, lastname, avatarid, email },
     lastmessage,
     unseencount
-  },
-  getChatStart
-}) => {
+  } = chat;
+
   const handleClick = () => {
     getChatStart(_id);
   };
 
   return (
-    <Link to={PATHS.CURRENT_CHAT_PATH} className='card' onClick={handleClick}>
+    <div className='card'>
       <div className='card-body'>
         <div className='row'>
           <div className='col-4 text-center'>
             <UserImage source={`/api/avatars/${avatarid}`} medium />
+            <CustomButton
+              className='mt-4'
+              outline
+              dark
+              small
+              onClick={() => setDisplayDialog(true)}
+            >
+              Delete Chat
+            </CustomButton>
+            {displayDialog && (
+              <ConfirmDialog
+                title='Delete chat confirmation'
+                message='This will delete your copy of chat only.
+                Other user will still have his own copy.
+                Are you sure?'
+                confirmText='Delete'
+                onChoose={response => {
+                  response && removeChatCopyStart(chat._id);
+                  setDisplayDialog(false);
+                }}
+              />
+            )}
           </div>
-          <div className='col'>
+          <Link
+            to={PATHS.CURRENT_CHAT_PATH}
+            className='col'
+            onClick={handleClick}
+          >
             <p className='lead d-block'>{`${firstname} ${lastname}`}</p>
             <p className='lead d-block'>{email}</p>
             <p className='lead d-block'>{lastmessage}</p>
@@ -38,15 +70,16 @@ const ChatCard = ({
                 unseen messages: {unseencount}
               </small>
             )}
-          </div>
+          </Link>
         </div>
       </div>
-    </Link>
+    </div>
   );
 };
 
 const mapDispatchToProps = dispatch => ({
-  getChatStart: opponentid => dispatch(getChatStart(opponentid))
+  getChatStart: opponentid => dispatch(getChatStart(opponentid)),
+  removeChatCopyStart: chatId => dispatch(removeChatCopyStart(chatId))
 });
 
 export default connect(

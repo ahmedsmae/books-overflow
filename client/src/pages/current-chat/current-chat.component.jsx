@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
+import Moment from 'react-moment';
+import moment from 'moment';
 
-import { subscribeToChat, sendMessage, recieveMessage } from './socket.func';
+import { subscribeToChat, sendMessage } from './socket.func';
 
-import { selectCurrentChat } from '../../redux/chats/chats.selectors';
-import { pushMsgToCurrentChat } from '../../redux/chats/chats.actions';
+import { updateChatMsgsSeenStart } from '../../redux/chats/chats.actions';
 
 import UserImage from '../../components/user-image/user-image.component';
 import FormInput from '../../components/form-input/form-input.component';
@@ -14,38 +14,52 @@ import CustomButton from '../../components/custom-button/custom-button.component
 import './current-chat.styles.scss';
 
 class CurrentChat extends React.Component {
-  // PROPS: currentChat, pushMsgToCurrentChat
+  // PROPS: currentChat
   state = {
-    chatId: null,
-    ownerId: null,
-    opponentId: null,
-    opponentAvatarId: null,
-    opponentFullName: '',
-    opponentEmail: '',
-    messages: [],
+    chatId: this.props.currentChat._id,
+    ownerId: this.props.currentChat.owner,
+    opponentId: this.props.currentChat.opponent._id,
+    opponentAvatarId: this.props.currentChat.opponent.avatarid,
+    opponentFullName: `${this.props.currentChat.opponent.firstname} ${this.props.currentChat.opponent.lastname}`,
+    opponentEmail: this.props.currentChat.opponent.email,
+    messages: this.props.currentChat.messages,
     text: ''
   };
 
-  static getDerivedStateFromProps(props, currentState) {
-    if (props.currentChat) {
-      return {
-        chatId: props.currentChat._id,
-        ownerId: props.currentChat.owner,
-        opponentId: props.currentChat.opponent._id,
-        opponentAvatarId: props.currentChat.opponent.avatarid,
-        opponentFullName: `${props.currentChat.opponent.firstname} ${props.currentChat.opponent.lastname}`,
-        opponentEmail: props.currentChat.opponent.email,
-        messages: props.currentChat.messages
-      };
+  isScrolledIntoView(el) {
+    if (el) {
+      // this func is to check if an element is visible within the viewport
+      var rect = el.getBoundingClientRect();
+      var elemTop = rect.top;
+      var elemBottom = rect.bottom;
+
+      // Only completely visible elements return true:
+      var isVisible = elemTop >= 0 && elemBottom <= window.innerHeight;
+      // Partially visible elements return true:
+      //isVisible = elemTop < window.innerHeight && elemBottom >= 0;
+      return isVisible;
     }
-    return null;
+  }
+
+  scrollToBottom = () => {
+    const { ownerId, opponentId } = this.state;
+    if (this.isScrolledIntoView(this.messagesEnd)) {
+      this.messagesEnd.scrollIntoView({ behavior: 'smooth' });
+      // this.props.updateChatMsgsSeenStart(opponentId);
+    }
+  };
+
+  componentDidUpdate() {
+    this.scrollToBottom();
   }
 
   componentDidMount() {
     const { ownerId, opponentId } = this.state;
-    subscribeToChat({ ownerId, opponentId });
-
-    recieveMessage(msg => pushMsgToCurrentChat(msg));
+    this.props.updateChatMsgsSeenStart(opponentId);
+    subscribeToChat({ ownerId, opponentId }, (err, message) => {
+      if (err) throw err;
+      this.setState({ messages: [...this.state.messages, message] });
+    });
   }
 
   handleSubmit = e => {
@@ -59,15 +73,15 @@ class CurrentChat extends React.Component {
       createdAt: date.setHours(date.getHours() + 4),
       seen: false
     };
+
     sendMessage(msg);
+
     this.setState({ text: '' });
   };
 
   render() {
     const {
-      // chatId,
-      // ownerId,
-      // opponentId,
+      ownerId,
       opponentAvatarId,
       opponentFullName,
       opponentEmail,
@@ -76,10 +90,10 @@ class CurrentChat extends React.Component {
     } = this.state;
     return (
       <div className='card'>
-        <div className='card-header'>
+        <div className='card-header sticky-top bg-dark text-white'>
           <div className='row'>
-            <div className='col-3'>
-              <UserImage source={`/api/avatars/${opponentAvatarId}`} medium />
+            <div className='col-3 text-center'>
+              <UserImage source={`/api/avatars/${opponentAvatarId}`} small />
             </div>
             <div className='col'>
               <h4>{opponentFullName}</h4>
@@ -90,40 +104,64 @@ class CurrentChat extends React.Component {
 
         <div className='card-body py-auto'>
           {messages.map((msg, index) => (
-            <div key={index}>{msg}</div>
+            <div
+              key={index}
+              className={`${
+                msg.ownerid === ownerId ? 'mine' : 'yours'
+              } messages`}
+            >
+              <div
+                className={`message ${messages[index + 1] &&
+                  messages[index + 1].ownerid !== msg.ownerid &&
+                  'last'}`}
+              >
+                <div className='content'>
+                  <div className='message-date'>
+                    <Moment format='h:mm a'>{moment.utc(msg.createdAt)}</Moment>
+                  </div>
+                  <span className='message-content'>{msg.text}</span>
+                </div>
+              </div>
+            </div>
           ))}
         </div>
 
-        <div className='card-footer'>
-          <form onSubmit={this.handleSubmit}>
-            <div className='row'>
-              <div className='col'>
-                <FormInput
-                  value={text}
-                  onChange={e => this.setState({ text: e.target.value })}
-                  placeholder='Type a message...'
-                />
+        <div
+          style={{ float: 'left', clear: 'both' }}
+          ref={el => (this.messagesEnd = el)}
+        />
+
+        <div className='card-footer fixed-bottom bg-dark'>
+          <div className='container'>
+            <form onSubmit={this.handleSubmit}>
+              <div className='row'>
+                <div className='col'>
+                  <FormInput
+                    value={text}
+                    onChange={e => this.setState({ text: e.target.value })}
+                    placeholder='Type a message...'
+                  />
+                </div>
+                <div className='col-2'>
+                  <CustomButton success type='submit' className='w-100'>
+                    Send
+                  </CustomButton>
+                </div>
               </div>
-              <div className='col-2'>
-                <CustomButton outline success type='submit' />
-              </div>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       </div>
     );
   }
 }
 
-const mapStateToProps = createStructuredSelector({
-  currentChat: selectCurrentChat
-});
-
 const mapDispatchToProps = dispatch => ({
-  pushMsgToCurrentChat: message => dispatch(pushMsgToCurrentChat(message))
+  updateChatMsgsSeenStart: opponentId =>
+    dispatch(updateChatMsgsSeenStart(opponentId))
 });
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
 )(CurrentChat);

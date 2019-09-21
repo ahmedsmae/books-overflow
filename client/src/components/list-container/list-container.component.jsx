@@ -34,67 +34,60 @@ const ListContainer = ({
   basicChats,
   location: { pathname }
 }) => {
-  switch (pathname) {
-    case PATHS.HOME_PATH:
-      // request saga to fetch the home page data then pass it to the list component
-      return (
-        <ListWithSpinner
-          isLoading={publicItems ? false : true}
-          list={publicItems}
-        />
-      );
-
-    case PATHS.MY_LIBRARY_PATH:
-      return (
-        <ListWithSpinner
-          // ! check for both books and collections
-          isLoading={userBooks && userCollections ? false : true}
-          list={[...userBooks, ...userCollections]}
-        />
-      );
-
-    case PATHS.LIBRARY_PATH_NO_ID + selectedUser._id:
-      return (
-        <ListWithSpinner
-          isLoading={selectedUser ? false : true}
-          list={selectedUser.items}
-        />
-      );
-
-    case PATHS.NOTIFICATIONS_PATH:
-      return (
-        <ListWithSpinner
-          isLoading={userNotifications ? false : true}
-          list={userNotifications}
-        />
-      );
-
-    case PATHS.FAVOURITES_PATH:
-      return (
-        <ListWithSpinner
-          isLoading={userFavourites ? false : true}
-          list={userFavourites}
-        />
-      );
-
-    case PATHS.BLOCKED_USERS_PATH:
-      return (
-        <ListWithSpinner
-          isLoading={blockedUsers ? false : true}
-          list={blockedUsers}
-        />
-      );
-
-    case PATHS.CHATS_PATH:
-      return (
-        <ListWithSpinner
-          isLoading={basicChats ? false : true}
-          list={basicChats}
-        />
-      );
-
-    default:
-      return <div>List Container</div>;
+  if (pathname === PATHS.HOME_PATH) {
+    // request saga to fetch the home page data then pass it to the list component
+    return (
+      <ListWithSpinner
+        isLoading={publicItems ? false : true}
+        list={publicItems}
+      />
+    );
+  } else if (pathname === PATHS.MY_LIBRARY_PATH) {
+    return (
+      <ListWithSpinner
+        // ! check for both books and collections
+        isLoading={userBooks && userCollections ? false : true}
+        list={[...userBooks, ...userCollections]}
+      />
+    );
+  } else if (
+    selectedUser &&
+    pathname === PATHS.LIBRARY_PATH_NO_ID + selectedUser._id
+  ) {
+    return (
+      <ListWithSpinner
+        isLoading={selectedUser ? false : true}
+        list={selectedUser.items}
+      />
+    );
+  } else if (pathname === PATHS.NOTIFICATIONS_PATH) {
+    return (
+      <ListWithSpinner
+        isLoading={userNotifications ? false : true}
+        list={userNotifications}
+      />
+    );
+  } else if (pathname === PATHS.FAVOURITES_PATH) {
+    return (
+      <ListWithSpinner
+        isLoading={userFavourites ? false : true}
+        list={userFavourites}
+      />
+    );
+  } else if (pathname === PATHS.BLOCKED_USERS_PATH) {
+    return (
+      <ListWithSpinner
+        isLoading={blockedUsers ? false : true}
+        list={blockedUsers}
+      />
+    );
+  } else if (pathname === PATHS.CHATS_PATH) {
+    return (
+      <ListWithSpinner
+        isLoading={basicChats ? false : true}
+        list={basicChats}
+      />
+    );
   }
 };
 

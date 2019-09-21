@@ -13,6 +13,8 @@ const chatsReducer = (state = INITIAL_STATE, { type, payload }) => {
     case ChatsActionTypes.GET_USER_UNSEEN_MSGS_COUNT_START:
     case ChatsActionTypes.GET_USER_BASIC_CHATS_START:
     case ChatsActionTypes.GET_CHAT_START:
+    case ChatsActionTypes.REMOVE_CHAT_COPY_START:
+    case ChatsActionTypes.UPDATE_CHAT_MSGS_SEEN_START:
       return {
         ...state,
         loading: true,
@@ -67,14 +69,16 @@ const chatsReducer = (state = INITIAL_STATE, { type, payload }) => {
         errorMessage: payload
       };
 
-    case ChatsActionTypes.PUSH_MSG_TO_CURRENT_CHAT:
+    case ChatsActionTypes.REMOVE_CHAT_COPY_FAILURE:
+    case ChatsActionTypes.UPDATE_CHAT_MSGS_SEEN_FAILURE:
       return {
         ...state,
-        currentChat: {
-          ...state.currentChat,
-          messages: state.currentChat.messages.push(payload)
-        }
+        loading: false,
+        errorMessage: payload
       };
+
+    // case ChatsActionTypes.REMOVE_CHAT_COPY_SUCCESS:
+    // case ChatsActionTypes.UPDATE_CHAT_MSGS_SEEN_SUCCESS:
 
     default:
       return state;

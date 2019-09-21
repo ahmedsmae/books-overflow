@@ -13,7 +13,14 @@ const Chat = require('../../database/models/chat');
  */
 router.get('/unseenmessages', auth, async (req, res) => {
   try {
-    const userChats = await Chat.find({ owner: req.user.id });
+    // get all messages that the user will be opponent in
+    const userChats = await Chat.find({
+      owner: req.user._id
+    });
+
+    // const userChats = await Chat.find({
+    //   $or: [{ owner: req.user.id }, { opponent: req.user.id }]
+    // });
 
     if (!userChats.length) {
       return res
@@ -31,8 +38,9 @@ router.get('/unseenmessages', auth, async (req, res) => {
       for (j = 0; j < chatMsgs.length; j++) {
         const msg = chatMsgs[j];
 
-        if (msg.owner != req.user.id && !msg.seen) {
+        if (msg.ownerid !== req.user._id && !msg.seen) {
           // not my message > you can count it
+          // get only one chat copy
           count += 1;
         }
       }
@@ -94,9 +102,7 @@ router.get('/getchat/:opponentid', auth, async (req, res) => {
   const params = req.params;
 
   try {
-    let chat;
-
-    chat = await Chat.findOne({
+    let chat = await Chat.findOne({
       owner: user._id,
       opponent: params.opponentid
     }).populate('opponent', [
@@ -130,9 +136,17 @@ router.get('/getchat/:opponentid', auth, async (req, res) => {
         'defaultlongitude',
         'bio'
       ]);
+    }
 
+    // find if there is an opponent chat or not
+    let opponentChat = await Chat.findOne({
+      owner: params.opponentid,
+      opponent: user._id
+    });
+
+    if (!opponentChat) {
       // create another version for the opponent
-      const opponentChat = new Chat({
+      opponentChat = new Chat({
         owner: params.opponentid,
         opponent: user._id,
         messages: []
@@ -141,6 +155,88 @@ router.get('/getchat/:opponentid', auth, async (req, res) => {
     }
 
     res.json({ chat });
+  } catch (err) {
+    console.error(err.message);
+    res.status(400).json({ errors: [{ msg: err.message }] });
+  }
+});
+
+/**
+ * @method - DELETE
+ * @url - '/api/chats/:chatid'
+ * @data - token header
+ * @action - remove chat copy
+ * @access - private
+ */
+router.delete('/:chatid', auth, async (req, res) => {
+  try {
+    const chat = await Chat.findById(req.params.chatid);
+
+    if (!chat) {
+      return res
+        .status(400)
+        .json({ errors: [{ msg: 'chat does not exists' }] });
+    }
+
+    await chat.remove();
+
+    res.json({ msg: 'Chat copy successfully removed' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(400).json({ errors: [{ msg: err.message }] });
+  }
+});
+
+/**
+ * @method - POST
+ * @url - '/api/chats/updateseen/:opponentid'
+ * @data - token header
+ * @action - get user basic chats
+ * @access - private
+ */
+router.post('/updateseen/:opponentid', auth, async (req, res) => {
+  try {
+    const userChat = await Chat.findOne({
+      owner: req.user._id,
+      opponent: req.params.opponentid
+    });
+
+    if (!userChat) {
+      return res
+        .status(400)
+        .json({ errors: [{ msg: 'User chat copy does not exists' }] });
+    }
+
+    const userChatObject = userChat.toObject();
+    const userMessages = userChatObject.messages.map(
+      ({ ownerid, seen, ...otherProps }) =>
+        ownerid !== req.user._id && { ownerid, seen: true, ...otherProps }
+    );
+
+    userChat.messages = userMessages;
+    await userChat.save();
+
+    const opponentChat = await Chat.findOne({
+      owner: req.params.opponentid,
+      opponent: req.user._id
+    });
+
+    if (!opponentChat) {
+      return res
+        .status(400)
+        .json({ errors: [{ msg: 'Opponent chat copy does not exists' }] });
+    }
+
+    const opponentChatObject = opponentChat.toObject();
+    const opponentMessages = opponentChatObject.messages.map(
+      ({ ownerid, seen, ...otherProps }) =>
+        ownerid !== req.user._id && { ownerid, seen: true, ...otherProps }
+    );
+
+    opponentChat.messages = opponentMessages;
+    await opponentChat.save();
+
+    res.json({ msg: 'Update User and Opponent chat copies done' });
   } catch (err) {
     console.error(err.message);
     res.status(400).json({ errors: [{ msg: err.message }] });

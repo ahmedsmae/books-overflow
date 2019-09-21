@@ -21,6 +21,7 @@ const ConfirmDialog = ({
               <h4>{title}</h4>
             </div>
             <Link
+              to='#'
               className='col-0.5 nav-link mr-1'
               onClick={() => onChoose(false)}
             >

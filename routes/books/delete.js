@@ -19,7 +19,7 @@ router.delete('/:bookid', auth, async (req, res) => {
       return res.status(400).json({ errors: [{ msg: 'Book does not exist' }] });
     }
 
-    if (book.owner != req.user.id) {
+    if (book.owner != req.user._id) {
       return res
         .status(400)
         .json({ errors: [{ msg: "You can not delete someone else's book" }] });

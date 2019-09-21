@@ -46,7 +46,32 @@ export const getChatFailure = errorMessage => ({
   payload: errorMessage
 });
 
-export const pushMsgToCurrentChat = msg => ({
-  type: ChatsActionTypes.PUSH_MSG_TO_CURRENT_CHAT,
-  payload: msg
+// REMOVE CHAT COPY
+export const removeChatCopyStart = chatId => ({
+  type: ChatsActionTypes.REMOVE_CHAT_COPY_START,
+  payload: chatId
+});
+
+export const removeChatCopySuccess = () => ({
+  type: ChatsActionTypes.REMOVE_CHAT_COPY_SUCCESS
+});
+
+export const removeChatCopyFailure = errorMessage => ({
+  type: ChatsActionTypes.REMOVE_CHAT_COPY_FAILURE,
+  payload: errorMessage
+});
+
+// UPDATE CHAT MESSAGES SEEN
+export const updateChatMsgsSeenStart = opponentid => ({
+  type: ChatsActionTypes.UPDATE_CHAT_MSGS_SEEN_START,
+  payload: opponentid
+});
+
+export const updateChatMsgsSeenSuccess = () => ({
+  type: ChatsActionTypes.UPDATE_CHAT_MSGS_SEEN_SUCCESS
+});
+
+export const updateChatMsgsSeenFailure = errorMessage => ({
+  type: ChatsActionTypes.UPDATE_CHAT_MSGS_SEEN_FAILURE,
+  payload: errorMessage
 });

@@ -13,7 +13,7 @@ const Collection = require('../../database/models/collection');
  */
 router.get('/mycollections', auth, async (req, res) => {
   try {
-    const collections = await Collection.find({ owner: req.user.id });
+    const collections = await Collection.find({ owner: req.user._id });
 
     res.json({ collections });
   } catch (err) {

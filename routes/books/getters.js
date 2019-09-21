@@ -13,7 +13,7 @@ const Book = require('../../database/models/book');
  */
 router.get('/mybooks', auth, async (req, res) => {
   try {
-    const books = await Book.find({ owner: req.user.id });
+    const books = await Book.find({ owner: req.user._id });
 
     res.json({ books });
   } catch (err) {

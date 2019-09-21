@@ -130,7 +130,7 @@ router.post(
  */
 router.get('/auth', auth, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user._id);
 
     if (!user) {
       return res

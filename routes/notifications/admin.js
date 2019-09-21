@@ -35,7 +35,7 @@ router.post(
     const { title, jsx } = req.body;
 
     try {
-      const user = await User.findById(req.user.id);
+      const user = await User.findById(req.user._id);
 
       if (!user) {
         return res
@@ -49,7 +49,11 @@ router.post(
         });
       }
 
-      const notification = new Notification({ owner: req.user.id, title, jsx });
+      const notification = new Notification({
+        owner: req.user._id,
+        title,
+        jsx
+      });
 
       await notification.save();
 
@@ -85,7 +89,7 @@ router.post(
  */
 router.get('/', auth, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user._id);
 
     if (!user) {
       return res.status(400).json({ errors: [{ msg: 'User does not exist' }] });
@@ -135,7 +139,7 @@ router.patch(
     const { title, jsx } = req.body;
 
     try {
-      const user = await User.findById(req.user.id);
+      const user = await User.findById(req.user._id);
 
       if (!user) {
         return res
@@ -175,7 +179,7 @@ router.patch(
  */
 router.delete('/:notificationid', auth, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user._id);
 
     if (!user) {
       return res.status(400).json({ errors: [{ msg: 'User does not exist' }] });

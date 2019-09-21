@@ -47,7 +47,7 @@ chatSchema.methods.getBasicVersion = function() {
   let unseencount = 0;
   let i;
   for (i = 0; i < messages.length; i++) {
-    if (messages[i].owner != chatObject.owner && !messages[i].seen) {
+    if (messages[i].ownerid !== chatObject.owner && !messages[i].seen) {
       unseencount += 1;
     }
   }

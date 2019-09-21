@@ -67,7 +67,7 @@ router.delete(
           .json({ errors: [{ msg: 'Invalid Credentials' }] });
       }
 
-      if (user._id !== req.user.id) {
+      if (user._id !== req.user._id) {
         return res.status(400).json({
           errors: [{ msg: 'You can not delete someone else account' }]
         });

@@ -47,7 +47,7 @@ router.post(
     } = req.body;
 
     try {
-      const user = await User.findById(req.user.id);
+      const user = await User.findById(req.user._id);
 
       if (!user) {
         return res
@@ -102,7 +102,7 @@ router.post(
     const { userid, reason } = req.body;
 
     try {
-      const user = await User.findById(req.user.id);
+      const user = await User.findById(req.user._id);
 
       if (!user) {
         return res
@@ -134,7 +134,7 @@ router.delete(
   auth,
   async (req, res) => {
     try {
-      const user = await User.findById(req.user.id);
+      const user = await User.findById(req.user._id);
 
       if (!user) {
         return res
@@ -165,7 +165,7 @@ router.delete(
  */
 router.get('/profile/blockedusers', auth, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user._id);
 
     if (!user) {
       return res
@@ -223,7 +223,7 @@ router.post(
     const { favouriteitemid, kind } = req.body;
 
     try {
-      const user = await User.findById(req.user.id);
+      const user = await User.findById(req.user._id);
 
       if (!user) {
         return res
@@ -255,7 +255,7 @@ router.delete(
   auth,
   async (req, res) => {
     try {
-      const user = await User.findById(req.user.id);
+      const user = await User.findById(req.user._id);
 
       if (!user) {
         return res
@@ -288,7 +288,7 @@ router.post('/profile/getfavourites', auth, async (req, res) => {
   const { latitude, longitude } = req.body;
 
   try {
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user._id);
 
     if (!user) {
       return res
@@ -346,7 +346,7 @@ router.post(
   auth,
   async (req, res) => {
     try {
-      const user = await User.findById(req.user.id);
+      const user = await User.findById(req.user._id);
 
       if (!user) {
         return res

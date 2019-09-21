@@ -126,7 +126,7 @@ router.post(
         if (latitude) bookData.latitude = latitude;
         if (longitude) bookData.longitude = longitude;
         if (keywords) bookData.keywords = keywords;
-        bookData.owner = req.user.id;
+        bookData.owner = req.user._id;
 
         book = new Book(bookData);
       }

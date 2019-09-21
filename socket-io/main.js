@@ -11,23 +11,28 @@ module.exports = io =>
     socket.on(
       SocketEvents.FIRST_CONNECTION,
       async ({ ownerId, opponentId }) => {
+        // find the user and opponent chat documents
         userChat = await Chat.findOne({ owner: ownerId, opponent: opponentId });
         opponentChat = await Chat.findOne({
           owner: opponentId,
           opponent: ownerId
         });
+
+        // console.log(userChat, opponentChat);
       }
     );
 
     socket.on(SocketEvents.SEND_MESSAGE, async message => {
+      // console.log(message);
+
       userChat.messages.push(message);
       userChat.save();
 
       opponentChat.messages.push(message);
       opponentChat.save();
 
-      io.emit(SocketEvents.RECIEVE_MESSAGE, message);
+      await io.emit(SocketEvents.RECIEVE_MESSAGE, message);
     });
 
-    require('./disconnect')(io, socket);
+    // require('./disconnect')(io, socket);
   });

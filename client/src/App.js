@@ -30,7 +30,7 @@ import MyLibraryPage from './pages/my-library/my-library.component';
 import MyProfilePage from './pages/my-profile/my-profile.component';
 import DeleteUserPage from './pages/delete-user/delete-user.component';
 import ChatsPage from './pages/chats/chats.component';
-import CurrentChatPage from './pages/current-chat/current-chat.component';
+import CurrentChatContainerPage from './pages/current-chat-container/current-chat-container.component';
 import Page404 from './pages/page-404/page-404.component';
 
 import './App.scss';
@@ -179,7 +179,7 @@ const App = ({
             path={PATHS.CURRENT_CHAT_PATH}
             render={props =>
               currentUser ? (
-                <CurrentChatPage {...props} />
+                <CurrentChatContainerPage {...props} />
               ) : (
                 <Redirect to={PATHS.HOME_PATH} />
               )

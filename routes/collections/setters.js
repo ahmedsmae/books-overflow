@@ -123,7 +123,7 @@ router.post(
         if (latitude) collectionData.latitude = latitude;
         if (longitude) collectionData.longitude = longitude;
         if (keywords) collectionData.keywords = keywords;
-        collectionData.owner = req.user.id;
+        collectionData.owner = req.user._id;
 
         collection = new Collection(collectionData);
       }
