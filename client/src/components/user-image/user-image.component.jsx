@@ -4,20 +4,19 @@ import BlankUser from '../../assets/user.png';
 
 import './user-image.styles.scss';
 
-const UserImage = ({ source, xsmall, small, medium, large }) => {
+const UserImage = ({ source, xsmall, small, medium, large, className }) => {
   return (
-    <div>
-      <img
-        className={`rounded-circle 
+    <img
+      className={`rounded-circle 
           ${small && 'small'} 
           ${xsmall && 'xsmall'} 
           ${medium && 'medium'} 
-          ${large && 'large'}
+          ${large && 'large'} 
+          ${className && 'className'} 
           `}
-        alt='user'
-        src={source ? source : BlankUser}
-      />
-    </div>
+      alt='user'
+      src={source ? source : BlankUser}
+    />
   );
 };
 

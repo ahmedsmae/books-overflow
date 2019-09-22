@@ -24,7 +24,7 @@ For heroku use only that includes building the project before deployment
 
 ### `npm run play`
 
-Launches play.js root file for the purpose of texting specific code only (not related to the code base)
+Launches play.js file in \_playground dir for the purpose of texting specific code only (not related to the code base)
 
 #### `_playground` directory
 

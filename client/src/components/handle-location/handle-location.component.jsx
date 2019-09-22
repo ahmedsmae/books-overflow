@@ -48,8 +48,9 @@ class HandleLocation extends React.Component {
             <div className='col'>
               <FormInput value={address} disabled />
             </div>
-            <div className='col-2'>
+            <div className='col-2 pl-0'>
               <CustomButton
+                className='w-100'
                 outline
                 primary
                 onClick={() =>
@@ -67,7 +68,7 @@ class HandleLocation extends React.Component {
           </div>
         ) : (
           <div className='row'>
-            <div className='col'>
+            <div className='col form-group'>
               <Autocomplete
                 className='form-control'
                 style={{ width: '100%', height: '40px' }}
@@ -88,8 +89,9 @@ class HandleLocation extends React.Component {
               />
             </div>
 
-            <div className='col-2'>
+            <div className='col-2 pl-0'>
               <CustomButton
+                className='w-100'
                 outline
                 primary
                 onClick={() => {

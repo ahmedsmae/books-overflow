@@ -32,23 +32,39 @@ const ChatCard = ({ chat, getChatStart, removeChatCopyStart }) => {
     <div className='card'>
       <div className='card-body'>
         <div className='row'>
-          <div className='col-4 text-center'>
+          <div className='col-3 text-center'>
             <UserImage source={`/api/avatars/${avatarid}`} medium />
+          </div>
+          <Link
+            className='col nav-link text-dark'
+            to={PATHS.CURRENT_CHAT_PATH}
+            onClick={handleClick}
+          >
+            <p className='lead d-block mb-2'>{`${firstname} ${lastname}`}</p>
+            <p className='d-block mb-2'>{email}</p>
+            <small>{lastmessage}</small>
+
+            {unseencount > 0 && (
+              <small className='text-danger'>
+                unseen messages: {unseencount}
+              </small>
+            )}
+          </Link>
+          <div className='col-1'>
             <CustomButton
-              className='mt-4'
-              outline
               dark
-              small
+              outline
+              className='w-100'
               onClick={() => setDisplayDialog(true)}
             >
-              Delete Chat
+              <i className='fas fa-trash-alt' />
             </CustomButton>
             {displayDialog && (
               <ConfirmDialog
                 title='Delete chat confirmation'
                 message='This will delete your copy of chat only.
-                Other user will still have his own copy.
-                Are you sure?'
+            Other user will still have his own copy.
+            Are you sure?'
                 confirmText='Delete'
                 onChoose={response => {
                   response && removeChatCopyStart(chat._id);
@@ -57,20 +73,6 @@ const ChatCard = ({ chat, getChatStart, removeChatCopyStart }) => {
               />
             )}
           </div>
-          <Link
-            to={PATHS.CURRENT_CHAT_PATH}
-            className='col'
-            onClick={handleClick}
-          >
-            <p className='lead d-block'>{`${firstname} ${lastname}`}</p>
-            <p className='lead d-block'>{email}</p>
-            <p className='lead d-block'>{lastmessage}</p>
-            {unseencount > 0 && (
-              <small className='text-danger'>
-                unseen messages: {unseencount}
-              </small>
-            )}
-          </Link>
         </div>
       </div>
     </div>

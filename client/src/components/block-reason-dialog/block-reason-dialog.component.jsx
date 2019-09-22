@@ -10,12 +10,12 @@ import './block-reason-dialog.styles.scss';
 
 const BlockReasonDialog = ({ blockReasons, onResonSelect, onCancel }) => {
   return (
-    <div className='confirm-dialog-container '>
+    <div className='confirm-dialog-container'>
       <div className='card confirm-dialog'>
         <div className='card-body'>
           <div className='row'>
             <div className='col'>
-              <p className='lead'>
+              <p className='lead text-dark'>
                 Please select the most valid reason why do you want to block
                 this user.
               </p>

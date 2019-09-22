@@ -7,11 +7,11 @@ import './footer.styles.scss';
 
 const Footer = () => {
   return (
-    <footer className='bg-dark text-light mt-4'>
+    <footer className='bg-dark text-light'>
       <div className='container'>
-        <div className='row pt-3'>
+        <div className='row pt-2'>
           <div className='col'>
-            <h5>Copyright &copy; 2019 Books Overflow</h5>
+            <h5 className='mb-0 pt-2'>Copyright &copy; 2019 Books Overflow</h5>
           </div>
 
           <Link

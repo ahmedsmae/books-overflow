@@ -14,7 +14,7 @@ const FormInput = ({
 }) => (
   // ? you should use either 'prepend' or 'label'
 
-  <div className={prepend ? 'input-group mb-3' : 'form-group mb-3'}>
+  <div className={prepend ? 'input-group mb-3' : 'form-group'}>
     {label && <label>{label}</label>}
     {prepend && (
       <div className='input-group-prepend'>

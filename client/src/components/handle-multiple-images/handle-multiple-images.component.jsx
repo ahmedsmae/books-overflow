@@ -191,19 +191,7 @@ class HandleMultipleImages extends React.Component {
         {isPhotoEnlarged && (
           <Lightbox
             mainSrc={enlargedPhotoSource}
-            // nextSrc={images[(photoIndex + 1) % images.length]}
-            // prevSrc={images[(photoIndex + images.length - 1) % images.length]}
             onCloseRequest={() => this.setState({ isPhotoEnlarged: false })}
-            // onMovePrevRequest={() =>
-            //   this.setState({
-            //     photoIndex: (photoIndex + images.length - 1) % images.length
-            //   })
-            // }
-            // onMoveNextRequest={() =>
-            //   this.setState({
-            //     photoIndex: (photoIndex + 1) % images.length
-            //   })
-            // }
           />
         )}
       </div>

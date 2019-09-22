@@ -69,21 +69,21 @@ const UserCard = ({
 
   return (
     <div className='card'>
-      <div className='card-body'>
+      <div className='card-body bg-dark text-white'>
         <div className='row'>
-          <div className='col-md-6 text-center'>
+          <div className='col-md-4 text-center'>
             <UserImage large source={avatarid && `/api/avatars/${avatarid}`} />
           </div>
 
-          <div className='col-md-6'>
-            <h1>{`${firstname} ${lastname}`}</h1>
+          <div className='col-md-8'>
+            <h1 className='display-4'>{`${firstname} ${lastname}`}</h1>
 
             <p className='lead'>{email}</p>
 
             {address.length && <p className='lead'>{address}</p>}
 
             <p className='lead'>
-              Join Date:{' '}
+              Joined since:{' '}
               <Moment format='YYYY/MM/DD'>{moment.utc(createdAt)}</Moment>
             </p>
           </div>
@@ -110,8 +110,7 @@ const UserCard = ({
             <Fragment>
               <Link to={PATHS.FAVOURITES_PATH} className='col m-2'>
                 <CustomButton primary outline className='w-100'>
-                  <i className='fas fa-star text-warning' />
-                  My Favourites
+                  <i className='fas fa-star text-warning' /> My Favourites
                 </CustomButton>
               </Link>
 

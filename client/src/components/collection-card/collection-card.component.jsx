@@ -23,7 +23,6 @@ import { fetchLatLng } from '../../assets/util-functions';
 import BlockReasonDialog from '../block-reason-dialog/block-reason-dialog.component';
 import UserImage from '../user-image/user-image.component';
 import CustomImage from '../custom-image/custom-image.component';
-import CustomButton from '../custom-button/custom-button.component';
 
 import './collection-card.styles.scss';
 
@@ -85,10 +84,10 @@ const CollectionCard = ({
 
   return (
     <div className='card my-2'>
-      <div className='card-header bg-primary text-white'>
+      <div className='card-header bg-primary text-white py-1'>
         <div className='row'>
           <div className='col'>
-            <h4>{title}</h4>
+            <h4 className='mt-2'>{title}</h4>
           </div>
           <Fragment>
             {currentUser && currentUser._id === owner._id ? (
@@ -103,6 +102,25 @@ const CollectionCard = ({
               // NOT THE OWNER OF THE BOOK
               currentUser && (
                 <Fragment>
+                  {ownerid !== currentUser._id && (
+                    <Link
+                      to='#'
+                      className='col-0.5 nav-link text-light text-center mr-2'
+                      onClick={() => setShowBlock(true)}
+                    >
+                      <i className='fas fa-user-lock' />
+                    </Link>
+                  )}
+                  {showBlock && (
+                    <BlockReasonDialog
+                      onCancel={() => setShowBlock(false)}
+                      onResonSelect={reason => {
+                        setShowBlock(false);
+                        addBlockedUserStart(ownerid, reason);
+                      }}
+                    />
+                  )}
+
                   <Link
                     to='#'
                     className='col-0.5 nav-link text-light text-center mr-2'
@@ -140,7 +158,7 @@ const CollectionCard = ({
         </div>
       </div>
 
-      <div className='card-body'>
+      <div className='card-body pb-0'>
         <div className='row'>
           <div className='col-3 text-center'>
             <Link
@@ -150,112 +168,101 @@ const CollectionCard = ({
                   : PATHS.PROFILE_PATH_NO_ID + ownerid
               }
             >
-              <UserImage source={`/api/avatars/${avatarid}`} medium />
-              <p className='lead mt-3'>{`${firstname} ${lastname}`}</p>
+              <UserImage source={`/api/avatars/${avatarid}`} small />
+              <p className='lead my-2'>{`${firstname} ${lastname}`}</p>
             </Link>
-
-            {/* You can't block urself */}
-            {currentUser && ownerid !== currentUser._id && (
-              <CustomButton
-                small
-                dark
-                outline
-                onClick={() => setShowBlock(true)}
-              >
-                Block User
-              </CustomButton>
-            )}
-            {showBlock && (
-              <BlockReasonDialog
-                onCancel={() => setShowBlock(false)}
-                onResonSelect={reason => addBlockedUserStart(ownerid, reason)}
-              />
-            )}
           </div>
 
           <div className='col'>
-            <div>
-              <small>Number of books: </small>
-              <span className='lead'>{numberofbooks}</span>
-            </div>
-
-            <hr />
-
             <div className='row'>
               <div className='col'>
-                <small>Category</small>
-                <p className='lead'>{category}</p>
+                <small>Number of books: </small>
+                <span className='lead mb-0'>{numberofbooks}</span>
               </div>
-              <div className='col'>
-                <small>Language</small>
-                <p className='lead'>{language}</p>
-              </div>
-            </div>
-
-            <hr />
-
-            <div className='row'>
               <div className='col'>
                 <small>Price: </small>
-                <span className='lead'>{`${Math.round(
+                <span className='lead mb-0'>{`${Math.round(
                   getPriceInLocalCurrency(price, currency),
                   0
                 )} ${currency.toLowerCase()}`}</span>
               </div>
               <div className='col'>
                 <small>How far: </small>
-                <span className='lead'>{`${Math.round(
+                <span className='lead mb-0'>{`${Math.round(
                   distance / 1000,
                   0
                 )} km`}</span>
+              </div>
+            </div>
+
+            <hr className='my-2' />
+
+            <div className='row'>
+              <div className='col'>
+                <small>Category</small>
+                <p className='lead mb-0'>{category}</p>
+              </div>
+              <div className='col'>
+                <small>Language</small>
+                <p className='lead mb-0'>{language}</p>
               </div>
             </div>
           </div>
         </div>
         {showMore && (
           <Fragment>
-            <hr />
-            <h5>{address}</h5>
-            <hr />
-            <small>Books</small>
+            <hr className='my-2' />
+            <div className='row'>
+              <div className='col'>
+                <small>Address</small>
+                <p className='lead mb-0'>{address}</p>
+                <hr className='my-2' />
 
-            {books.map((book, index) => (
-              <div className='row border rounded m-2 pt-2' key={index}>
-                <div className='col'>
-                  <small>Title</small>
-                  <p className='lead'>{book.title}</p>
-                </div>
-                <div className='col-3'>
-                  <small>Author</small>
-                  <p className='lead'>{book.author}</p>
-                </div>
-                <div className='col-3'>
-                  <small>Condition</small>
-                  <p className='lead'>{book.condition}</p>
-                </div>
+                <table className='table table-striped'>
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Book title</th>
+                      <th>Author</th>
+                      <th>Condition</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {books.map((book, index) => (
+                      <tr key={index}>
+                        <th>{index + 1}</th>
+                        <td>{book.title}</td>
+                        <td>{book.author}</td>
+                        <td>{book.condition}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+
+                <hr className='my-2' />
+
+                <small>Summary</small>
+                <p className='lead mb-0'>{summary}</p>
+
+                <hr className='my-2' />
+
+                <small>Keywords</small>
+                <p className='lead mb-0'>{keywords}</p>
               </div>
-            ))}
-
-            <hr />
-
-            {sourceArray.map((src, index) => (
-              <CustomImage
-                key={index}
-                source={src}
-                width='140px'
-                onClick={() => setZoom({ isZoomed: true, imageIndex: index })}
-              />
-            ))}
-
-            <hr />
-
-            <small>Summary</small>
-            <p className='lead'>{summary}</p>
-
-            <hr />
-
-            <small>Keywords</small>
-            <p className='lead'>{keywords}</p>
+              <div className='col-3'>
+                {sourceArray.map((src, index) => (
+                  <CustomImage
+                    key={index}
+                    source={src}
+                    height='60px'
+                    fit
+                    onClick={() =>
+                      setZoom({ isZoomed: true, imageIndex: index })
+                    }
+                  />
+                ))}
+              </div>
+            </div>
           </Fragment>
         )}
       </div>

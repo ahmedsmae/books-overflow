@@ -37,7 +37,8 @@ class Search extends React.Component {
     priceMax: '',
     currency: '',
     searchLat: null,
-    searchLng: null
+    searchLng: null,
+    keywords: ''
   };
 
   async componentDidMount() {
@@ -82,15 +83,16 @@ class Search extends React.Component {
       priceMax,
       currency,
       searchLat,
-      searchLng
+      searchLng,
+      keywords
     } = this.state;
 
     return (
       <div className='card mb-4'>
-        <div className='card-header bg-secondary text-white'>
+        <div className='card-header bg-secondary text-white py-1'>
           <div className='row'>
             <div className='col'>
-              <h5>Search Items</h5>
+              <h5 className='mt-2'>Search Items</h5>
             </div>
             <Link
               to='#'
@@ -155,7 +157,7 @@ class Search extends React.Component {
           </div>
         </div>
 
-        <div className='card-body'>
+        <div className='card-body pb-0'>
           <div className='row'>
             <div className='col-md-6'>
               <FormInput
@@ -176,7 +178,7 @@ class Search extends React.Component {
           </div>
           {advancedSearch && (
             <Fragment>
-              <hr />
+              <hr className='mt-0' />
               <div className='row'>
                 <div className='col-md-6'>
                   <div className='row'>
@@ -206,9 +208,26 @@ class Search extends React.Component {
                 </div>
 
                 <div className='col-md-6'>
-                  <div className='row'>
-                    <div className='col'>
-                      <input
+                  <div className='row mt-1'>
+                    <div className='col my-auto'>
+                      {/* //////////////// */}
+                      <label class='radio-container'>
+                        Books
+                        <input
+                          type='radio'
+                          name='booksCollsRadio'
+                          checked={booksIncluded && !collectionsIncluded}
+                          onChange={() =>
+                            this.setState({
+                              booksIncluded: true,
+                              collectionsIncluded: false
+                            })
+                          }
+                        />
+                        <span class='checkmark'></span>
+                      </label>
+
+                      {/* <input
                         type='radio'
                         className=''
                         name='booksCollsRadio'
@@ -220,11 +239,26 @@ class Search extends React.Component {
                           })
                         }
                       />
-                      <label className=''>Books</label>
+                      <label className=''>Books</label> */}
                     </div>
 
-                    <div className='col'>
-                      <input
+                    <div className='col my-auto'>
+                      <label class='radio-container'>
+                        Collections
+                        <input
+                          type='radio'
+                          name='booksCollsRadio'
+                          checked={!booksIncluded && collectionsIncluded}
+                          onChange={() =>
+                            this.setState({
+                              collectionsIncluded: true,
+                              booksIncluded: false
+                            })
+                          }
+                        />
+                        <span class='checkmark'></span>
+                      </label>
+                      {/* <input
                         type='radio'
                         className=''
                         name='booksCollsRadio'
@@ -236,11 +270,26 @@ class Search extends React.Component {
                           })
                         }
                       />
-                      <label className=''>Collections</label>
+                      <label className=''>Collections</label> */}
                     </div>
 
-                    <div className='col'>
-                      <input
+                    <div className='col my-auto'>
+                      <label class='radio-container'>
+                        Both
+                        <input
+                          type='radio'
+                          name='booksCollsRadio'
+                          checked={booksIncluded && collectionsIncluded}
+                          onChange={() =>
+                            this.setState({
+                              booksIncluded: true,
+                              collectionsIncluded: true
+                            })
+                          }
+                        />
+                        <span class='checkmark'></span>
+                      </label>
+                      {/* <input
                         type='radio'
                         className=''
                         name='booksCollsRadio'
@@ -252,13 +301,13 @@ class Search extends React.Component {
                           })
                         }
                       />
-                      <label className=''>Both</label>
+                      <label className=''>Both</label> */}
                     </div>
                   </div>
                 </div>
               </div>
 
-              <hr />
+              <hr className='mt-0' />
 
               <div className='row'>
                 <div className='col'>
@@ -287,7 +336,7 @@ class Search extends React.Component {
                 </div>
               </div>
 
-              <hr />
+              <hr className='mt-0' />
 
               <div className='row'>
                 <div className='col'>
@@ -306,6 +355,15 @@ class Search extends React.Component {
                   />
                 </div>
               </div>
+
+              <hr className='mt-0' />
+              <FormInput
+                placeholder='enter keywords'
+                hint='Use comma "," to separate between keywords. will search for any item has any of these keywards'
+                name='keywords'
+                value={keywords}
+                onChange={this.handleChange}
+              />
             </Fragment>
           )}
         </div>

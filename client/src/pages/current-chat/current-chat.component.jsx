@@ -42,7 +42,6 @@ class CurrentChat extends React.Component {
   }
 
   scrollToBottom = () => {
-    const { ownerId, opponentId } = this.state;
     if (this.isScrolledIntoView(this.messagesEnd)) {
       this.messagesEnd.scrollIntoView({ behavior: 'smooth' });
       // this.props.updateChatMsgsSeenStart(opponentId);
@@ -131,7 +130,7 @@ class CurrentChat extends React.Component {
           ref={el => (this.messagesEnd = el)}
         />
 
-        <div className='card-footer fixed-bottom bg-dark'>
+        <div className='card-footer bg-dark pb-0'>
           <div className='container'>
             <form onSubmit={this.handleSubmit}>
               <div className='row'>

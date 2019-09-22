@@ -45,30 +45,6 @@ class BookDetails extends React.Component {
     displayConfirmDialog: false
   };
 
-  // state = {
-  //   status: this.props.selectedBook
-  //     ? this.props.selectedBook.status
-  //     : 'Available',
-  //   title: this.props.selectedBook ? this.props.selectedBook.title : '',
-  //   author: this.props.selectedBook ? this.props.selectedBook.author : '',
-  //   publishdate: this.props.selectedBook
-  //     ? this.props.selectedBook.publishdate
-  //     : '',
-  //   category: this.props.selectedBook ? this.props.selectedBook.category : '',
-  //   language: this.props.selectedBook ? this.props.selectedBook.language : '',
-  //   summary: this.props.selectedBook ? this.props.selectedBook.summary : '',
-  //   condition: this.props.selectedBook ? this.props.selectedBook.condition : '',
-  //   price: this.props.selectedBook ? this.props.selectedBook.price : '',
-  //   currency: this.props.selectedBook ? this.props.selectedBook.currency : '',
-  //   latitude: this.props.selectedBook ? this.props.selectedBook.latitude : null,
-  //   longitude: this.props.selectedBook
-  //     ? this.props.selectedBook.longitude
-  //     : null,
-  //   keywords: this.props.selectedBook ? this.props.selectedBook.keywords : '',
-  //   imageids: this.props.selectedBook ? this.props.selectedBook.imageids : [],
-  //   newImageSources: []
-  // };
-
   static getDerivedStateFromProps(props, currentState) {
     if (props.selectedBook) {
       return {

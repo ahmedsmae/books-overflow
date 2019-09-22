@@ -74,7 +74,9 @@ router.post('/searchitems', async (req, res) => {
 
     distanceMax,
     searchLat,
-    searchLng
+    searchLng,
+
+    keywords
   } = req.body;
 
   try {
@@ -98,6 +100,16 @@ router.post('/searchitems', async (req, res) => {
         booksSearchObject.price = { $gt: priceMin };
       }
 
+      if (keywords.length) {
+        booksSearchObject.keywords = {
+          $regex: keywords
+            .toLowerCase()
+            .replace(',', '|')
+            .replace(' ', ''),
+          $options: 'i'
+        };
+      }
+
       books = await Book.find(booksSearchObject).populate('owner', [
         'firstname',
         'lastname',
@@ -117,7 +129,14 @@ router.post('/searchitems', async (req, res) => {
         'books.condition': { $regex: condition, $options: 'i' },
         category: { $regex: category, $options: 'i' },
         language: { $regex: language, $options: 'i' },
-        price: priceMax ? { $gt: priceMin, $lt: priceMax } : { $gt: priceMin }
+        price: priceMax ? { $gt: priceMin, $lt: priceMax } : { $gt: priceMin },
+        keywords: {
+          $regex: keywords
+            .toLowerCase()
+            .replace(',', '|')
+            .replace(' ', ''),
+          $options: 'i'
+        }
       }).populate('owner', [
         'firstname',
         'lastname',

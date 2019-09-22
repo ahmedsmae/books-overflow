@@ -30,8 +30,9 @@ class HandleCurrency extends React.Component {
             <div className='col'>
               <FormInput value={currency} disabled />
             </div>
-            <div className='col-4'>
+            <div className='col-4 pl-0'>
               <CustomButton
+                className='w-100'
                 primary
                 outline
                 onClick={() => {
