@@ -4,7 +4,7 @@ const path = require('path');
 const http = require('http');
 const socketio = require('socket.io');
 const compression = require('compression');
-// const enforce = require('express-sslify');
+const enforce = require('express-sslify');
 
 if (process.env.NODE_ENV !== 'production') require('dotenv').config();
 
