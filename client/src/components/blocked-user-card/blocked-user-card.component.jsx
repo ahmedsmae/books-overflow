@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import {
@@ -21,24 +22,36 @@ const BlockedUserCard = ({
       <div className='card-body'>
         <div className='row'>
           <div className='col-4 text-center'>
-            <UserImage source={`/api/avatars/${avatarid}`} medium />
-            <p className='lead'>{`${firstname} ${lastname}`}</p>
-            <CustomButton
+            <UserImage
               small
-              dark
-              outline
-              onClick={() => {
-                removeBlockedUserStart(_id);
-                getBlockedUsersStart();
-              }}
-            >
-              Unblock User
-            </CustomButton>
+              className='mt-2'
+              source={`/api/avatars/${avatarid}`}
+            />
           </div>
 
           <div className='col'>
-            <p className='lead'>{email}</p>
-            <p className='lead'>{reason}</p>
+            <div className='row'>
+              <div className='col'>
+                <p className='lead mb-0'>{`${firstname} ${lastname}`}</p>
+              </div>
+              <div className='col-2'>
+                <Link className='col text-dark' to='#'>
+                  <CustomButton
+                    small
+                    dark
+                    outline
+                    onClick={() => {
+                      removeBlockedUserStart(_id);
+                      getBlockedUsersStart();
+                    }}
+                  >
+                    <i className='fas fa-lock-open' />
+                  </CustomButton>
+                </Link>
+              </div>
+            </div>
+            <p className='lead mb-0'>{email}</p>
+            <p className='lead mb-0'>{reason}</p>
           </div>
         </div>
       </div>

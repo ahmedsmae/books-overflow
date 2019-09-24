@@ -19,9 +19,9 @@ class ErrorBoundry extends React.Component {
   render() {
     if (this.state.hasErrored) {
       return (
-        <div className='error-image-overlay'>
-          <div className='error-image-container' />
-          <h2>Sorry this page is broken</h2>
+        <div className='error-image-overlay text-center'>
+          <div className='error-image-container mt-4' />
+          <h2 className='lead mt-4'>Sorry this page is broken</h2>
         </div>
       );
     }

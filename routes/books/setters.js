@@ -34,9 +34,6 @@ router.post(
       check('condition', 'Book condition is required')
         .not()
         .isEmpty(),
-      check('price', 'Book price is required')
-        .not()
-        .isEmpty(),
       check('currency', 'Book price currency is required')
         .not()
         .isEmpty(),

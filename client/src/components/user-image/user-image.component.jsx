@@ -12,7 +12,7 @@ const UserImage = ({ source, xsmall, small, medium, large, className }) => {
           ${xsmall && 'xsmall'} 
           ${medium && 'medium'} 
           ${large && 'large'} 
-          ${className && 'className'} 
+          ${className && className} 
           `}
       alt='user'
       src={source ? source : BlankUser}

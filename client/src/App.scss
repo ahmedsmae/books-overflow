@@ -1,24 +1,27 @@
-*,
 html,
 body {
+  box-sizing: border-box;
   font-family: 'Roboto Condensed', sans-serif;
   height: 100%;
-  box-sizing: border-box;
 
   a {
     text-decoration: none;
     color: black;
   }
 
-  .wrapper {
-    min-height: 100%;
-    height: auto !important;
+  #root {
     height: 100%;
-    margin: 0 0 -60px 0; /* the bottom margin is the negative value of the footer's height */
-  }
 
-  footer,
-  .push {
-    height: 60px; /* .push must be the same height as .footer */
+    .wrapper {
+      min-height: 100%;
+      height: auto !important;
+      height: 100%;
+      margin: 0 0 -60px 0; /* the bottom margin is the negative value of the footer's height */
+    }
+
+    footer,
+    .push {
+      height: 60px; /* .push must be the same height as .footer */
+    }
   }
 }

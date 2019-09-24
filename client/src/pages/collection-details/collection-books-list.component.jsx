@@ -4,6 +4,8 @@ import { createStructuredSelector } from 'reselect';
 
 import { selectConditions } from '../../redux/constants/constants.selectors';
 
+import { setAlert } from '../../redux/alert/alert.actions';
+
 import CustomButton from '../../components/custom-button/custom-button.component';
 import FormInput from '../../components/form-input/form-input.component';
 import FormSelect from '../../components/form-select/form-select.component';
@@ -40,12 +42,20 @@ class CollectionBooksList extends React.Component {
   handleSubmit = e => {
     e.preventDefault();
 
+    const errors = [];
     const {
       hotBookTitle,
       hotBookAuthor,
       hotBookCondition,
       booksArray
     } = this.state;
+    if (!hotBookTitle.length) errors.push('Please add the book title');
+    if (!hotBookAuthor.length) errors.push('Please add the author name');
+    if (!hotBookCondition.length)
+      errors.push('Please select the book condition');
+
+    if (errors.length)
+      return this.props.setAlert(null, errors, 'danger', errors.length * 2000);
 
     const newBook = {
       title: hotBookTitle,
@@ -152,10 +162,11 @@ class CollectionBooksList extends React.Component {
               <div className='col-3'>
                 <FormSelect
                   prepend='Condition'
-                  list={['Select ...', ...this.props.conditions]}
+                  list={this.props.conditions}
                   name='hotBookCondition'
                   value={hotBookCondition}
                   onChange={this.handleChange}
+                  required
                 />
               </div>
               <div className='col-1'>
@@ -175,4 +186,12 @@ const mapStateToProps = createStructuredSelector({
   conditions: selectConditions
 });
 
-export default connect(mapStateToProps)(CollectionBooksList);
+const mapDispatchToProps = dispatch => ({
+  setAlert: (title, message, alertType, timeout) =>
+    dispatch(setAlert(title, message, alertType, timeout))
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CollectionBooksList);

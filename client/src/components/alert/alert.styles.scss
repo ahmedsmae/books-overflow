@@ -1,6 +1,13 @@
-.myAlert-top {
+.alert-container {
   position: fixed;
-  top: 5px;
-  width: 80%;
+  top: 0;
+  left: 0;
+  width: 100%;
   z-index: 5;
+
+  .myAlert-top {
+    top: 10px;
+    width: 80%;
+    margin: 0 auto;
+  }
 }

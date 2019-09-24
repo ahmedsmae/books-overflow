@@ -12,6 +12,7 @@ import {
   editCollectionStart,
   deleteCollectionStart
 } from '../../redux/current-user/current-user.actions';
+import { setAlert } from '../../redux/alert/alert.actions';
 
 import FormInput from '../../components/form-input/form-input.component';
 import FormSelect from '../../components/form-select/form-select.component';
@@ -108,11 +109,17 @@ class BookDetails extends React.Component {
   handleSubmit = e => {
     e.preventDefault();
 
-    // ! display status proparly
-    // ! make sure that user select category, language and condition
-
     console.log('Saving...');
     console.log({ ...this.state });
+
+    const errors = [];
+    const { currency, latitude, longitude, books } = this.state;
+    if (!latitude || !longitude) errors.push('Please choose the book location');
+    if (!currency) errors.push('Please choose a price currency');
+    if (!books.length) errors.push('Please add books to the collection');
+
+    if (errors.length)
+      return this.props.setAlert(null, errors, 'danger', errors.length * 2000);
 
     // convert the price to the price with USD
     const newPrice = this.props.getPriceInUSD(
@@ -123,6 +130,8 @@ class BookDetails extends React.Component {
     this.setState({ price: newPrice, currency: 'USD' }, () => {
       this.props.editCollectionStart({ ...this.state });
     });
+
+    this.props.history.goBack();
   };
 
   render() {
@@ -158,6 +167,7 @@ class BookDetails extends React.Component {
                   name='title'
                   value={title}
                   onChange={this.handleChange}
+                  required
                 />
                 <FormInput
                   prepend='Number of books'
@@ -165,22 +175,25 @@ class BookDetails extends React.Component {
                   name='numberofbooks'
                   value={numberofbooks}
                   onChange={this.handleChange}
+                  required
                 />
               </div>
               <div className='col-md-6'>
                 <FormSelect
                   prepend='Category'
-                  list={['Select ...', ...this.props.categories]}
+                  list={this.props.categories}
                   name='category'
                   value={category}
                   onChange={this.handleChange}
+                  required
                 />
                 <FormSelect
                   prepend='Language'
-                  list={['Select ...', ...this.props.languages]}
+                  list={this.props.languages}
                   name='language'
                   value={language}
                   onChange={this.handleChange}
+                  required
                 />
               </div>
             </div>
@@ -195,10 +208,12 @@ class BookDetails extends React.Component {
               <div className='col-md-6'>
                 <FormInput
                   prepend='Price'
+                  type='number'
                   placeholder='enter price'
                   name='price'
                   value={price}
                   onChange={this.handleChange}
+                  required
                 />
               </div>
               <div className='col-md-6'>
@@ -293,7 +308,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   editCollectionStart: bookInfo => dispatch(editCollectionStart(bookInfo)),
   deleteCollectionStart: collectionId =>
-    dispatch(deleteCollectionStart(collectionId))
+    dispatch(deleteCollectionStart(collectionId)),
+  setAlert: (title, message, alertType, timeout) =>
+    dispatch(setAlert(title, message, alertType, timeout))
 });
 
 export default connect(

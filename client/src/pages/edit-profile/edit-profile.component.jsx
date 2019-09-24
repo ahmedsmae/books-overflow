@@ -36,7 +36,7 @@ class EditProfile extends React.Component {
   };
 
   static getDerivedStateFromProps(props, currentState) {
-    if (props.currentUser) {
+    if (props.currentUser.email !== currentState.email) {
       return {
         firstname: props.currentUser.firstname,
         lastname: props.currentUser.lastname,
@@ -87,6 +87,8 @@ class EditProfile extends React.Component {
     e.preventDefault();
     const { email, ...otherInfo } = this.state;
     this.props.editUserProfileStart({ ...otherInfo });
+
+    this.props.history.goBack();
   };
 
   render() {

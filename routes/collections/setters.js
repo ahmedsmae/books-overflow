@@ -34,9 +34,6 @@ router.post(
       check('language', 'Collection language is required')
         .not()
         .isEmpty(),
-      check('price', 'Collection price is required')
-        .not()
-        .isEmpty(),
       check('currency', 'Collection price currency is required')
         .not()
         .isEmpty(),

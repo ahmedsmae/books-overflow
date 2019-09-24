@@ -88,7 +88,11 @@ const BookCard = ({
       <div className='card-header bg-primary text-white py-1'>
         <div className='row'>
           <div className='col'>
-            <h4 className='mt-2'>{title}</h4>
+            <p className='h6 mt-2 text-dark'>
+              1 x <i className='fas fa-book' />
+              {' | '}
+              <span className='h4 text-white'>{title}</span>
+            </p>
           </div>
           <Fragment>
             {currentUser && currentUser._id === owner._id ? (

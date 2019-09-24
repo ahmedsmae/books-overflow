@@ -19,6 +19,10 @@ const FormSelect = ({ label, hint, large, small, list, prepend, ...props }) => {
           ${small && 'form-control-sm'}`}
         {...props}
       >
+        <option disabled value=''>
+          Select...
+        </option>
+
         {list.map((item, index) => (
           <option key={index}>{item}</option>
         ))}

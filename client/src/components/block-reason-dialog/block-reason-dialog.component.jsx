@@ -20,13 +20,18 @@ const BlockReasonDialog = ({ blockReasons, onResonSelect, onCancel }) => {
                 this user.
               </p>
             </div>
-            <Link className='col-0.5 nav-link mr-1' onClick={() => onCancel()}>
+            <Link
+              to='#'
+              className='col-0.5 nav-link mr-1'
+              onClick={() => onCancel()}
+            >
               <i className='fas fa-power-off' />
             </Link>
           </div>
           <FormSelect
-            list={['Select ...', ...blockReasons]}
+            list={blockReasons}
             onChange={e => onResonSelect(e.target.value)}
+            required
           />
         </div>
       </div>

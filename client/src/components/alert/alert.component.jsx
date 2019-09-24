@@ -29,27 +29,29 @@ const Alert = ({
 
   return (
     display && (
-      <div className={`myAlert-top alert alert-${alertType}`} role='alert'>
-        <button className='close' onClick={() => removeAlert()}>
-          &times;
-        </button>
-        {header && (
-          <Fragment>
-            <h4 className='alert-heading'>{header}</h4>
-            <hr />
-          </Fragment>
-        )}
-        {typeof message == 'string' ? (
-          <p className='my-auto'>{message}</p>
-        ) : (
-          message &&
-          message.map((msg, index) => (
-            <div key={index}>
-              <p className='my-auto'>{msg}</p>
-              {index < message.length - 1 && <hr />}
-            </div>
-          ))
-        )}
+      <div className='alert-container'>
+        <div className={`myAlert-top alert alert-${alertType}`} role='alert'>
+          <button className='close' onClick={() => removeAlert()}>
+            &times;
+          </button>
+          {header && (
+            <Fragment>
+              <h4 className='alert-heading'>{header}</h4>
+              <hr />
+            </Fragment>
+          )}
+          {typeof message == 'string' ? (
+            <p className='my-auto'>{message}</p>
+          ) : (
+            message &&
+            message.map((msg, index) => (
+              <div key={index}>
+                <p className='my-auto'>{msg}</p>
+                {index < message.length - 1 && <hr />}
+              </div>
+            ))
+          )}
+        </div>
       </div>
     )
   );

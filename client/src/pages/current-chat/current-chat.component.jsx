@@ -78,6 +78,17 @@ class CurrentChat extends React.Component {
     this.setState({ text: '' });
   };
 
+  lastMessage = (messages, index) => {
+    if (
+      !messages[index + 1] ||
+      messages[index + 1].ownerid !== messages[index].ownerid
+    ) {
+      return 'last';
+    }
+
+    return '';
+  };
+
   render() {
     const {
       ownerId,
@@ -109,11 +120,7 @@ class CurrentChat extends React.Component {
                 msg.ownerid === ownerId ? 'mine' : 'yours'
               } messages`}
             >
-              <div
-                className={`message ${messages[index + 1] &&
-                  messages[index + 1].ownerid !== msg.ownerid &&
-                  'last'}`}
-              >
+              <div className={`message ${this.lastMessage(messages, index)}`}>
                 <div className='content'>
                   <div className='message-date'>
                     <Moment format='h:mm a'>{moment.utc(msg.createdAt)}</Moment>

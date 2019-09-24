@@ -3,7 +3,10 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { withRouter } from 'react-router-dom';
 
-import { selectUserBlockedUsersIds } from '../../redux/current-user/current-user.selectors';
+import {
+  selectUserBlockedUsersIds,
+  selectUser
+} from '../../redux/current-user/current-user.selectors';
 
 import BookCard from '../book-card/book-card.component';
 import CollectionCard from '../collection-card/collection-card.component';
@@ -15,7 +18,12 @@ import { PATHS } from '../../assets/list.types';
 
 import './list.styles.scss';
 
-const List = ({ location: { pathname }, list, blockedUsersIds }) => {
+const List = ({
+  location: { pathname },
+  list,
+  blockedUsersIds,
+  currentUser
+}) => {
   if (
     pathname.includes(PATHS.LIBRARY_PATH_NO_ID) ||
     pathname === PATHS.HOME_PATH ||
@@ -26,10 +34,10 @@ const List = ({ location: { pathname }, list, blockedUsersIds }) => {
       <div className='card'>
         <div className='card-body'>
           {list.map((item, index) => {
-            // filter blocked users
+            // owner of item is not blocked
             if (
-              item.owner &&
-              blockedUsersIds &&
+              currentUser &&
+              item.owner._id &&
               !blockedUsersIds.includes(item.owner._id)
             ) {
               return item.hasOwnProperty('books') ? (
@@ -37,12 +45,15 @@ const List = ({ location: { pathname }, list, blockedUsersIds }) => {
               ) : (
                 <BookCard book={item} key={index} />
               );
-            } else {
+            } else if (!currentUser) {
+              // public user (not logged in)
               return item.hasOwnProperty('books') ? (
                 <CollectionCard collection={item} key={index} />
               ) : (
                 <BookCard book={item} key={index} />
               );
+            } else {
+              return null;
             }
           })}
         </div>
@@ -85,7 +96,8 @@ const List = ({ location: { pathname }, list, blockedUsersIds }) => {
 };
 
 const mapStateToProps = createStructuredSelector({
-  blockedUsersIds: selectUserBlockedUsersIds
+  blockedUsersIds: selectUserBlockedUsersIds,
+  currentUser: selectUser
 });
 
 export default withRouter(connect(mapStateToProps)(List));

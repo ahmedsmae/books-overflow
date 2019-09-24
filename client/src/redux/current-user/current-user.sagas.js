@@ -65,7 +65,9 @@ function* signupUserAsync({ payload }) {
     yield localStorage.setItem('token', response.data.token);
 
     yield put(signupUserSuccess(response.data.user));
+    yield put(setAlert(null, 'Successful signup', 'success', 2000));
   } catch (err) {
+    yield put(setAlert('Error!', err.message, 'danger', 5000));
     yield put(signupUserFailure(err.message));
   }
 }
@@ -81,6 +83,7 @@ function* signInUserAsync({ payload }) {
     yield localStorage.setItem('token', response.data.token);
 
     yield put(signinUserSuccess(response.data.user));
+    yield put(setAlert(null, 'Successful signin', 'success', 2000));
   } catch (err) {
     yield put(setAlert('Error!', err.message, 'danger', 5000));
     yield put(signinUserFailure(err.message));
@@ -124,6 +127,7 @@ function* signoutUserAsync() {
     yield localStorage.removeItem('token');
 
     yield put(signoutUserSuccess());
+    yield put(setAlert(null, 'Successful signout', 'success', 2000));
   } catch (err) {
     yield put(setAlert('Error!', err.message, 'danger', 5000));
     yield put(signoutUserFailure(err.message));
@@ -149,6 +153,7 @@ function* editUserProfileAsync({ payload }) {
     });
 
     yield put(editUserProfileSuccess(response.data.user));
+    yield put(setAlert(null, 'profile edited successfully', 'success', 2000));
   } catch (err) {
     yield put(setAlert('Error!', err.message, 'danger', 5000));
     yield put(editUserProfileFailure(err.message));
@@ -180,6 +185,7 @@ function* editBookAsync({ payload }) {
     }
 
     yield put(editBookSuccess());
+    yield put(setAlert(null, 'Changes done successfully', 'success', 2000));
   } catch (err) {
     yield put(setAlert('Error!', err.message, 'danger', 5000));
     yield put(editBookFailure(err.message));
@@ -231,6 +237,7 @@ function* editCollectionAsync({ payload }) {
     }
 
     yield put(editCollectionSuccess());
+    yield put(setAlert(null, 'Changes done successfully', 'success', 2000));
   } catch (err) {
     yield put(setAlert('Error!', err.message, 'danger', 5000));
     yield put(editCollectionFailure(err.message));
@@ -295,6 +302,7 @@ function* deleteBookAsync({ payload }) {
     });
 
     yield put(deleteBookSuccess());
+    yield put(setAlert(null, 'Book deleted successfully', 'success', 2000));
   } catch (err) {
     yield put(setAlert('Error!', err.message, 'danger', 5000));
     yield put(deleteBookFailure(err.message));
@@ -311,6 +319,9 @@ function* deleteCollectionAsync({ payload }) {
     });
 
     yield put(deleteCollectionSuccess());
+    yield put(
+      setAlert(null, 'Collection deleted successfully', 'success', 2000)
+    );
   } catch (err) {
     yield put(setAlert('Error!', err.message, 'danger', 5000));
     yield put(deleteCollectionFailure(err.message));
@@ -326,6 +337,9 @@ function* forgetPasswordAsync({ payload }) {
     });
 
     yield put(forgetPasswordSuccess());
+    yield put(
+      setAlert(null, 'New password sent to your email', 'success', 2000)
+    );
   } catch (err) {
     yield put(setAlert('Error!', err.message, 'danger', 5000));
     yield put(forgetPasswordFailure(err.message));
@@ -343,6 +357,7 @@ function* changePasswordAsync({ payload }) {
     yield localStorage.setItem('token', response.data.token);
 
     yield put(changePasswordSuccess(response.data.user));
+    yield put(setAlert(null, 'Password cahnged successfully', 'success', 2000));
   } catch (err) {
     yield put(setAlert('Error!', err.message, 'danger', 5000));
     yield put(changePasswordFailure(err.message));
@@ -361,13 +376,14 @@ function* deleteUserAsync({ payload }) {
 
     yield localStorage.removeItem('token');
 
+    yield put(setAlert(null, 'User deleted successfully', 'success', 2000));
     yield put(deleteUserSuccess());
   } catch (err) {
     yield put(setAlert('Error!', err.message, 'danger', 5000));
     yield put(deleteUserFailure(err.message));
   }
 }
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 function* addFavouriteAsync({ payload }) {
   try {
     yield setAuthToken();
@@ -379,6 +395,14 @@ function* addFavouriteAsync({ payload }) {
     });
 
     yield put(addFavouriteSuccess(response.data.user));
+    yield put(
+      setAlert(
+        null,
+        'Item successfully added to your favourites',
+        'success',
+        2000
+      )
+    );
   } catch (err) {
     yield put(setAlert('Error!', err.message, 'danger', 5000));
     yield put(addFavouriteFailure(err.message));
@@ -395,6 +419,14 @@ function* removeFavouriteAsync({ payload }) {
     });
 
     yield put(removeFavouriteSuccess(response.data.user));
+    yield put(
+      setAlert(
+        null,
+        'Item successfully removed from your favourites',
+        'success',
+        2000
+      )
+    );
   } catch (err) {
     yield put(setAlert('Error!', err.message, 'danger', 5000));
     yield put(removeFavouriteFailure(err.message));
@@ -434,6 +466,14 @@ function* addBlockedUserAsync({ payload }) {
     });
 
     yield put(addBlockedUserSuccess(response.data.user));
+    yield put(
+      setAlert(
+        null,
+        'User successfully added to your blocked list',
+        'success',
+        2000
+      )
+    );
   } catch (err) {
     yield put(setAlert('Error!', err.message, 'danger', 5000));
     yield put(addBlockedUserFailure(err.message));
@@ -450,6 +490,14 @@ function* removeBlockedUserAsync({ payload }) {
     });
 
     yield put(removeBlockedUserSuccess(response.data.user));
+    yield put(
+      setAlert(
+        null,
+        'User successfully removed from your blocked list',
+        'success',
+        2000
+      )
+    );
   } catch (err) {
     yield put(setAlert('Error!', err.message, 'danger', 5000));
     yield put(removeBlockedUserFailure(err.message));
