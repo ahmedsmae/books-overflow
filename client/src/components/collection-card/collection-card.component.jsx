@@ -243,29 +243,37 @@ const CollectionCard = ({
                   </tbody>
                 </table>
 
-                <hr className='my-2' />
+                {!!summary && summary.length && (
+                  <Fragment>
+                    <hr className='my-2' />
+                    <small>Summary</small>
+                    <p className='lead mb-0'>{summary}</p>
+                  </Fragment>
+                )}
 
-                <small>Summary</small>
-                <p className='lead mb-0'>{summary}</p>
-
-                <hr className='my-2' />
-
-                <small>Keywords</small>
-                <p className='lead mb-0'>{keywords}</p>
+                {!!keywords && keywords.length && (
+                  <Fragment>
+                    <hr className='my-2' />
+                    <small>Keywords</small>
+                    <p className='lead mb-0'>{keywords}</p>
+                  </Fragment>
+                )}
               </div>
-              <div className='col-3'>
-                {sourceArray.map((src, index) => (
-                  <CustomImage
-                    key={index}
-                    source={src}
-                    height='60px'
-                    fit
-                    onClick={() =>
-                      setZoom({ isZoomed: true, imageIndex: index })
-                    }
-                  />
-                ))}
-              </div>
+              {!!sourceArray.length && (
+                <div className='col-3'>
+                  {sourceArray.map((src, index) => (
+                    <CustomImage
+                      key={index}
+                      source={src}
+                      height='60px'
+                      fit
+                      onClick={() =>
+                        setZoom({ isZoomed: true, imageIndex: index })
+                      }
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           </Fragment>
         )}
