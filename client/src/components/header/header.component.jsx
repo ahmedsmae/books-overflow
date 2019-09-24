@@ -12,6 +12,8 @@ import {
 
 import { PATHS } from '../../assets/list.types';
 
+import Logo from '../../assets/logo.png';
+
 import UserImage from '../user-image/user-image.component';
 import Alert from '../alert/alert.component';
 
@@ -28,7 +30,8 @@ const Header = ({
       <div className='container'>
         <Link to={PATHS.HOME_PATH} className='navbar-brand'>
           <span className='h4 align-bottom'>
-            <i className='fas fa-book' /> BOOKS OVERFLOW
+            <img src={Logo} alt='logo' style={{ width: '50px' }} /> BOOKS
+            OVERFLOW
           </span>
         </Link>
 
