@@ -80,7 +80,9 @@ const UserCard = ({
 
             <p className='lead'>{email}</p>
 
-            {address.length && <p className='lead'>{address}</p>}
+            {defaultlatitude && defaultlongitude && (
+              <p className='lead'>{address}</p>
+            )}
 
             <p className='lead'>
               Joined since:{' '}

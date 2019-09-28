@@ -74,9 +74,12 @@ const App = ({
 }) => {
   useEffect(() => {
     loadingUserStart();
+  }, [loadingUserStart]);
+
+  useEffect(() => {
     getConversionRatesStart();
-    getUserUnseenMsgsCountStart();
-  }, [loadingUserStart, getConversionRatesStart, getUserUnseenMsgsCountStart]);
+    currentUser && getUserUnseenMsgsCountStart();
+  }, [currentUser, getUserUnseenMsgsCountStart, getConversionRatesStart]);
 
   return (
     <Fragment>

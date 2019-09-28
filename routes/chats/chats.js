@@ -23,9 +23,7 @@ router.get('/unseenmessages', auth, async (req, res) => {
     // });
 
     if (!userChats.length) {
-      return res
-        .status(400)
-        .json({ errors: [{ msg: 'No chats for this user' }] });
+      return res.json({ msg: 'No chats for this user' });
     }
 
     let count = 0;
@@ -76,9 +74,7 @@ router.get('/basicchats', auth, async (req, res) => {
     );
 
     if (!userChats.length) {
-      return res
-        .status(400)
-        .json({ errors: [{ msg: 'No chats for this user' }] });
+      return res.json({ msg: 'No chats for this user' });
     }
 
     const chats = userChats.map(chat => chat.getBasicVersion());
